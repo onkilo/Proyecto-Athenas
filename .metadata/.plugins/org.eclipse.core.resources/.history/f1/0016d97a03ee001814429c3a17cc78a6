@@ -1,0 +1,40 @@
+package util;
+
+import java.util.ArrayList;
+
+import javax.swing.table.AbstractTableModel;
+
+import entidades.Trabajador;
+
+public class TrabajadorTableModel extends AbstractTableModel {
+	
+	private ArrayList<Trabajador> data;
+	private String[] columnas = { "Código", "Nombre", "Teléfono", "DNI", "Dirección", "Correo", "Sexo", "Cargo"};
+	
+	public TrabajadorTableModel() {
+		data = new ArrayList<Trabajador>();
+	}
+
+	public TrabajadorTableModel(ArrayList<Trabajador> data) {
+		this.data = data;
+	}
+
+	@Override
+	public int getColumnCount() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int getRowCount() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public Object getValueAt(int rowIndex, int columnIndex) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

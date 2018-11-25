@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<commands>
+	<addCategory
+		id="custom_1542760601601"
+		name="JDatePicker"
+		description=""
+		visible="true"
+		open="true"/>
+	<addComponent
+		id="com.github.lgooddatepicker.components.DatePicker_1542760630554"
+		name="DatePicker"
+		description="Custom component: com.github.lgooddatepicker.components.DatePicker"
+		visible="true"
+		class="com.github.lgooddatepicker.components.DatePicker"
+		category="custom_1542760601601"/>
+	<addComponent
+		id="com.github.lgooddatepicker.components.DateTimePicker_1542760630554"
+		name="DateTimePicker"
+		description="Custom component: com.github.lgooddatepicker.components.DateTimePicker"
+		visible="true"
+		class="com.github.lgooddatepicker.components.DateTimePicker"
+		category="custom_1542760601601"/>
+	<addComponent
+		id="com.github.lgooddatepicker.components.TimePicker_1542760630554"
+		name="TimePicker"
+		description="Custom component: com.github.lgooddatepicker.components.TimePicker"
+		visible="true"
+		class="com.github.lgooddatepicker.components.TimePicker"
+		category="custom_1542760601601"/>
+	<addComponent
+		id="com.github.lgooddatepicker.components.CalendarPanel_1542760630554"
+		name="CalendarPanel"
+		description="Custom component: com.github.lgooddatepicker.components.CalendarPanel"
+		visible="true"
+		class="com.github.lgooddatepicker.components.CalendarPanel"
+		category="custom_1542760601601"/>
+</commands>

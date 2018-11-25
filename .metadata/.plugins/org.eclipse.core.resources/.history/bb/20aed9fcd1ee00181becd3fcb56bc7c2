@@ -1,0 +1,16 @@
+package negocio;
+
+import java.sql.*;
+
+public class NegocioProveedor {
+	
+	private Connection con;
+	private CallableStatement cstm;
+	private PreparedStatement pst;
+	private Statement st;
+	private String sql = "";
+	private ResultSet rs;
+	
+	
+	
+}

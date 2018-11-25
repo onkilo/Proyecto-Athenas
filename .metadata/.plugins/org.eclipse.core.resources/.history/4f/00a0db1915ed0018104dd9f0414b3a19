@@ -1,0 +1,62 @@
+package presentacion;
+
+import java.awt.EventQueue;
+
+import javax.swing.JInternalFrame;
+import java.awt.Color;
+import net.miginfocom.swing.MigLayout;
+import javax.swing.JPanel;
+import javax.swing.border.TitledBorder;
+import javax.swing.UIManager;
+import javax.swing.border.LineBorder;
+
+public class FrmProveedor extends JInternalFrame {
+	private JPanel panel;
+	private JPanel panel_1;
+	private JPanel panel_2;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		try {
+			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					FrmProveedor frame = new FrmProveedor();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public FrmProveedor() {
+		getContentPane().setBackground(Color.WHITE);
+		getContentPane().setLayout(new MigLayout("", "[grow][grow]", "[grow][grow]"));
+		
+		panel = new JPanel();
+		panel.setBorder(new TitledBorder(null, "Proveedor", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		getContentPane().add(panel, "cell 0 0,grow");
+		panel.setLayout(new MigLayout("", "[][]", "[][][][][]"));
+		
+		panel_1 = new JPanel();
+		panel_1.setBorder(new TitledBorder(null, "Listado de proveedores", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		getContentPane().add(panel_1, "cell 1 0 1 2,grow");
+		
+		panel_2 = new JPanel();
+		panel_2.setBorder(null);
+		getContentPane().add(panel_2, "cell 0 1,grow");
+		setBounds(100, 100, 706, 460);
+
+	}
+
+}

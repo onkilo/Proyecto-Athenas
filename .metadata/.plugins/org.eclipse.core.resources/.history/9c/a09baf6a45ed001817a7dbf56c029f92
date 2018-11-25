@@ -1,0 +1,241 @@
+package presentacion;
+
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.UIManager;
+import net.miginfocom.swing.MigLayout;
+import java.awt.SystemColor;
+import javax.swing.border.TitledBorder;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import java.awt.Font;
+import com.github.lgooddatepicker.components.DatePicker;
+import java.awt.Dimension;
+import javax.swing.SwingConstants;
+
+public class FrmDetVentas extends JDialog {
+
+	private final JPanel contentPanel = new JPanel();
+	private JPanel panel;
+	private JPanel panel_1;
+	private JPanel panel_2;
+	private JPanel panel_3;
+	private JPanel panel_4;
+	private JPanel panel_5;
+	private JLabel lblTotal;
+	private JTextField textField;
+	private JLabel lblCdigo;
+	private JLabel lblFecha;
+	private JTextField textField_1;
+	private DatePicker datePicker;
+	private JLabel lblBodegaAthenas;
+	private JLabel lblDni;
+	private JLabel lblNombre;
+	private JTextField textField_2;
+	private JTextField textField_3;
+	private JButton button;
+	private JLabel lblTelfono;
+	private JTextField textField_4;
+	private JLabel lblProducto;
+	private JTextField textField_5;
+	private JButton button_1;
+	private JLabel lblPrecio;
+	private JTextField textField_6;
+	private JLabel lblDescuento;
+	private JTextField textField_7;
+	private JLabel lblVendedor;
+	private JTextField textField_8;
+	private JButton btnAgregar;
+	private JLabel lblRuc;
+	private JLabel lblCantidad;
+	private JLabel lblStock;
+	private JTextField textField_9;
+	private JTextField textField_10;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		try {
+			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		try {
+			FrmDetVentas dialog = new FrmDetVentas();
+			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			dialog.setVisible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Create the dialog.
+	 */
+	public FrmDetVentas() {
+		setModal(true);
+		setBounds(100, 100, 850, 647);
+		getContentPane().setLayout(new BorderLayout());
+		contentPanel.setBackground(SystemColor.activeCaption);
+		contentPanel.setBorder(null);
+		getContentPane().add(contentPanel, BorderLayout.CENTER);
+		contentPanel.setLayout(new MigLayout("", "[300px:n][grow]", "[][][100px:n][grow]"));
+		
+		panel = new JPanel();
+		panel.setBorder(null);
+		contentPanel.add(panel, "cell 0 0 2 1,grow");
+		panel.setLayout(new MigLayout("", "[100px:n][][100px:n][][grow]", "[50px:n,grow][30px:n,grow][30px:n,grow][grow]"));
+		
+		lblBodegaAthenas = new JLabel("Bodega Athenas - Comprobante de venta");
+		lblBodegaAthenas.setFont(new Font("Serif", Font.BOLD, 18));
+		lblBodegaAthenas.setHorizontalAlignment(SwingConstants.CENTER);
+		panel.add(lblBodegaAthenas, "cell 0 0 5 1,growx");
+		
+		lblCdigo = new JLabel("C\u00F3digo");
+		lblCdigo.setPreferredSize(new Dimension(50, 16));
+		lblCdigo.setFont(new Font("Serif", Font.BOLD, 14));
+		panel.add(lblCdigo, "cell 0 1,alignx center");
+		
+		textField_1 = new JTextField();
+		textField_1.setEnabled(false);
+		panel.add(textField_1, "flowx,cell 1 1,alignx leading");
+		textField_1.setColumns(10);
+		
+		lblFecha = new JLabel("Fecha");
+		lblFecha.setPreferredSize(new Dimension(50, 25));
+		lblFecha.setFont(new Font("Serif", Font.BOLD, 14));
+		panel.add(lblFecha, "cell 2 1,alignx center");
+		
+		datePicker = new DatePicker();
+		datePicker.setEnabled(false);
+		datePicker.getComponentToggleCalendarButton().setPreferredSize(new Dimension(41, 28));
+		datePicker.getComponentDateTextField().setPreferredSize(new Dimension(159, 25));
+		datePicker.getComponentToggleCalendarButton().setBounds(98, -2, 41, 28);
+		datePicker.getComponentDateTextField().setBounds(0, 0, 100, 25);
+		datePicker.setPreferredSize(new Dimension(203, 28));
+		panel.add(datePicker, "cell 3 1,alignx leading,aligny center");
+		datePicker.setLayout(null);
+		
+		lblRuc = new JLabel("R.U.C. : 0000000000");
+		lblRuc.setFont(new Font("Serif", Font.BOLD, 14));
+		lblRuc.setHorizontalAlignment(SwingConstants.CENTER);
+		panel.add(lblRuc, "cell 4 1 1 2,grow");
+		
+		lblVendedor = new JLabel("Vendedor");
+		lblVendedor.setPreferredSize(new Dimension(50, 25));
+		lblVendedor.setFont(new Font("Serif", Font.BOLD, 14));
+		panel.add(lblVendedor, "cell 0 2,alignx center");
+		
+		textField_8 = new JTextField();
+		panel.add(textField_8, "cell 1 2 3 1,alignx leading");
+		textField_8.setColumns(15);
+		
+		panel_1 = new JPanel();
+		panel_1.setBorder(new TitledBorder(null, "Cliente", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		contentPanel.add(panel_1, "cell 0 1 2 1,grow");
+		panel_1.setLayout(new MigLayout("", "[][100px:n,grow][grow]", "[30px:n]"));
+		
+		lblDni = new JLabel("DNI");
+		lblDni.setFont(new Font("Serif", Font.PLAIN, 14));
+		lblDni.setPreferredSize(new Dimension(50, 16));
+		panel_1.add(lblDni, "flowx,cell 0 0,alignx center");
+		
+		textField_2 = new JTextField();
+		panel_1.add(textField_2, "cell 0 0,alignx leading");
+		textField_2.setColumns(10);
+		
+		lblNombre = new JLabel("Nombre");
+		lblNombre.setFont(new Font("Serif", Font.PLAIN, 14));
+		lblNombre.setPreferredSize(new Dimension(50, 16));
+		panel_1.add(lblNombre, "flowx,cell 1 0,alignx center");
+		
+		button = new JButton("...");
+		panel_1.add(button, "cell 0 0");
+		
+		lblTelfono = new JLabel("Tel\u00E9fono");
+		lblTelfono.setFont(new Font("Serif", Font.PLAIN, 14));
+		lblTelfono.setPreferredSize(new Dimension(50, 16));
+		panel_1.add(lblTelfono, "flowx,cell 2 0,alignx center");
+		
+		textField_3 = new JTextField();
+		panel_1.add(textField_3, "cell 1 0,alignx leading");
+		textField_3.setColumns(20);
+		
+		textField_4 = new JTextField();
+		panel_1.add(textField_4, "cell 2 0,alignx leading");
+		textField_4.setColumns(10);
+		
+		panel_2 = new JPanel();
+		panel_2.setBorder(new TitledBorder(null, "Producto", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		contentPanel.add(panel_2, "cell 0 2 2 1,grow");
+		panel_2.setLayout(new MigLayout("", "[grow][grow][100px:n,grow][][grow][][grow][grow]", "[][]"));
+		
+		lblProducto = new JLabel("Producto");
+		panel_2.add(lblProducto, "cell 0 0,alignx trailing");
+		
+		textField_5 = new JTextField();
+		textField_5.setPreferredSize(new Dimension(12, 25));
+		panel_2.add(textField_5, "flowx,cell 1 0,alignx leading");
+		textField_5.setColumns(15);
+		
+		button_1 = new JButton("...");
+		panel_2.add(button_1, "cell 1 0");
+		
+		lblDescuento = new JLabel("Descuento");
+		panel_2.add(lblDescuento, "cell 2 0,alignx trailing");
+		
+		textField_7 = new JTextField();
+		panel_2.add(textField_7, "cell 3 0,alignx leading");
+		textField_7.setColumns(5);
+		
+		lblPrecio = new JLabel("Precio");
+		panel_2.add(lblPrecio, "cell 4 0,alignx trailing");
+		
+		textField_6 = new JTextField();
+		panel_2.add(textField_6, "cell 5 0,alignx leading");
+		textField_6.setColumns(5);
+		
+		lblStock = new JLabel("Stock");
+		panel_2.add(lblStock, "cell 6 0,alignx trailing");
+		
+		textField_9 = new JTextField();
+		panel_2.add(textField_9, "cell 7 0,alignx leading");
+		textField_9.setColumns(5);
+		
+		lblCantidad = new JLabel("Cantidad");
+		panel_2.add(lblCantidad, "cell 0 1,alignx trailing");
+		
+		textField_10 = new JTextField();
+		panel_2.add(textField_10, "flowx,cell 1 1,alignx leading");
+		textField_10.setColumns(10);
+		
+		btnAgregar = new JButton("Agregar");
+		btnAgregar.setPreferredSize(new Dimension(100, 30));
+		panel_2.add(btnAgregar, "cell 1 1,alignx center");
+		
+		panel_3 = new JPanel();
+		contentPanel.add(panel_3, "cell 0 3 2 1,grow");
+		panel_3.setLayout(new MigLayout("", "[grow][200px:n]", "[grow][30px:n]"));
+		
+		panel_4 = new JPanel();
+		panel_4.setBorder(new TitledBorder(null, "Detalle", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel_3.add(panel_4, "cell 0 0,grow");
+		
+		panel_5 = new JPanel();
+		panel_3.add(panel_5, "cell 1 0 1 2,grow");
+		
+		lblTotal = new JLabel("Total S/. ");
+		lblTotal.setFont(new Font("Serif", Font.BOLD, 14));
+		panel_3.add(lblTotal, "flowx,cell 0 1,alignx trailing");
+		
+		textField = new JTextField();
+		panel_3.add(textField, "cell 0 1,alignx trailing,aligny center");
+		textField.setColumns(10);
+	}
+}

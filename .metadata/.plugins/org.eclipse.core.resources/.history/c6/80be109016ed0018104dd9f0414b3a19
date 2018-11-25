@@ -1,0 +1,154 @@
+package presentacion;
+
+import java.awt.EventQueue;
+
+import javax.swing.JInternalFrame;
+import java.awt.Color;
+import net.miginfocom.swing.MigLayout;
+import javax.swing.JPanel;
+import javax.swing.border.TitledBorder;
+import javax.swing.UIManager;
+import javax.swing.border.LineBorder;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FlowLayout;
+
+public class FrmProveedor extends JInternalFrame {
+	private JPanel panel;
+	private JPanel panel_1;
+	private JPanel panel_2;
+	private JLabel lblCdigo;
+	private JLabel lblRaznSocial;
+	private JLabel lblRepresentante;
+	private JLabel lblEmail;
+	private JLabel lblTelfono;
+	private JTextField textField;
+	private JTextField textField_1;
+	private JTextField textField_2;
+	private JTextField textField_3;
+	private JTextField textField_4;
+	private JButton btnNuevo;
+	private JButton btnModificar;
+	private JButton btnEliminar;
+	private JPanel panel_3;
+	private JButton btnGuardar;
+	private JButton btnCancelar;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		try {
+			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					FrmProveedor frame = new FrmProveedor();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public FrmProveedor() {
+		getContentPane().setBackground(Color.WHITE);
+		getContentPane().setLayout(new MigLayout("", "[450:n][grow]", "[][grow]"));
+		
+		panel = new JPanel();
+		panel.setBorder(new TitledBorder(null, "Proveedor", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		getContentPane().add(panel, "cell 0 0,grow");
+		panel.setLayout(new MigLayout("", "[150px:n,grow][grow]", "[][][][][][]"));
+		
+		lblCdigo = new JLabel("C\u00F3digo");
+		lblCdigo.setFont(new Font("Serif", Font.PLAIN, 14));
+		lblCdigo.setPreferredSize(new Dimension(100, 16));
+		panel.add(lblCdigo, "cell 0 0,alignx center");
+		
+		textField_4 = new JTextField();
+		panel.add(textField_4, "cell 1 0,alignx leading");
+		textField_4.setColumns(10);
+		
+		lblRaznSocial = new JLabel("Raz\u00F3n Social");
+		lblRaznSocial.setFont(new Font("Serif", Font.PLAIN, 14));
+		lblRaznSocial.setPreferredSize(new Dimension(100, 16));
+		panel.add(lblRaznSocial, "cell 0 1,alignx center");
+		
+		textField_3 = new JTextField();
+		panel.add(textField_3, "cell 1 1,alignx leading");
+		textField_3.setColumns(20);
+		
+		lblRepresentante = new JLabel("Representante");
+		lblRepresentante.setFont(new Font("Serif", Font.PLAIN, 14));
+		lblRepresentante.setPreferredSize(new Dimension(100, 16));
+		panel.add(lblRepresentante, "cell 0 2,alignx center");
+		
+		textField_2 = new JTextField();
+		panel.add(textField_2, "cell 1 2,alignx leading");
+		textField_2.setColumns(20);
+		
+		lblEmail = new JLabel("Email");
+		lblEmail.setFont(new Font("Serif", Font.PLAIN, 14));
+		lblEmail.setPreferredSize(new Dimension(100, 16));
+		panel.add(lblEmail, "cell 0 3,alignx center");
+		
+		textField_1 = new JTextField();
+		panel.add(textField_1, "cell 1 3,alignx leading");
+		textField_1.setColumns(20);
+		
+		lblTelfono = new JLabel("Tel\u00E9fono");
+		lblTelfono.setFont(new Font("Serif", Font.PLAIN, 14));
+		lblTelfono.setPreferredSize(new Dimension(100, 16));
+		panel.add(lblTelfono, "cell 0 4,alignx center");
+		
+		textField = new JTextField();
+		panel.add(textField, "cell 1 4,alignx leading");
+		textField.setColumns(10);
+		
+		panel_3 = new JPanel();
+		FlowLayout flowLayout = (FlowLayout) panel_3.getLayout();
+		flowLayout.setHgap(50);
+		flowLayout.setVgap(10);
+		panel.add(panel_3, "cell 0 5 2 1,grow");
+		
+		btnGuardar = new JButton("Guardar");
+		btnGuardar.setPreferredSize(new Dimension(100, 35));
+		panel_3.add(btnGuardar);
+		
+		btnCancelar = new JButton("Cancelar");
+		btnCancelar.setPreferredSize(new Dimension(100, 35));
+		panel_3.add(btnCancelar);
+		
+		panel_1 = new JPanel();
+		panel_1.setBorder(new TitledBorder(null, "Listado de proveedores", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		getContentPane().add(panel_1, "cell 1 0 1 2,grow");
+		panel_1.setLayout(new MigLayout("", "[]", "[]"));
+		
+		panel_2 = new JPanel();
+		panel_2.setBorder(null);
+		getContentPane().add(panel_2, "cell 0 1,grow");
+		panel_2.setLayout(new MigLayout("", "[grow][grow][grow]", "[]"));
+		
+		btnNuevo = new JButton("Nuevo");
+		panel_2.add(btnNuevo, "cell 0 0,alignx center");
+		
+		btnModificar = new JButton("Modificar");
+		panel_2.add(btnModificar, "cell 1 0,alignx center");
+		
+		btnEliminar = new JButton("Eliminar");
+		panel_2.add(btnEliminar, "cell 2 0,alignx center");
+		setBounds(100, 100, 706, 460);
+
+	}
+
+}

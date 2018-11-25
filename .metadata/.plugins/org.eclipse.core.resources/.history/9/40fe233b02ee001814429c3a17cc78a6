@@ -1,0 +1,62 @@
+package util;
+
+import java.util.ArrayList;
+
+import javax.swing.table.AbstractTableModel;
+
+import entidades.Proveedor;
+
+public class ProveedorTableModel extends AbstractTableModel {
+	
+	// Listado de los datos del modelo <Proveedor>
+	private ArrayList<Proveedor> data;
+	// Columnas de la tabla
+	private String[] columnas = { "Código", "Razón social", "Representante", "Email", "Telefono", "Dirección"};
+
+	public ProveedorTableModel() {
+		data = new ArrayList<Proveedor>();
+	}
+	
+	public ProveedorTableModel(ArrayList<Proveedor> data) {
+		this.data = data;
+	}
+
+	@Override
+	public int getColumnCount() {
+		return columnas.length;
+	}
+
+	@Override
+	public int getRowCount() {
+		return data.size();
+	}
+	
+	@Override
+	public String getColumnName(int column) {
+		return columnas[column];
+	}
+
+	@Override
+	public Object getValueAt(int rowIndex, int columnIndex) {
+		Proveedor p = data.get(rowIndex);
+		switch(columnIndex){
+		case 0 : return p.getID();
+		case 1 : return p.getRaz_Soc();
+		case 2 : return p.getRepresentante();
+		case 3 : return p.getEmail();
+		case 4 : return p.getTelf();
+		case 5 : return p.getDireccion();
+		default : return null;
+		}
+	}
+
+	@Override
+	public boolean isCellEditable(int rowIndex, int columnIndex) {
+		return false;
+	}
+	
+	@Override
+	public Class<?> getColumnClass(int columnIndex) {
+		return String.class;
+	}
+}

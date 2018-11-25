@@ -1,0 +1,24 @@
+package negocio;
+
+import java.sql.*;
+import entidades.Cliente;
+import conexion.Conexion;
+import java.util.ArrayList;
+
+public class NegocioCliente {
+	private Connection con;
+	private CallableStatement cstm;
+	private PreparedStatement pst;
+	private Statement st;
+	private String sql = "";
+	
+	public ArrayList<Cliente> Listar(){
+		ArrayList<Cliente> lista = new ArrayList<>();
+		
+		
+		
+		return lista;
+	}
+	
+	
+}

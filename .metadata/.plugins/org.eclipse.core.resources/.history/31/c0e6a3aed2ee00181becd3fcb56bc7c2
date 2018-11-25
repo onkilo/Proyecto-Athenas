@@ -1,0 +1,31 @@
+package negocio;
+
+import java.sql.*;
+import java.util.ArrayList;
+
+import entidades.Proveedor;
+
+public class NegocioProveedor {
+	
+	private Connection con;
+	private CallableStatement cstm;
+	private PreparedStatement pst;
+	private Statement st;
+	private String sql = "";
+	private ResultSet rs;
+	
+	
+	public ArrayList<Proveedor> Listar(){
+		ArrayList<Proveedor> lista = new ArrayList<Proveedor>();
+		
+		sql = "SELECT ID, Rz_Social, Representante, Email, Telefono, Direccion  FROM Proveedor";
+		
+		try {
+			
+		} catch (Exception e) {
+			
+		}
+		
+		return lista;
+	}
+}

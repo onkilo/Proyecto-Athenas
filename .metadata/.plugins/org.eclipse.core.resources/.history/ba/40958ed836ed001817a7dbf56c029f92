@@ -1,0 +1,131 @@
+package presentacion;
+
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.UIManager;
+import net.miginfocom.swing.MigLayout;
+import java.awt.SystemColor;
+import javax.swing.border.TitledBorder;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import java.awt.Font;
+import com.github.lgooddatepicker.components.DatePicker;
+import java.awt.Dimension;
+import javax.swing.SwingConstants;
+
+public class FrmDetVentas extends JDialog {
+
+	private final JPanel contentPanel = new JPanel();
+	private JPanel panel;
+	private JPanel panel_1;
+	private JPanel panel_2;
+	private JPanel panel_3;
+	private JPanel panel_4;
+	private JPanel panel_5;
+	private JLabel lblTotal;
+	private JTextField textField;
+	private JLabel lblCdigo;
+	private JLabel lblFecha;
+	private JTextField textField_1;
+	private DatePicker datePicker;
+	private JLabel lblBodegaAthenas;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		try {
+			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		try {
+			FrmDetVentas dialog = new FrmDetVentas();
+			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			dialog.setVisible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Create the dialog.
+	 */
+	public FrmDetVentas() {
+		setModal(true);
+		setBounds(100, 100, 1000, 550);
+		getContentPane().setLayout(new BorderLayout());
+		contentPanel.setBackground(SystemColor.activeCaption);
+		contentPanel.setBorder(null);
+		getContentPane().add(contentPanel, BorderLayout.CENTER);
+		contentPanel.setLayout(new MigLayout("", "[300px:n][grow]", "[100px:n][100px:n][grow]"));
+		
+		panel = new JPanel();
+		panel.setBorder(new TitledBorder(null, "Venta", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		contentPanel.add(panel, "cell 0 0 1 2,grow");
+		panel.setLayout(new MigLayout("", "[100px:n][grow]", "[grow][50px:n][50px:n]"));
+		
+		lblBodegaAthenas = new JLabel("Bodega Athenas");
+		lblBodegaAthenas.setFont(new Font("Serif", Font.BOLD, 18));
+		lblBodegaAthenas.setHorizontalAlignment(SwingConstants.CENTER);
+		panel.add(lblBodegaAthenas, "cell 0 0 2 1,growx");
+		
+		lblCdigo = new JLabel("C\u00F3digo");
+		lblCdigo.setFont(new Font("Serif", Font.BOLD, 16));
+		panel.add(lblCdigo, "cell 0 1,alignx center");
+		
+		textField_1 = new JTextField();
+		textField_1.setEnabled(false);
+		panel.add(textField_1, "cell 1 1,alignx leading");
+		textField_1.setColumns(10);
+		
+		lblFecha = new JLabel("Fecha");
+		lblFecha.setFont(new Font("Serif", Font.BOLD, 16));
+		panel.add(lblFecha, "cell 0 2,alignx center");
+		
+		datePicker = new DatePicker();
+		datePicker.setEnabled(false);
+		datePicker.getComponentToggleCalendarButton().setPreferredSize(new Dimension(41, 28));
+		datePicker.getComponentDateTextField().setPreferredSize(new Dimension(159, 25));
+		datePicker.getComponentToggleCalendarButton().setBounds(98, -2, 41, 28);
+		datePicker.getComponentDateTextField().setBounds(0, 0, 100, 25);
+		datePicker.setPreferredSize(new Dimension(203, 28));
+		panel.add(datePicker, "cell 1 2,alignx leading,aligny center");
+		datePicker.setLayout(null);
+		
+		panel_1 = new JPanel();
+		panel_1.setBorder(new TitledBorder(null, "Cliente", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		contentPanel.add(panel_1, "cell 1 0,grow");
+		panel_1.setLayout(new MigLayout("", "[]", "[]"));
+		
+		panel_2 = new JPanel();
+		panel_2.setBorder(new TitledBorder(null, "Producto", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		contentPanel.add(panel_2, "cell 1 1,grow");
+		panel_2.setLayout(new MigLayout("", "[]", "[]"));
+		
+		panel_3 = new JPanel();
+		contentPanel.add(panel_3, "cell 0 2 2 1,grow");
+		panel_3.setLayout(new MigLayout("", "[grow][200px:n]", "[grow][30px:n]"));
+		
+		panel_4 = new JPanel();
+		panel_4.setBorder(new TitledBorder(null, "Detalle", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel_3.add(panel_4, "cell 0 0,grow");
+		
+		panel_5 = new JPanel();
+		panel_3.add(panel_5, "cell 1 0 1 2,grow");
+		
+		lblTotal = new JLabel("Total S/. ");
+		lblTotal.setFont(new Font("Serif", Font.BOLD, 14));
+		panel_3.add(lblTotal, "flowx,cell 0 1,alignx trailing");
+		
+		textField = new JTextField();
+		panel_3.add(textField, "cell 0 1,alignx trailing,aligny center");
+		textField.setColumns(10);
+	}
+
+}
