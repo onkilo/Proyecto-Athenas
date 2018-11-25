@@ -250,7 +250,7 @@ ELSE IF (@OPERACION = '2') --======PARA MODIFICAR PRODUCTO
 		IF @Img IS NULL
 		BEGIN
 			UPDATE DBO.Producto SET Descripcion = @Desc, Precio_Compra = Precio_Compra, 
-			Precio_Venta = @PrecioV, Stock_Actual = @StockA , Stock_Min = Stock_Min, Cat_Id = @Cat
+			Precio_Venta = @PrecioV, Stock_Actual = @StockA , Stock_Min = @StockM, Cat_Id = @Cat
 			WHERE ID = @ID
 		END
 		ELSE

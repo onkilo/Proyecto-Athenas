@@ -1,0 +1,25 @@
+package negocio;
+
+import java.sql.*;
+import java.util.ArrayList;
+
+import entidades.Producto;
+
+public class NegocioProducto {
+	private Connection con;
+	private CallableStatement cstm;
+	private PreparedStatement pst;
+	private Statement st;
+	private String sql = "";
+	private ResultSet rs;
+	
+	public ArrayList<Producto> listar(){
+		ArrayList<Producto> lista = new ArrayList<>();
+		
+		sql = "SELECT p.ID, p.Descripcion, p.Precio_Compra, p.Precio_Venta, p.Stock_Actual, p.Stock_Min, "
+				+ "c.ID, c.Descripcion,p.Imagen FROM Producto p INNER JOIN Cat_Prod c ON p.Cat_Id = c.ID";
+		
+		
+		return lista;
+	}
+}
