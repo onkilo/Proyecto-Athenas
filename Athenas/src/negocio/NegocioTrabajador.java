@@ -288,6 +288,51 @@ public class NegocioTrabajador {
 
 		return lista;
 	}
+	
+	
+	public Trabajador getTrabajadorBYUser(String user, String pass) {
+		Trabajador t = null;
+
+		sql = "SELECT ID,Nombre,Apellido,Telefono,DNI,Email, Direccion, Usuario, Contrasenia,Sexo, Rol FROM Trabajador "
+				+ "WHERE Usuario = ? COLLATE SQL_Latin1_General_CP1_CS_AS AND Contrasenia = ? COLLATE SQL_Latin1_General_CP1_CS_AS";
+
+		try {
+			con = Conexion.Conectar();
+			pst = con.prepareStatement(sql);
+			pst.setString(1, user);
+			pst.setString(2, pass);
+			rs = pst.executeQuery();
+			if (rs.next()) {
+				t = new Trabajador();
+				t.setID(rs.getString("ID"));
+				t.setNombre(rs.getString("Nombre"));
+				t.setApellido(rs.getString("Apellido"));
+				t.setTelf(rs.getString("Telefono"));
+				t.setDNI(rs.getString("DNI"));
+				t.setEmail(rs.getString("Email"));
+				t.setDireccion(rs.getString("Direccion"));
+				t.setUsuario(rs.getString("Usuario"));
+				t.setPassword(rs.getString("Contrasenia"));
+				t.setSexo(rs.getString("Sexo"));
+				t.setRol(rs.getString("Rol"));
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pst != null)
+					pst.close();
+				if (con != null)
+					con.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+
+		return t;
+	}
 
 	public String nextCod() {
 		sql = "{call USP_NextCod(?)}";

@@ -1,0 +1,200 @@
+package negocio;
+
+import java.sql.*;
+import java.util.ArrayList;
+
+import conexion.Conexion;
+import entidades.Promo;
+
+public class NegocioPromo {
+	
+	private Connection con;
+	private CallableStatement cstm;
+	private PreparedStatement pst;
+	private Statement st;
+	private String sql = "";
+	private ResultSet rs;
+	
+	public ArrayList<Promo> Listar(){
+		ArrayList<Promo> lista = new ArrayList<Promo>();
+		
+		sql = "SELECT pm.ID AS PromoID,pd.ID as ProdID, pd.Descripcion as Producto,"
+				+ " pm.Tipo as Tipo, pm.Valor as Valor, pm.FecIni as Inicio, pm.FecFin as Fin"
+				+ " FROM Promo pm INNER JOIN Producto pd ON pm.Cod_Prod = pd.ID";
+		
+		try {
+			
+			con = Conexion.Conectar();
+			st = con.createStatement();
+			rs = st.executeQuery(sql);
+			
+			while(rs.next()){
+				Promo pm = new Promo();
+				pm.setID(rs.getString("PromoID"));
+				pm.getProd().setID(rs.getString("ProdID"));
+				pm.getProd().setDescripcion(rs.getString("Descripcion"));
+				pm.setTipo(rs.getInt("Tipo"));
+				pm.setValor(rs.getDouble("Valor"));
+				pm.setSqlFecIni(rs.getDate("Inicio"));
+				pm.setSQlFecFin(rs.getDate("Fin"));
+				
+				lista.add(pm);
+				
+			}
+			
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (st != null)
+					st.close();
+				if (con != null)
+					con.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		
+		return lista;
+	}
+	
+	public boolean InsertarPromo(Promo obj){
+		boolean exito  = false;
+		
+		sql = "{call USP_PromoMantenimiento(?,?,?,?,?,?,?)}";
+		
+		try {
+			
+			con = Conexion.Conectar();
+			cstm = con.prepareCall(sql);
+			cstm.setString(1, "1");
+			cstm.setString(2, obj.getID());
+			cstm.setString(3, obj.getProd().getID());
+			cstm.setInt(4, obj.getTipo());
+			cstm.setDouble(5, obj.getValor());
+			cstm.setDate(6, obj.getSqlFecIniTo());
+			cstm.setDate(7, obj.getSqlFecFin());
+			
+			cstm.executeUpdate();
+			
+			exito = true;
+			
+		}  catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			try {
+				if (cstm != null)
+					cstm.close();
+				if (con != null)
+					con.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		
+		return exito;
+	}
+	
+	public boolean ModificarPromo(Promo obj){
+		boolean exito  = false;
+		
+		sql = "{call USP_PromoMantenimiento(?,?,?,?,?,?,?)}";
+		
+		try {
+			
+			con = Conexion.Conectar();
+			cstm = con.prepareCall(sql);
+			cstm.setString(1, "2");
+			cstm.setString(2, obj.getID());
+			cstm.setString(3, obj.getProd().getID());
+			cstm.setInt(4, obj.getTipo());
+			cstm.setDouble(5, obj.getValor());
+			cstm.setDate(6, obj.getSqlFecIniTo());
+			cstm.setDate(7, obj.getSqlFecFin());
+			
+			cstm.executeUpdate();
+			
+			exito = true;
+			
+		}  catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			try {
+				if (cstm != null)
+					cstm.close();
+				if (con != null)
+					con.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		
+		return exito;
+	}
+	
+	public boolean EliminarPromo(String cod){
+		boolean exito  = false;
+		
+		sql = "{call USP_PromoMantenimiento(?,?)}";
+		
+		try {
+			
+			con = Conexion.Conectar();
+			cstm = con.prepareCall(sql);
+			cstm.setString(1, "1");
+			cstm.setString(2, cod);
+			
+			cstm.executeUpdate();
+			
+			exito = true;
+			
+		}  catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			try {
+				if (cstm != null)
+					cstm.close();
+				if (con != null)
+					con.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		
+		return exito;
+	}
+	
+	public Promo getPromoByID(String cod){
+		Promo obj = null;
+		
+		
+		return obj;
+	}
+	
+	public String nextCod() {
+		sql = "{call USP_NextCod(?)}";
+		String cod = "";
+		try {
+			con = Conexion.Conectar();
+			cstm = con.prepareCall(sql);
+			cstm.setString(1, "5");
+			cstm.registerOutParameter(1, Types.VARCHAR);
+			cstm.executeUpdate();
+			cod = cstm.getString(1);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			try {
+				if (cstm != null)
+					cstm.close();
+				if (con != null)
+					con.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		return cod;
+	}
+}

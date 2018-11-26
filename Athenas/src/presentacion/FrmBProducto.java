@@ -9,9 +9,15 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import net.miginfocom.swing.MigLayout;
+import util.ProductoTableModel;
+
 import java.awt.SystemColor;
 import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
+
+import entidades.Producto;
+import negocio.NegocioProducto;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JRadioButton;
@@ -19,11 +25,18 @@ import java.awt.Font;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import java.awt.Color;
+import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.awt.event.MouseEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;
 
-public class FrmBProducto extends JDialog {
+public class FrmBProducto extends JDialog implements  ActionListener, KeyListener, MouseListener {
 
 	private final JPanel contentPanel = new JPanel();
-	private JTextField textField;
+	private JTextField txtBuscar;
 	private JTable tblProducto;
 
 	private ButtonGroup btnG;
@@ -32,7 +45,11 @@ public class FrmBProducto extends JDialog {
 	private JButton btnResetear;
 	private JLabel lblBuscar;
 	private JScrollPane scrollPane;
-
+	
+	private NegocioProducto nProd = new NegocioProducto();
+	private FrmPromo ventProm;
+	private Producto prod;
+	private ProductoTableModel modelo;
 	/**
 	 * Launch the application.
 	 */
@@ -68,11 +85,13 @@ public class FrmBProducto extends JDialog {
 		lblBuscar = new JLabel("Buscar");
 		contentPanel.add(lblBuscar, "cell 0 0,alignx center");
 
-		textField = new JTextField();
-		contentPanel.add(textField, "cell 1 0,alignx leading");
-		textField.setColumns(20);
+		txtBuscar = new JTextField();
+		txtBuscar.addKeyListener(this);
+		contentPanel.add(txtBuscar, "cell 1 0,alignx leading");
+		txtBuscar.setColumns(20);
 
 		btnResetear = new JButton("Resetear");
+		btnResetear.addActionListener(this);
 		btnResetear.setFont(new Font("Serif", Font.BOLD, 14));
 		btnResetear.setForeground(new Color(255, 255, 255));
 		btnResetear.setBackground(new Color(128, 128, 0));
@@ -101,6 +120,7 @@ public class FrmBProducto extends JDialog {
 		panel.add(scrollPane, BorderLayout.CENTER);
 
 		tblProducto = new JTable();
+		tblProducto.addMouseListener(this);
 		scrollPane.setViewportView(tblProducto);
 		
 		btnG = new ButtonGroup();
@@ -108,6 +128,72 @@ public class FrmBProducto extends JDialog {
 		btnG.add(rdbtPorCodigo);
 		
 		rdbtPorCodigo.setSelected(true);
+		
+		modelo = new ProductoTableModel();
+		tblProducto.setModel(modelo);
+		modelo.setData(nProd.listar());
+	}
+	
+	public FrmBProducto (FrmPromo vent){
+		this();
+		this.ventProm = vent;
+		this.setLocationRelativeTo(vent);
 	}
 
+	public void actionPerformed(ActionEvent arg0) {
+		if (arg0.getSource() == btnResetear) {
+			actionPerformedBtnResetear(arg0);
+		}
+	}
+	protected void actionPerformedBtnResetear(ActionEvent arg0) {
+		txtBuscar.setText("");
+		modelo.setData(nProd.listar());
+	}
+	public void keyPressed(KeyEvent arg0) {
+	}
+	public void keyReleased(KeyEvent arg0) {
+		if (arg0.getSource() == txtBuscar) {
+			keyReleasedTxtBuscar(arg0);
+		}
+	}
+	public void keyTyped(KeyEvent e) {
+	}
+	protected void keyReleasedTxtBuscar(KeyEvent arg0) {
+		ArrayList<Producto> busqueda = new ArrayList<Producto>();
+		String patron = txtBuscar.getText();
+		if (rdbtPorCodigo.isSelected()) {
+			busqueda = nProd.getProductosByID(patron);
+		} else if (rdbtPorDescripcion.isSelected()) {
+			busqueda = nProd.getProductosByDescripcion(patron);
+		}
+		modelo.setData(busqueda);
+	}
+	public void mouseClicked(MouseEvent e) {
+		if (e.getSource() == tblProducto) {
+			mouseClickedTblProducto(e);
+		}
+	}
+	public void mouseEntered(MouseEvent e) {
+	}
+	public void mouseExited(MouseEvent e) {
+	}
+	public void mousePressed(MouseEvent e) {
+	}
+	public void mouseReleased(MouseEvent e) {
+	}
+	protected void mouseClickedTblProducto(MouseEvent e) {
+		if(this.ventProm != null){
+			if(e.getClickCount() == 2){
+				if(!tblProducto.getSelectionModel().isSelectionEmpty()){
+					int fila = tblProducto.getSelectedRow();
+					this.prod = modelo.getProducto(fila);
+					this.ventProm.setProd(prod);
+					this.ventProm.getTxtProd().setText(prod.getDescripcion());
+					this.dispose();
+				}
+			}
+		}
+		
+		
+	}
 }

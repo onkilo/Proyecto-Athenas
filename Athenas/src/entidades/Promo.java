@@ -12,6 +12,7 @@ public class Promo {
 	private LocalDate fecFin;
 	
 	public Promo() {
+		this.prod = new Producto();
 	}
 
 	public Promo(String iD, Producto prod, int tipo, double valor, LocalDate fecIni, LocalDate fecFin) {

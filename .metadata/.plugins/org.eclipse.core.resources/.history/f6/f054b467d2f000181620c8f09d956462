@@ -1,0 +1,55 @@
+package negocio;
+
+import java.sql.*;
+import java.util.ArrayList;
+
+import conexion.Conexion;
+import entidades.Promo;
+
+public class NegocioPromo {
+	
+	private Connection con;
+	private CallableStatement cstm;
+	private PreparedStatement pst;
+	private Statement st;
+	private String sql = "";
+	private ResultSet rs;
+	
+	public ArrayList<Promo> Listar(){
+		ArrayList<Promo> lista = new ArrayList<Promo>();
+		
+		sql = "SELECT pm.ID AS PromoID,pd.ID as ProdID, pd.Descripcion as Producto,"
+				+ " pm.Tipo as Tipo, pm.Valor as Valor, pm.FecIni as Inicio, pm.FecFin as Fin"
+				+ " FROM Promo pm INNER JOIN Producto pd ON pm.Cod_Prod = pd.ID";
+		
+		try {
+			
+			con = Conexion.Conectar();
+			st = con.createStatement();
+			rs = st.executeQuery(sql);
+			
+			while(rs.next()){
+				Promo pm = new Promo();
+				
+				
+			}
+			
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (st != null)
+					st.close();
+				if (con != null)
+					con.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		
+		return lista;
+	}
+	
+}

@@ -39,7 +39,6 @@
 <fullyQualifiedTypeName name="java.time.format.DateTimeFormatter"/>
 <fullyQualifiedTypeName name="java.time.LocalDate"/>
 <fullyQualifiedTypeName name="util.ProductoTableModel"/>
-<fullyQualifiedTypeName name="entidades.Promo"/>
 <fullyQualifiedTypeName name="negocio.NegocioProducto"/>
 <fullyQualifiedTypeName name="negocio.NegocioCategoria"/>
 <fullyQualifiedTypeName name="javax.swing.DefaultComboBoxModel"/>
@@ -52,12 +51,13 @@
 <fullyQualifiedTypeName name="javax.swing.JFileChooser"/>
 <fullyQualifiedTypeName name="java.io.FileInputStream"/>
 <fullyQualifiedTypeName name="java.sql.Connection"/>
-<fullyQualifiedTypeName name="conexion.Conexion"/>
-<fullyQualifiedTypeName name="java.util.ArrayList"/>
 <fullyQualifiedTypeName name="jxl.biff.ByteArray"/>
 <fullyQualifiedTypeName name="java.io.ByteArrayInputStream"/>
-<fullyQualifiedTypeName name="entidades.Producto"/>
 <fullyQualifiedTypeName name="java.sql.Array"/>
 <fullyQualifiedTypeName name="java.util.Arrays"/>
 <fullyQualifiedTypeName name="java.nio.file.Files"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="entidades.Promo"/>
+<fullyQualifiedTypeName name="entidades.Producto"/>
+<fullyQualifiedTypeName name="conexion.Conexion"/>
 </qualifiedTypeNameHistroy>

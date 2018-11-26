@@ -17,6 +17,7 @@ import javax.swing.ImageIcon;
 import javax.swing.event.ChangeListener;
 
 import conexion.Conexion;
+import entidades.Trabajador;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.SwingConstants;
@@ -42,6 +43,9 @@ public class FrmPrincipal extends JFrame implements ActionListener, ChangeListen
 	private JMenuItem mntmCompras;
 	private JMenuItem mntmTrabajadores;
 	private JDesktopPane pnEscritorio;
+	
+	//Persona logeada
+	public static Trabajador currentUser = new Trabajador();
 	
 	//Ventanas de casa opcion de menu
 	FrmProveedor prov = null;
@@ -189,6 +193,7 @@ public class FrmPrincipal extends JFrame implements ActionListener, ChangeListen
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		
 		Conexion.Conectar();
+		CheckPrivilegios();
 	}
 
 	
@@ -201,6 +206,16 @@ public class FrmPrincipal extends JFrame implements ActionListener, ChangeListen
 		}else{
 			item.setIcon(new ImageIcon(FrmPrincipal.class.getResource(ruta2)));
 		}
+	}
+	
+	private void CheckPrivilegios(){
+		if(FrmPrincipal.currentUser != null && currentUser.getUsuario() != null){
+			if(FrmPrincipal.currentUser.getRol().equalsIgnoreCase("Vendedor")){
+				mnAdministrador.setVisible(false);
+				mnReportes.setVisible(false);
+			}
+		}
+		
 	}
 	
 	public void actionPerformed(ActionEvent e) {

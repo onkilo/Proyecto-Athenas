@@ -51,7 +51,7 @@ public class PromoTableModel extends AbstractTableModel {
 				return "Fijo";
 			}
 			else{
-				return "Pocentual";
+				return "Porcentual";
 			}
 		case 3: return obj.getValor();
 		case 4: return obj.getFecIni().format(formato);

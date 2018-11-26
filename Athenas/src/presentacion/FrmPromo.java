@@ -5,12 +5,17 @@ import java.awt.EventQueue;
 import javax.swing.JInternalFrame;
 import java.awt.Color;
 import net.miginfocom.swing.MigLayout;
+import util.PromoTableModel;
+
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.UIManager;
 import javax.swing.border.LineBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -18,15 +23,28 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FlowLayout;
 import java.awt.SystemColor;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.awt.BorderLayout;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JRadioButton;
 import javax.swing.SwingConstants;
 import com.github.lgooddatepicker.components.DatePicker;
-import javax.swing.ImageIcon;
 
-public class FrmPromo extends JInternalFrame {
+import entidades.Producto;
+import entidades.Promo;
+import negocio.NegocioPromo;
+
+import javax.swing.ImageIcon;
+import javax.swing.ListSelectionModel;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class FrmPromo extends JInternalFrame implements MouseListener, ActionListener {
 	private JPanel panel;
 	private JPanel panel_1;
 	private JPanel panel_2;
@@ -47,7 +65,7 @@ public class FrmPromo extends JInternalFrame {
 	private JPanel panel_4;
 	private JPanel panel_5;
 	private JScrollPane scrollPane;
-	private JTable tblProveedor;
+	private JTable tblPromo;
 	private JTextField txtBuscar;
 	private JButton btnResetear;
 	private JButton btnImprimir;
@@ -55,7 +73,8 @@ public class FrmPromo extends JInternalFrame {
 	private JRadioButton rdbtnPorCodigo;
 	private JLabel lblBuscar;
 	
-	private DefaultTableModel modelo;
+	private PromoTableModel modelo;
+	private ButtonGroup btnGTipo;
 	private ButtonGroup btnG;
 	private JRadioButton rdbtnPorProducto;
 	private JLabel lblSexo;
@@ -64,7 +83,13 @@ public class FrmPromo extends JInternalFrame {
 	private JButton btnBuscarProd;
 	private DatePicker dpInicial;
 	private DatePicker dpFinal;
-
+	
+	private NegocioPromo nProm = new NegocioPromo();
+	private DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd-MM-uuuu");
+	private Producto prod = new Producto();
+	private String opGuardar = "";
+	private FrmBProducto bProd = null;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -101,7 +126,7 @@ public class FrmPromo extends JInternalFrame {
 		panel.setBackground(SystemColor.control);
 		panel.setBorder(new TitledBorder(null, "Promoci\u00F3n", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(59, 59, 59)));
 		getContentPane().add(panel, "cell 0 0,grow");
-		panel.setLayout(new MigLayout("", "[150px:n,grow][grow]", "[50px:n][50px:n][50px:n][50px:n][50px:n,grow][50px:n,grow][]"));
+		panel.setLayout(new MigLayout("", "[100px:n,grow][grow]", "[50px:n][50px:n][50px:n][50px:n][50px:n,grow][50px:n,grow][]"));
 		
 		lblCdigo = new JLabel("C\u00F3digo");
 		lblCdigo.setFont(new Font("Serif", Font.PLAIN, 14));
@@ -119,9 +144,10 @@ public class FrmPromo extends JInternalFrame {
 		panel.add(lblRaznSocial, "cell 0 1,alignx center");
 		
 		txtProducto = new JTextField();
+		txtProducto.setEditable(false);
 		txtProducto.setEnabled(false);
 		panel.add(txtProducto, "flowx,cell 1 1,alignx leading");
-		txtProducto.setColumns(15);
+		txtProducto.setColumns(25);
 		
 		lblRepresentante = new JLabel("Tipo");
 		lblRepresentante.setFont(new Font("Serif", Font.PLAIN, 14));
@@ -141,7 +167,7 @@ public class FrmPromo extends JInternalFrame {
 		txtValor = new JTextField();
 		txtValor.setEnabled(false);
 		panel.add(txtValor, "cell 1 3,alignx leading");
-		txtValor.setColumns(20);
+		txtValor.setColumns(8);
 		
 		lblTelfono = new JLabel("Fecha inicial");
 		lblTelfono.setFont(new Font("Serif", Font.PLAIN, 14));
@@ -183,6 +209,7 @@ public class FrmPromo extends JInternalFrame {
 		panel.add(panel_3, "cell 0 6 2 1,grow");
 		
 		btnGuardar = new JButton("Guardar");
+		btnGuardar.addActionListener(this);
 		btnGuardar.setHorizontalAlignment(SwingConstants.LEADING);
 		btnGuardar.setIcon(new ImageIcon(FrmPromo.class.getResource("/img/icon-guardar-white.png")));
 		btnGuardar.setEnabled(false);
@@ -193,6 +220,7 @@ public class FrmPromo extends JInternalFrame {
 		panel_3.add(btnGuardar);
 		
 		btnCancelar = new JButton("Cancelar");
+		btnCancelar.addActionListener(this);
 		btnCancelar.setIcon(new ImageIcon(FrmPromo.class.getResource("/img/icon-cancelar-white.png")));
 		btnCancelar.setEnabled(false);
 		btnCancelar.setForeground(new Color(255, 255, 255));
@@ -206,6 +234,7 @@ public class FrmPromo extends JInternalFrame {
 		panel.add(rdbtnFijo, "cell 1 2,alignx leading");
 		
 		btnBuscarProd = new JButton("");
+		btnBuscarProd.addActionListener(this);
 		btnBuscarProd.setIcon(new ImageIcon(FrmPromo.class.getResource("/img/icon-buscar-black.png")));
 		btnBuscarProd.setEnabled(false);
 		panel.add(btnBuscarProd, "cell 1 1");
@@ -221,10 +250,12 @@ public class FrmPromo extends JInternalFrame {
 		panel_1.add(lblBuscar, "cell 0 0,alignx center");
 		
 		txtBuscar = new JTextField();
+		txtBuscar.addMouseListener(this);
 		panel_1.add(txtBuscar, "cell 1 0,growx");
 		txtBuscar.setColumns(20);
 		
 		btnResetear = new JButton("");
+		btnResetear.addActionListener(this);
 		btnResetear.setMinimumSize(new Dimension(25, 25));
 		btnResetear.setIcon(new ImageIcon(FrmPromo.class.getResource("/img/icon-resetear-white.png")));
 		btnResetear.setFont(new Font("SansSerif", Font.BOLD, 12));
@@ -254,8 +285,11 @@ public class FrmPromo extends JInternalFrame {
 		scrollPane.setBackground(SystemColor.control);
 		panel_5.add(scrollPane, BorderLayout.CENTER);
 		
-		tblProveedor = new JTable();
-		scrollPane.setViewportView(tblProveedor);
+		tblPromo = new JTable();
+		tblPromo.setFont(new Font("Serif", Font.PLAIN, 14));
+		tblPromo.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tblPromo.setRowHeight(20);
+		scrollPane.setViewportView(tblPromo);
 		
 		panel_2 = new JPanel();
 		panel_2.setBackground(SystemColor.control);
@@ -270,6 +304,7 @@ public class FrmPromo extends JInternalFrame {
 		panel_4.setLayout(new MigLayout("", "[grow][grow][grow]", "[]"));
 		
 		btnNuevo = new JButton("Nuevo");
+		btnNuevo.addActionListener(this);
 		btnNuevo.setIcon(new ImageIcon(FrmPromo.class.getResource("/img/icon-nuevo-white.png")));
 		panel_4.add(btnNuevo, "cell 0 0,alignx center");
 		btnNuevo.setForeground(new Color(255, 255, 255));
@@ -278,6 +313,7 @@ public class FrmPromo extends JInternalFrame {
 		btnNuevo.setPreferredSize(new Dimension(100, 35));
 		
 		btnModificar = new JButton("Modificar");
+		btnModificar.addActionListener(this);
 		btnModificar.setIcon(new ImageIcon(FrmPromo.class.getResource("/img/icon-modificar-white.png")));
 		panel_4.add(btnModificar, "cell 1 0,alignx center");
 		btnModificar.setForeground(new Color(255, 255, 255));
@@ -286,6 +322,7 @@ public class FrmPromo extends JInternalFrame {
 		btnModificar.setPreferredSize(new Dimension(100, 35));
 		
 		btnEliminar = new JButton("Eliminar");
+		btnEliminar.addActionListener(this);
 		btnEliminar.setIcon(new ImageIcon(FrmPromo.class.getResource("/img/icon-eliminar-white.png")));
 		panel_4.add(btnEliminar, "cell 2 0,alignx center");
 		btnEliminar.setForeground(new Color(255, 255, 255));
@@ -294,8 +331,8 @@ public class FrmPromo extends JInternalFrame {
 		btnEliminar.setPreferredSize(new Dimension(100, 35));
 		setBounds(0, 0, 1100, 600);
 		
-		modelo = new DefaultTableModel();
-		tblProveedor.setModel(modelo);
+		modelo = new PromoTableModel();
+		tblPromo.setModel(modelo);
 		
 		btnImprimir = new JButton("");
 		btnImprimir.setIcon(new ImageIcon(FrmPromo.class.getResource("/img/icon-imprimir-white.png")));
@@ -304,17 +341,212 @@ public class FrmPromo extends JInternalFrame {
 		btnImprimir.setForeground(new Color(255, 255, 255));
 		btnImprimir.setBackground(new Color(128, 128, 0));
 		btnImprimir.setPreferredSize(new Dimension(100, 30));
-		modelo.addColumn("Código");
-		modelo.addColumn("Nombre");
-		modelo.addColumn("Telefono");
-		modelo.addColumn("DNI");
-		modelo.addColumn("Sexo");
+
 		
 		
 		btnG = new ButtonGroup();
 		btnG.add(rdbtnPorCodigo);
 		btnG.add(rdbtnPorProducto);
 
+		btnGTipo = new ButtonGroup();
+		btnGTipo.add(rdbtnFijo);
+		btnGTipo.add(rdbtnPorcentual);
+		
+		rdbtnPorCodigo.setSelected(true);
+		rdbtnFijo.setSelected(true);
+		
+		miInit();
 	}
 
+	private void miInit(){
+		modelo.setData(nProm.Listar());
+		
+		tblPromo.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+			
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				if(!tblPromo.getSelectionModel().isSelectionEmpty()){
+					int fila = tblPromo.getSelectedRow();
+					LlenaDatos(modelo.getPromo(fila));
+				}
+				
+			}
+		});
+	}
+	
+	private void LlenaDatos(Promo obj){
+		txtCodigo.setText(obj.getID());
+		txtProducto.setText(obj.getProd().getDescripcion());
+		txtValor.setText(obj.getValor() + "");
+		if(obj.getTipo() == 0){
+			rdbtnFijo.setSelected(true);
+		}
+		else if (obj.getTipo() == 1){
+			rdbtnPorcentual.setSelected(true);
+		}
+		dpInicial.setDate(obj.getFecIni());
+		dpFinal.setDate(obj.getFecFin());
+	}
+	
+	private void Habilita(boolean estado) {
+		txtProducto.setEnabled(estado);
+		txtValor.setEnabled(estado);
+		rdbtnFijo.setEnabled(estado);
+		rdbtnPorcentual.setEnabled(estado);
+		dpInicial.setEnabled(estado);
+		dpFinal.setEnabled(estado);
+
+		btnBuscarProd.setEnabled(estado);
+		btnGuardar.setEnabled(estado);
+		btnCancelar.setEnabled(estado);
+	}
+
+	private void ReseteaCampos() {
+		txtCodigo.setText("");
+		txtProducto.setText("");
+		txtValor.setText("");
+		rdbtnFijo.setSelected(true);
+		
+		dpInicial.setDate(LocalDate.now());
+		dpFinal.setDate(LocalDate.now());
+	}
+	
+	private Promo LeerPromo(){
+		Promo obj = new Promo();
+		obj.setID(txtCodigo.getText());
+		obj.setProd(prod);
+		obj.setTipo(rdbtnFijo.isSelected()? 0 : 1);
+		obj.setValor(Double.parseDouble(txtValor.getText()));
+		obj.setFecIni(dpInicial.getDate());
+		obj.setFecFin(dpFinal.getDate());
+		
+		return obj;
+	}
+	
+	public void setProd(Producto prod){
+		 this.prod = prod;
+	}
+	
+	public JTextField getTxtProd(){
+		return this.txtProducto;
+	}
+	
+	public void mouseClicked(MouseEvent arg0) {
+	}
+	public void mouseEntered(MouseEvent arg0) {
+	}
+	public void mouseExited(MouseEvent arg0) {
+	}
+	public void mousePressed(MouseEvent arg0) {
+	}
+	public void mouseReleased(MouseEvent arg0) {
+		if (arg0.getSource() == txtBuscar) {
+			mouseReleasedTxtBuscar(arg0);
+		}
+	}
+	protected void mouseReleasedTxtBuscar(MouseEvent arg0) {
+		ArrayList<Promo> busqueda = new ArrayList<Promo>();
+		String patron = txtBuscar.getText();
+		if (rdbtnPorCodigo.isSelected()) {
+			busqueda = nProm.getPromosByID(patron);
+		} else if (rdbtnPorProducto.isSelected()) {
+			busqueda = nProm.getPromosByProd(patron);
+		}
+		modelo.setData(busqueda);
+	}
+	public void actionPerformed(ActionEvent arg0) {
+		if (arg0.getSource() == btnBuscarProd) {
+			actionPerformedBtnBuscarProd(arg0);
+		}
+		if (arg0.getSource() == btnEliminar) {
+			actionPerformedBtnEliminar(arg0);
+		}
+		if (arg0.getSource() == btnGuardar) {
+			actionPerformedBtnGuardar(arg0);
+		}
+		if (arg0.getSource() == btnCancelar) {
+			actionPerformedBtnCancelar(arg0);
+		}
+		if (arg0.getSource() == btnModificar) {
+			actionPerformedBtnModificar(arg0);
+		}
+		if (arg0.getSource() == btnNuevo) {
+			actionPerformedBtnNuevo(arg0);
+		}
+		if (arg0.getSource() == btnResetear) {
+			actionPerformedBtnResetear(arg0);
+		}
+	}
+	protected void actionPerformedBtnResetear(ActionEvent arg0) {
+		txtBuscar.setText("");
+		modelo.setData(nProm.Listar());
+	}
+	protected void actionPerformedBtnNuevo(ActionEvent arg0) {
+		btnModificar.setEnabled(false);
+		btnEliminar.setEnabled(false);
+
+		Habilita(true);
+		ReseteaCampos();
+		txtCodigo.setText(nProm.nextCod());
+		opGuardar = "Nuevo";
+		tblPromo.setEnabled(false);
+	}
+	protected void actionPerformedBtnModificar(ActionEvent arg0) {
+		if (!txtCodigo.getText().equals("")) {
+			btnNuevo.setEnabled(false);
+			btnEliminar.setEnabled(false);
+
+			Habilita(true);
+			opGuardar = "Modificar";
+		} else {
+			JOptionPane.showInternalMessageDialog(this, "Debe seleccionar un registro para realzar esta acción",
+					"Advertencia", JOptionPane.WARNING_MESSAGE);
+		}
+	}
+	protected void actionPerformedBtnCancelar(ActionEvent arg0) {
+		ReseteaCampos();
+		Habilita(false);
+		btnNuevo.setEnabled(true);
+		btnModificar.setEnabled(true);
+		btnEliminar.setEnabled(true);
+		tblPromo.setEnabled(true);
+
+		if (!tblPromo.getSelectionModel().isSelectionEmpty()) {
+			int fila = tblPromo.getSelectedRow();
+			LlenaDatos(modelo.getPromo(fila));
+		}
+	}
+	protected void actionPerformedBtnGuardar(ActionEvent arg0) {
+		if (opGuardar.equals("Nuevo")) {
+			nProm.InsertarPromo(LeerPromo());
+			ReseteaCampos();
+			txtCodigo.setText(nProm.nextCod());
+		} else if (opGuardar.equals("Modificar")) {
+			nProm.ModificarPromo(LeerPromo());
+		}
+		modelo.setData(nProm.Listar());
+	}
+	protected void actionPerformedBtnEliminar(ActionEvent arg0) {
+		if (!tblPromo.getSelectionModel().isSelectionEmpty()) {
+			int confirmar = JOptionPane.showInternalConfirmDialog(this, "¿Desea eliminar este regitro?", "Precaución",
+					JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+			if (confirmar == JOptionPane.YES_OPTION) {
+				String cod = txtCodigo.getText();
+				nProm.EliminarPromo(cod);
+				modelo.setData(nProm.Listar());
+				ReseteaCampos();
+				JOptionPane.showInternalMessageDialog(this, "Registro eliminado", "Confirmación",
+						JOptionPane.INFORMATION_MESSAGE);
+			}
+		} else {
+			JOptionPane.showInternalMessageDialog(this, "Debe seleccionar un registro para realzar esta acción",
+					"Advertencia", JOptionPane.WARNING_MESSAGE);
+		}
+	}
+	protected void actionPerformedBtnBuscarProd(ActionEvent arg0) {
+		
+			bProd = new FrmBProducto(this);
+			bProd.setVisible(true);
+		
+	}
 }

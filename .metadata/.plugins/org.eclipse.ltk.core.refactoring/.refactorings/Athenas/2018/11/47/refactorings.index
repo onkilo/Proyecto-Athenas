@@ -35,3 +35,6 @@
 1542949592752	Rename local variable 'lista'
 1543036644813	Delete element
 1543074702666	Rename local variable 'p'
+1543177851108	Rename local variable 'pm'
+1543185453742	Rename field 'vent'
+1543187824623	Rename method 'CheckAdmin'

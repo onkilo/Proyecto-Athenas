@@ -160,7 +160,7 @@ public class FrmVentas extends JInternalFrame {
 		
 		scrollPane = new JScrollPane();
 		scrollPane.setBackground(SystemColor.control);
-		panel_5.add(scrollPane, BorderLayout.NORTH);
+		panel_5.add(scrollPane, BorderLayout.CENTER);
 		
 		tblProveedor = new JTable();
 		scrollPane.setViewportView(tblProveedor);

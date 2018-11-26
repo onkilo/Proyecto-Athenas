@@ -1,0 +1,17 @@
+package negocio;
+
+import java.sql.*;
+import java.util.ArrayList;
+
+import conexion.Conexion;
+import entidades.Promo;
+
+public class NegocioPromo {
+	
+	private Connection con;
+	private CallableStatement cstm;
+	private PreparedStatement pst;
+	private Statement st;
+	private String sql = "";
+	private ResultSet rs;
+}
