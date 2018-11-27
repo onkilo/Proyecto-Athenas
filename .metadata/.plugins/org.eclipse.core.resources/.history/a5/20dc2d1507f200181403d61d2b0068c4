@@ -1,0 +1,108 @@
+package negocio;
+
+import java.sql.*;
+
+import entidades.Cliente;
+import entidades.Trabajador;
+import entidades.Venta;
+import conexion.Conexion;
+import java.util.ArrayList;
+
+public class NegocioVenta {
+	
+	private Connection con;
+	private CallableStatement cstm;
+	private PreparedStatement pst;
+	private Statement st;
+	private String sql = "";
+	private ResultSet rs;
+	
+	public ArrayList<Venta> Listar(){
+		ArrayList<Venta> lista = new ArrayList<Venta>();
+		
+		sql = "SELECT v.Cod_Venta AS Venta, c.ID AS CodCliente, c.Nombre AS NomCliente, c.Apellido AS ApeCliente, "
+				+ "c.Telefono AS Telefono, t.ID AS CodTrab, t.Nombre AS NomTrab, t.Apellido AS ApeTrab, v.Fecha AS Fecha,"
+				+ " v.IGV AS IGV, isnull(v.DescTotal, 0) AS DescTotal, sum(dv.Precio * dv.Cantidad) AS Subtotal "
+				+ "FROM Venta v INNER JOIN Cliente c ON v.Cod_Cliente = c.ID INNER JOIN Trabajador t "
+				+ "ON v.Cod_Trabajador = t.ID INNER JOIN Det_Venta dv ON v.Cod_Venta = dv.Cod_Venta "
+				+ "GROUP BY v.Cod_Venta, c.ID, c.Nombre, c.Apellido, c.Telefono, t.ID, t.Nombre, t.Apellido, v.Fecha, v.IGV, isnull(v.DescTotal, 0)";
+		
+		try {
+			
+			con = Conexion.Conectar();
+			st = con.createStatement();
+			rs = st.executeQuery(sql);
+			while(rs.next()){
+				Venta obj = new Venta();
+				obj.setCodVenta(rs.getString("Venta"));
+				obj.getCli().setID(rs.getString("CodCliente"));
+				obj.getCli().setNombre(rs.getString("NomCliente"));
+				obj.getCli().setApellido(rs.getString("ApeCliente"));
+				obj.getCli().setTelefono(rs.getString("Telefono"));
+				obj.getTrab().setID(rs.getString("CodTrab"));
+				obj.getTrab().setNombre(rs.getString("NomTrab"));
+				obj.getTrab().setApellido(rs.getString("ApeTrab"));
+				obj.setSqlFecha(rs.getDate("Fecha"));
+				obj.setIGV(rs.getDouble("IGV"));
+				obj.setDescTotal(rs.getDouble("DescTotal"));
+				obj.setSubtotal(rs.getDouble("Subtotal"));
+				
+				lista.add(obj);
+			}
+			
+		}catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (st != null)
+					st.close();
+				if (con != null)
+					con.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		
+		return lista;
+	}
+	
+	
+	public boolean InsertarVenta(Venta obj){
+		boolean exito = false;
+		
+		sql = "{call USP_VentaMantenimiento(?,?,?,?,?,?,?)}";
+		
+		try {
+			
+			con = Conexion.Conectar();
+			cstm = con.prepareCall(sql);
+			cstm.setString(1, "1");
+			cstm.setString(2, obj.getCodVenta());
+			cstm.setString(3, obj.getCli().getID());
+			cstm.setString(4, obj.getTrab().getID());
+			cstm.setDate(5, obj.getSQlFecha());
+			cstm.setDouble(6, obj.getIGV());
+			cstm.setDouble(7, obj.getDescTotal());
+			
+			cstm.executeUpdate();
+			
+			exito = true;
+			
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			try {
+				if (cstm != null)
+					cstm.close();
+				if (con != null)
+					con.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		
+		return exito;
+	}
+}

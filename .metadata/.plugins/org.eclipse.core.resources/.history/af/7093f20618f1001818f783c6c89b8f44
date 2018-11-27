@@ -1,0 +1,28 @@
+package entidades;
+
+import java.time.LocalDate;
+
+public class Compra {
+	private String Id;
+	private Proveedor prov;
+	private Trabajador trab;
+	private LocalDate fecha;
+	private double IGV;
+	private int estado;
+	
+	public Compra(){
+		prov = new Proveedor();
+		trab = new Trabajador();
+	}
+	
+	public Compra(String id, Proveedor prov, Trabajador trab, LocalDate fecha, double iGV, int estado) {
+		Id = id;
+		this.prov = prov;
+		this.trab = trab;
+		this.fecha = fecha;
+		IGV = iGV;
+		this.estado = estado;
+	}
+	
+	
+}

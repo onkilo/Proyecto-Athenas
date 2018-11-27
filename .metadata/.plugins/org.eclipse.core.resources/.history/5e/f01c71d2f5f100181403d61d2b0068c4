@@ -1,0 +1,40 @@
+package util;
+
+import java.util.ArrayList;
+
+import javax.swing.table.AbstractTableModel;
+
+import entidades.Trabajador;
+import entidades.Venta;
+
+public class VentaTableModel extends AbstractTableModel {
+	
+	private ArrayList<Venta> data;
+	private String[] columnas = {"Código", "Cliente", "Trabajador", "Fecha", "IGV", "Descuento", "Total"};
+
+	public TrabajadorTableModel() {
+		data = new ArrayList<Trabajador>();
+	}
+
+	public TrabajadorTableModel(ArrayList<Trabajador> data) {
+		this.data = data;
+	}
+
+	@Override
+	public int getColumnCount() {
+		return columnas.length;
+	}
+
+	@Override
+	public int getRowCount() {
+		return data.size();
+	}
+
+	@Override
+	public String getColumnName(int column) {
+		return columnas[column];
+	}
+	
+	
+
+}

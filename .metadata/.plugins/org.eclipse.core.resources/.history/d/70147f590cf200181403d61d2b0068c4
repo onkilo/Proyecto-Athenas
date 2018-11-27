@@ -1,0 +1,12 @@
+package negocio;
+
+import java.sql.*;
+
+import entidades.Producto;
+import entidades.Venta;
+import conexion.Conexion;
+import java.util.ArrayList;
+
+public class NegocioDetVenta {
+
+}

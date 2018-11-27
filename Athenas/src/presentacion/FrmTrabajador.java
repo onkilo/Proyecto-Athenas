@@ -321,6 +321,7 @@ public class FrmTrabajador extends JInternalFrame implements KeyListener, Action
 		panel_5.add(scrollPane, BorderLayout.CENTER);
 		
 		tblTrabajador = new JTable();
+		tblTrabajador.setFont(new Font("Times New Roman", Font.PLAIN, 14));
 		scrollPane.setViewportView(tblTrabajador);
 		
 		panel_2 = new JPanel();

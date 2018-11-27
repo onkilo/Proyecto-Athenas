@@ -1,0 +1,16 @@
+package entidades;
+
+import java.time.LocalDate;
+
+public class Venta {
+
+	private String Id;
+	private Cliente cli;
+	private Trabajador trab;
+	private LocalDate fecha;
+	private double IGV;
+	private int estado;
+	private double subtotal;
+	private double total;
+	
+}

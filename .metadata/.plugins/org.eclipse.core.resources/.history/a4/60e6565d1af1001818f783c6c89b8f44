@@ -1,0 +1,66 @@
+package entidades;
+
+public class DetVenta {
+	private String codVenta;
+	private Producto prod;
+	private int cant;
+	private double precio;
+	private double descUni;
+	private int subtotal;
+	
+	public DetVenta(){
+		prod = new Producto();
+	}
+
+	public DetVenta(String codCompra, Producto prod, int cant, double precio) {
+		this.codVenta = codCompra;
+		this.prod = prod;
+		this.cant = cant;
+		this.precio = precio;
+	}
+
+	public String getCodVenta() {
+		return codVenta;
+	}
+
+	public void setCodVenta(String codVenta) {
+		this.codVenta = codVenta;
+	}
+
+	public Producto getProd() {
+		return prod;
+	}
+
+	public void setProd(Producto prod) {
+		this.prod = prod;
+	}
+
+	public int getCant() {
+		return cant;
+	}
+
+	public void setCant(int cant) {
+		this.cant = cant;
+	}
+
+	public double getPrecio() {
+		return precio;
+	}
+
+	public void setPrecio(double precio) {
+		this.precio = precio;
+	}
+	
+	//Adicionales
+	public int getSubtotal() {
+		return subtotal;
+	}
+
+	public void setSubtotal(int subtotal) {
+		this.subtotal = subtotal;
+	}
+	
+	public double CalcSubtotal(){
+		return cant * precio;
+	}
+}

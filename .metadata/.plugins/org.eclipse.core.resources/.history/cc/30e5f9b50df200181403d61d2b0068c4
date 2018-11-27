@@ -1,0 +1,64 @@
+package negocio;
+
+import java.sql.*;
+
+import entidades.Producto;
+import entidades.DetVenta;
+import conexion.Conexion;
+import java.util.ArrayList;
+
+public class NegocioDetVenta {
+
+	private Connection con;
+	private CallableStatement cstm;
+	private PreparedStatement pst;
+	private Statement st;
+	private String sql = "";
+	private ResultSet rs;
+
+	public ArrayList<DetVenta> Listar() {
+		ArrayList<DetVenta> lista = new ArrayList<DetVenta>();
+
+		sql = "select dv.Cod_Venta as Venta, p.ID as CodPRod, p.Descripcion as DescProd,"
+				+ " dv.Cantidad as Cantidad, dv.Precio as Precio, isnull(dv.Desct, 0) as DescUni "
+				+ "from Det_Venta dv inner join Producto p on dv.Cod_Produc = p.ID";
+
+		try {
+			con = Conexion.Conectar();
+			st = con.createStatement();
+			rs = st.executeQuery(sql);
+			while(rs.next()){
+				DetVenta obj = new DetVenta();
+				obj.setCodVenta(rs.getString("Venta"));
+				obj.getProd().setID(rs.getString("CodProd"));
+				obj.getProd().setDescripcion(rs.getString("DescProd"));
+				obj.setCant(rs.getInt("Cantidad"));
+				obj.setPrecio(rs.getDouble("Precio"));
+				obj.setDescUni(rs.getDouble("DescUni"));
+				
+				lista.add(obj);
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (st != null)
+					st.close();
+				if (con != null)
+					con.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		return lista;
+	}
+	
+	public boolean InsertarDetalle(DetVenta obj){
+		boolean exito = false;
+
+		
+		return exito;
+	}
+}

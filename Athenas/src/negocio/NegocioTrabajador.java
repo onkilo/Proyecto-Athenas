@@ -91,7 +91,7 @@ public class NegocioTrabajador {
 				ex.printStackTrace();
 			}
 		}
-		return false;
+		return exito;
 	}
 
 	public boolean ModificarTrabajador(Trabajador t) {
@@ -129,7 +129,7 @@ public class NegocioTrabajador {
 				ex.printStackTrace();
 			}
 		}
-		return false;
+		return exito;
 	}
 
 	public boolean EliminarTrabajador(String cod) {
@@ -156,7 +156,7 @@ public class NegocioTrabajador {
 				ex.printStackTrace();
 			}
 		}
-		return false;
+		return exito;
 	}
 
 	public Trabajador getTrabajadorBYID(String cod) {
