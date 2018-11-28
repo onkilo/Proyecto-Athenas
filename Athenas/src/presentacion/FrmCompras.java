@@ -5,12 +5,21 @@ import java.awt.EventQueue;
 import javax.swing.JInternalFrame;
 import java.awt.Color;
 import net.miginfocom.swing.MigLayout;
+import util.CompraTableModel;
+
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+
+import entidades.Compra;
+import entidades.Venta;
+import negocio.NegocioCompra;
+import negocio.NegocioDetCompra;
+
 import javax.swing.UIManager;
 import javax.swing.border.LineBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -24,13 +33,20 @@ import javax.swing.JTable;
 import javax.swing.JRadioButton;
 import javax.swing.SwingConstants;
 import javax.swing.ImageIcon;
+import java.awt.event.KeyListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.awt.event.KeyEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
-public class FrmCompras extends JInternalFrame {
+public class FrmCompras extends JInternalFrame implements KeyListener, ActionListener {
 	private JPanel panel;
 	private JPanel panel_1;
 	private JPanel panel_5;
 	private JScrollPane scrollPane;
-	private JTable tblProveedor;
+	private JTable tblCompra;
 	private JTextField txtBuscar;
 	private JButton btnResetear;
 	private JButton btnImprimir;
@@ -38,8 +54,9 @@ public class FrmCompras extends JInternalFrame {
 	private JRadioButton rdbtnPorCodigo;
 	private JLabel lblBuscar;
 	
-	private DefaultTableModel modelo;
+	private CompraTableModel modelo;
 	private ButtonGroup btnG;
+	private ButtonGroup btnGFiltro;
 	private JRadioButton rdbtnPorProv;
 	private JButton btnNuevo;
 	private JButton btnModificar;
@@ -52,7 +69,9 @@ public class FrmCompras extends JInternalFrame {
 	private JRadioButton rdbtnRec;
 	private JRadioButton rdbtnTodas;
 	private JButton btnRecibir;
-
+	
+	private NegocioCompra nComp = new NegocioCompra();
+	private NegocioDetCompra nDet = new NegocioDetCompra();
 	/**
 	 * Launch the application.
 	 */
@@ -98,6 +117,7 @@ public class FrmCompras extends JInternalFrame {
 		panel_2.setLayout(new MigLayout("", "[grow]", "[50px:n][50px:n][50px:n][50px:n]"));
 		
 		btnNuevo = new JButton("Nuevo pedido");
+		btnNuevo.addActionListener(this);
 		btnNuevo.setFont(new Font("Serif", Font.BOLD, 14));
 		btnNuevo.setForeground(Color.WHITE);
 		btnNuevo.setBackground(new Color(138, 43, 226));
@@ -105,6 +125,7 @@ public class FrmCompras extends JInternalFrame {
 		btnNuevo.setPreferredSize(new Dimension(150, 40));
 		
 		btnModificar = new JButton("Modificar pedido");
+		btnModificar.addActionListener(this);
 		btnModificar.setFont(new Font("Serif", Font.BOLD, 14));
 		btnModificar.setForeground(Color.WHITE);
 		btnModificar.setBackground(new Color(138, 43, 226));
@@ -112,6 +133,7 @@ public class FrmCompras extends JInternalFrame {
 		btnModificar.setPreferredSize(new Dimension(150, 40));
 		
 		btnEliminar = new JButton("Eliminar pedido");
+		btnEliminar.addActionListener(this);
 		btnEliminar.setFont(new Font("Serif", Font.BOLD, 14));
 		btnEliminar.setForeground(Color.WHITE);
 		btnEliminar.setBackground(new Color(138, 43, 226));
@@ -119,6 +141,7 @@ public class FrmCompras extends JInternalFrame {
 		btnEliminar.setPreferredSize(new Dimension(150, 40));
 		
 		btnRecibir = new JButton("Recibir pedido");
+		btnRecibir.addActionListener(this);
 		btnRecibir.setPreferredSize(new Dimension(150, 40));
 		btnRecibir.setForeground(Color.WHITE);
 		btnRecibir.setFont(new Font("Serif", Font.BOLD, 14));
@@ -132,12 +155,15 @@ public class FrmCompras extends JInternalFrame {
 		panel_3.setLayout(new MigLayout("", "[]", "[grow][grow][grow]"));
 		
 		rdbtnReg = new JRadioButton("Solo registrados");
+		rdbtnReg.addActionListener(this);
 		panel_3.add(rdbtnReg, "cell 0 0");
 		
 		rdbtnRec = new JRadioButton("Solo recibidos");
+		rdbtnRec.addActionListener(this);
 		panel_3.add(rdbtnRec, "cell 0 1");
 		
 		rdbtnTodas = new JRadioButton("Registrados y recibidos");
+		rdbtnTodas.addActionListener(this);
 		panel_3.add(rdbtnTodas, "cell 0 2");
 		
 		lblCantidadDeVentas = new JLabel("Cantidad de pedidos");
@@ -159,10 +185,12 @@ public class FrmCompras extends JInternalFrame {
 		panel_1.add(lblBuscar, "cell 0 0,alignx center");
 		
 		txtBuscar = new JTextField();
+		txtBuscar.addKeyListener(this);
 		panel_1.add(txtBuscar, "cell 1 0,growx");
 		txtBuscar.setColumns(20);
 		
 		btnResetear = new JButton("");
+		btnResetear.addActionListener(this);
 		btnResetear.setMinimumSize(new Dimension(25, 25));
 		btnResetear.setIcon(new ImageIcon(FrmCompras.class.getResource("/img/icon-resetear-white.png")));
 		btnResetear.setFont(new Font("SansSerif", Font.BOLD, 12));
@@ -194,12 +222,12 @@ public class FrmCompras extends JInternalFrame {
 		scrollPane.setBackground(SystemColor.control);
 		panel_5.add(scrollPane, BorderLayout.CENTER);
 		
-		tblProveedor = new JTable();
-		scrollPane.setViewportView(tblProveedor);
+		tblCompra = new JTable();
+		scrollPane.setViewportView(tblCompra);
 		setBounds(0, 0, 1100, 600);
 		
-		modelo = new DefaultTableModel();
-		tblProveedor.setModel(modelo);
+		modelo = new CompraTableModel();
+		tblCompra.setModel(modelo);
 		
 		btnImprimir = new JButton("");
 		btnImprimir.setIcon(new ImageIcon(FrmCompras.class.getResource("/img/icon-imprimir-white.png")));
@@ -208,18 +236,156 @@ public class FrmCompras extends JInternalFrame {
 		btnImprimir.setForeground(new Color(255, 255, 255));
 		btnImprimir.setBackground(new Color(128, 128, 0));
 		btnImprimir.setPreferredSize(new Dimension(100, 30));
-		modelo.addColumn("Código");
-		modelo.addColumn("Proveedor");
-		modelo.addColumn("Trabajador");
-		modelo.addColumn("Fecha");
-		modelo.addColumn("IGV");
-		modelo.addColumn("Total");
-		modelo.addColumn("Estado");
-		
+
 		btnG = new ButtonGroup();
 		btnG.add(rdbtnPorCodigo);
 		btnG.add(rdbtnPorProv);
+		
+		btnGFiltro = new ButtonGroup();
+		btnGFiltro.add(rdbtnRec);
+		btnGFiltro.add(rdbtnReg);
+		btnGFiltro.add(rdbtnTodas);
+		
+		rdbtnPorCodigo.setSelected(true);
+		rdbtnTodas.setSelected(true);
 
+		modelo.setData(nComp.Listar());
+		txtCant.setText(modelo.getRowCount() + "");
 	}
-
+	
+	private void DecideListado(){
+		if(rdbtnRec.isSelected()){
+			modelo.setData(nComp.ListarRecibidos());
+		}
+		else if (rdbtnReg.isSelected()){
+			modelo.setData(nComp.ListarPorRecibir());
+		}
+		else if (rdbtnTodas.isSelected()){
+			modelo.setData(nComp.Listar());
+		}
+		txtCant.setText(modelo.getRowCount() + "");
+	}
+	
+	
+	
+	public void keyPressed(KeyEvent arg0) {
+	}
+	public void keyReleased(KeyEvent arg0) {
+		if (arg0.getSource() == txtBuscar) {
+			keyReleasedTxtBuscar(arg0);
+		}
+	}
+	public void keyTyped(KeyEvent arg0) {
+	}
+	protected void keyReleasedTxtBuscar(KeyEvent arg0) {
+		String busqueda = txtBuscar.getText();
+		ArrayList<Compra> lista = new ArrayList<Compra>();
+		lista = rdbtnPorCodigo.isSelected() ? nComp.getComprasByID(busqueda): nComp.getComprasByProv(busqueda);
+		
+		modelo.setData(lista);
+		
+	}
+	public void actionPerformed(ActionEvent arg0) {
+		if (arg0.getSource() == btnRecibir) {
+			actionPerformedBtnRecibir(arg0);
+		}
+		if (arg0.getSource() == btnEliminar) {
+			actionPerformedBtnEliminar(arg0);
+		}
+		if (arg0.getSource() == btnModificar) {
+			actionPerformedBtnModificar(arg0);
+		}
+		if (arg0.getSource() == btnNuevo) {
+			actionPerformedBtnNuevo(arg0);
+		}
+		if (arg0.getSource() == rdbtnTodas) {
+			actionPerformedRdbtnTodas(arg0);
+		}
+		if (arg0.getSource() == rdbtnRec) {
+			actionPerformedRdbtnRec(arg0);
+		}
+		if (arg0.getSource() == rdbtnReg) {
+			actionPerformedRdbtnReg(arg0);
+		}
+		if (arg0.getSource() == btnResetear) {
+			actionPerformedBtnResetear(arg0);
+		}
+	}
+	protected void actionPerformedBtnResetear(ActionEvent arg0) {
+		txtBuscar.setText("");
+		DecideListado();
+	}
+	protected void actionPerformedRdbtnReg(ActionEvent arg0) {
+		DecideListado();
+	}
+	protected void actionPerformedRdbtnRec(ActionEvent arg0) {
+		DecideListado();
+	}
+	protected void actionPerformedRdbtnTodas(ActionEvent arg0) {
+		DecideListado();
+	}
+	protected void actionPerformedBtnNuevo(ActionEvent arg0) {
+		FrmDetComp detCom = new FrmDetComp();
+		detCom.setLocationRelativeTo(this);
+		detCom.setVisible(true);
+		detCom.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosed(WindowEvent e) {
+				super.windowClosed(e);
+				DecideListado();
+			}
+		});
+	}
+	protected void actionPerformedBtnModificar(ActionEvent arg0) {
+		if(!tblCompra.getSelectionModel().isSelectionEmpty()){
+			int fila = tblCompra.getSelectedRow();
+			Compra obj = modelo.getCompra(fila);
+			FrmDetComp detCom = new FrmDetComp(obj);
+			detCom.setLocationRelativeTo(this);
+			detCom.setVisible(true);
+			detCom.addWindowListener(new WindowAdapter() {
+				@Override
+				public void windowClosed(WindowEvent e) {
+					super.windowClosed(e);
+					DecideListado();
+				}
+			});
+		}
+		else{
+			JOptionPane.showInternalMessageDialog(this, "Debe selecionar un registro para realizar esta operación", "Seleción Errónea", JOptionPane.WARNING_MESSAGE);
+		}
+	}
+	protected void actionPerformedBtnEliminar(ActionEvent arg0) {
+		if(!tblCompra.getSelectionModel().isSelectionEmpty()){
+			int confirmar =JOptionPane.showInternalConfirmDialog(this, "¿Desea eliminar este registro?", "Confirmación", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+			if(confirmar == JOptionPane.YES_OPTION){
+				int fila = tblCompra.getSelectedRow();
+				Compra compra = modelo.getCompra(fila);
+				nComp.EliminarCompra(compra);
+				JOptionPane.showInternalMessageDialog(this, "Registro eliminado satisfactoriamente", "Eliminación", JOptionPane.INFORMATION_MESSAGE);
+				DecideListado();
+			}
+			
+		}
+		else{
+			JOptionPane.showInternalMessageDialog(this, "Debe selecionar un registro para realizar esta operación", "Seleción Errónea", JOptionPane.WARNING_MESSAGE);
+		}
+	}
+	protected void actionPerformedBtnRecibir(ActionEvent arg0) {
+		if(!tblCompra.getSelectionModel().isSelectionEmpty()){
+			int confirmar =JOptionPane.showInternalConfirmDialog(this, "¿Desea dar este pedido por recibido?", "Confirmación", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+			if(confirmar == JOptionPane.YES_OPTION){
+				int fila = tblCompra.getSelectedRow();
+				Compra compra = modelo.getCompra(fila);
+				compra.setEstado(1);
+				nComp.ModificarCompra(compra, nDet.getDetallesByVenta(compra.getId()));
+				JOptionPane.showInternalMessageDialog(this, "Registro eliminado satisfactoriamente", "Eliminación", JOptionPane.INFORMATION_MESSAGE);
+				DecideListado();
+			}
+			
+		}
+		else{
+			JOptionPane.showInternalMessageDialog(this, "Debe selecionar un registro para realizar esta operación", "Seleción Errónea", JOptionPane.WARNING_MESSAGE);
+		}
+	}
 }

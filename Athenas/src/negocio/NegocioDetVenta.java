@@ -19,7 +19,7 @@ public class NegocioDetVenta {
 	public ArrayList<DetVenta> Listar() {
 		ArrayList<DetVenta> lista = new ArrayList<DetVenta>();
 
-		sql = "select dv.Cod_Venta as Venta, p.ID as CodPRod, p.Descripcion as DescProd,"
+		sql = "select dv.Cod_Venta as Venta, p.ID as CodProd, p.Descripcion as DescProd,"
 				+ " dv.Cantidad as Cantidad, dv.Precio as Precio, isnull(dv.Desct, 0) as DescUni "
 				+ "from Det_Venta dv inner join Producto p on dv.Cod_Produc = p.ID";
 
@@ -291,7 +291,7 @@ public class NegocioDetVenta {
 	public ArrayList<DetVenta> getDetallesByVenta(String venta) {
 		ArrayList<DetVenta> lista = new ArrayList<DetVenta>();
 
-		sql = "select dv.Cod_Venta as Venta, p.ID as CodPRod, p.Descripcion as DescProd,"
+		sql = "select dv.Cod_Venta as Venta, p.ID as CodProd, p.Descripcion as DescProd,"
 				+ " dv.Cantidad as Cantidad, dv.Precio as Precio, isnull(dv.Desct, 0) as DescUni "
 				+ "from Det_Venta dv inner join Producto p on dv.Cod_Produc = p.ID WHERE dv.Cod_Venta = ?";
 

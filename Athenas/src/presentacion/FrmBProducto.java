@@ -51,6 +51,7 @@ public class FrmBProducto extends JDialog implements ActionListener, KeyListener
 	private Producto prod;
 	private ProductoTableModel modelo;
 	private FrmDetVentas ventDetVent = null;
+	private FrmDetComp ventDetComp = null;
 
 	/**
 	 * Launch the application.
@@ -147,6 +148,12 @@ public class FrmBProducto extends JDialog implements ActionListener, KeyListener
 		this.ventDetVent = vent;
 		this.setLocationRelativeTo(vent);
 	}
+	
+	public FrmBProducto(FrmDetComp vent) {
+		this();
+		this.ventDetComp = vent;
+		this.setLocationRelativeTo(vent);
+	}
 
 	public void actionPerformed(ActionEvent arg0) {
 		if (arg0.getSource() == btnResetear) {
@@ -212,6 +219,10 @@ public class FrmBProducto extends JDialog implements ActionListener, KeyListener
 					this.dispose();
 				} else if (this.ventDetVent != null) {
 					this.ventDetVent.CargarProducto(prod);
+					this.dispose();
+				}
+				else if (this.ventDetComp != null) {
+					this.ventDetComp.CargarProducto(prod);
 					this.dispose();
 				}
 			}

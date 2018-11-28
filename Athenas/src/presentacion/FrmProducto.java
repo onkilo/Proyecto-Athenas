@@ -5,6 +5,9 @@ import java.awt.EventQueue;
 import javax.swing.JInternalFrame;
 import java.awt.Color;
 import net.miginfocom.swing.MigLayout;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
 import util.ProductoTableModel;
 
 import javax.swing.JPanel;
@@ -13,6 +16,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
+import conexion.Conexion;
 import entidades.CategoriaProducto;
 import entidades.Producto;
 import entidades.Trabajador;
@@ -366,6 +370,7 @@ public class FrmProducto extends JInternalFrame implements KeyListener, ActionLi
 		tblProducto.setModel(modelo);
 
 		btnImprimir = new JButton("");
+		btnImprimir.addActionListener(this);
 		btnImprimir.setIcon(new ImageIcon(FrmProducto.class.getResource("/img/icon-imprimir-white.png")));
 		panel_1.add(btnImprimir, "cell 2 3,alignx trailing");
 		btnImprimir.setFont(new Font("SansSerif", Font.BOLD, 12));
@@ -520,6 +525,9 @@ public class FrmProducto extends JInternalFrame implements KeyListener, ActionLi
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
+		if (arg0.getSource() == btnImprimir) {
+			actionPerformedBtnImprimir(arg0);
+		}
 		if (arg0.getSource() == btnBuscarImg) {
 			actionPerformedBtnBuscarImg(arg0);
 		}
@@ -617,5 +625,17 @@ public class FrmProducto extends JInternalFrame implements KeyListener, ActionLi
 	}
 	protected void actionPerformedBtnBuscarImg(ActionEvent arg0) {
 		LeerImg();
+	}
+	protected void actionPerformedBtnImprimir(ActionEvent arg0) {
+		try {
+			JasperPrint jp = JasperFillManager.fillReport("src/reportes/ListaProductos.jasper", null, Conexion.Conectar());
+			JasperViewer jv = new JasperViewer(jp, false);
+			jv.setTitle("Lista de clientes");
+			jv.setVisible(true);
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
 	}
 }

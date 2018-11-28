@@ -9,17 +9,36 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.UIManager;
 import net.miginfocom.swing.MigLayout;
+import util.Comunes;
+import util.DetCompraTableModel;
+
 import java.awt.SystemColor;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import java.awt.Font;
 import com.github.lgooddatepicker.components.DatePicker;
+
+import entidades.Compra;
+import entidades.DetCompra;
+import entidades.DetVenta;
+import entidades.Producto;
+import entidades.Proveedor;
+import negocio.NegocioCompra;
+import negocio.NegocioDetCompra;
+import negocio.NegocioProducto;
+import negocio.NegocioProveedor;
+
 import java.awt.Dimension;
 import javax.swing.SwingConstants;
 import java.awt.Color;
 import javax.swing.border.LineBorder;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -33,41 +52,57 @@ public class FrmDetComp extends JDialog implements ActionListener {
 	private JPanel panel_4;
 	private JPanel panel_5;
 	private JLabel lblTotal;
-	private JTextField textField;
+	private JTextField txtTotal;
 	private JLabel lblCdigo;
 	private JLabel lblFecha;
-	private JTextField textField_1;
-	private DatePicker datePicker;
+	private JTextField txtCodigo;
+	private DatePicker dpFecha;
 	private JLabel lblBodegaAthenas;
 	private JLabel lblDni;
 	private JLabel lblNombre;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JButton button;
+	private JTextField txtProvCod;
+	private JTextField txtProvRZ;
+	private JButton btnBucarProv;
 	private JLabel lblTelfono;
-	private JTextField textField_4;
+	private JTextField txtProvTel;
 	private JLabel lblVendedor;
-	private JTextField textField_8;
+	private JTextField txtTrab;
 	private JLabel lblRuc;
 	private JPanel panel_2;
 	private JLabel lblProducto;
-	private JTextField textField_5;
-	private JButton button_1;
+	private JTextField txtProdDesc;
+	private JButton btnBuscarProd;
 	private JLabel lblPrecio;
-	private JTextField textField_6;
+	private JTextField txtProdPrecio;
 	private JButton btnAgregar;
 	private JButton btnEliminarProducto;
 	private JButton btnModificarDetalle;
-	private JButton btnCancelarDetalle;
-	private JButton btnRegistrarDetalle;
-	private JButton btnImprimirVenta;
+	private JButton btnCancelarPedido;
+	private JButton btnRegistrarPedido;
+	private JButton btnImprimirPedido;
 	private JLabel lblCantidad;
-	private JTextField textField_10;
+	private JTextField txtProdCant;
 	private JLabel lblDireccin;
-	private JTextField textField_11;
+	private JTextField txtProvDir;
 	private JScrollPane scrollPane;
 	private JTable tblDetalle;
-
+	private JTextField txtSubtotal;
+	private JLabel lblSubtotalS;
+	private JLabel lblIgvs;
+	private JTextField txtIgv;
+	private JTextField txtProdStock;
+	private JLabel lblStock;
+	
+	private Compra comp = new Compra();
+	private NegocioCompra nComp = new NegocioCompra();
+	private NegocioProducto nProd = new NegocioProducto();
+	private NegocioProveedor nProv = new NegocioProveedor();
+	private NegocioDetCompra nDet = new NegocioDetCompra();
+	private Producto prod = null;
+	private Proveedor prov = null;
+	private DetCompraTableModel modelo;
+	private Comunes comunes = new Comunes();
+	int operacion = 0;
 	/**
 	 * Launch the application.
 	 */
@@ -90,8 +125,9 @@ public class FrmDetComp extends JDialog implements ActionListener {
 	 * Create the dialog.
 	 */
 	public FrmDetComp() {
+		setResizable(false);
 		setModal(true);
-		setBounds(100, 100, 879, 647);
+		setBounds(100, 100, 869, 654);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(SystemColor.activeCaption);
 		contentPanel.setBorder(null);
@@ -100,7 +136,7 @@ public class FrmDetComp extends JDialog implements ActionListener {
 		
 		panel = new JPanel();
 		panel.setBackground(SystemColor.control);
-		panel.setBounds(7, 6, 322, 254);
+		panel.setBounds(7, 6, 322, 263);
 		panel.setBorder(new TitledBorder(null, "Pedido", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(59, 59, 59)));
 		contentPanel.add(panel);
 		panel.setLayout(null);
@@ -117,12 +153,12 @@ public class FrmDetComp extends JDialog implements ActionListener {
 		lblCdigo.setFont(new Font("Serif", Font.BOLD, 14));
 		panel.add(lblCdigo);
 		
-		textField_1 = new JTextField();
-		textField_1.setBackground(SystemColor.control);
-		textField_1.setEditable(false);
-		textField_1.setBounds(114, 111, 122, 28);
-		panel.add(textField_1);
-		textField_1.setColumns(10);
+		txtCodigo = new JTextField();
+		txtCodigo.setBackground(SystemColor.control);
+		txtCodigo.setEditable(false);
+		txtCodigo.setBounds(114, 111, 122, 28);
+		panel.add(txtCodigo);
+		txtCodigo.setColumns(10);
 		
 		lblFecha = new JLabel("Fecha");
 		lblFecha.setBounds(33, 156, 50, 25);
@@ -130,17 +166,17 @@ public class FrmDetComp extends JDialog implements ActionListener {
 		lblFecha.setFont(new Font("Serif", Font.BOLD, 14));
 		panel.add(lblFecha);
 		
-		datePicker = new DatePicker();
-		datePicker.setBackground(SystemColor.control);
-		datePicker.setBounds(114, 155, 152, 28);
-		datePicker.setEnabled(false);
-		datePicker.getComponentToggleCalendarButton().setPreferredSize(new Dimension(41, 28));
-		datePicker.getComponentDateTextField().setPreferredSize(new Dimension(159, 25));
-		datePicker.getComponentToggleCalendarButton().setBounds(98, -2, 41, 28);
-		datePicker.getComponentDateTextField().setBounds(0, 0, 100, 25);
-		datePicker.setPreferredSize(new Dimension(203, 28));
-		panel.add(datePicker);
-		datePicker.setLayout(null);
+		dpFecha = new DatePicker();
+		dpFecha.setBackground(SystemColor.control);
+		dpFecha.setBounds(114, 155, 152, 28);
+		dpFecha.setEnabled(false);
+		dpFecha.getComponentToggleCalendarButton().setPreferredSize(new Dimension(41, 28));
+		dpFecha.getComponentDateTextField().setPreferredSize(new Dimension(159, 25));
+		dpFecha.getComponentToggleCalendarButton().setBounds(98, -2, 41, 28);
+		dpFecha.getComponentDateTextField().setBounds(0, 0, 100, 25);
+		dpFecha.setPreferredSize(new Dimension(203, 28));
+		panel.add(dpFecha);
+		dpFecha.setLayout(null);
 		
 		lblRuc = new JLabel("R.U.C. : 0000000000");
 		lblRuc.setBounds(31, 53, 249, 50);
@@ -154,16 +190,16 @@ public class FrmDetComp extends JDialog implements ActionListener {
 		lblVendedor.setFont(new Font("Serif", Font.BOLD, 14));
 		panel.add(lblVendedor);
 		
-		textField_8 = new JTextField();
-		textField_8.setBackground(SystemColor.control);
-		textField_8.setEditable(false);
-		textField_8.setBounds(114, 204, 191, 28);
-		panel.add(textField_8);
-		textField_8.setColumns(15);
+		txtTrab = new JTextField();
+		txtTrab.setBackground(SystemColor.control);
+		txtTrab.setEditable(false);
+		txtTrab.setBounds(114, 204, 191, 28);
+		panel.add(txtTrab);
+		txtTrab.setColumns(15);
 		
 		panel_1 = new JPanel();
 		panel_1.setBackground(SystemColor.control);
-		panel_1.setBounds(332, 7, 525, 117);
+		panel_1.setBounds(332, 6, 525, 118);
 		panel_1.setBorder(new TitledBorder(null, "Proveedor", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(59, 59, 59)));
 		contentPanel.add(panel_1);
 		panel_1.setLayout(null);
@@ -174,12 +210,12 @@ public class FrmDetComp extends JDialog implements ActionListener {
 		lblDni.setPreferredSize(new Dimension(50, 16));
 		panel_1.add(lblDni);
 		
-		textField_2 = new JTextField();
-		textField_2.setBackground(SystemColor.control);
-		textField_2.setEditable(false);
-		textField_2.setBounds(110, 26, 122, 28);
-		panel_1.add(textField_2);
-		textField_2.setColumns(10);
+		txtProvCod = new JTextField();
+		txtProvCod.setBackground(SystemColor.control);
+		txtProvCod.setEditable(false);
+		txtProvCod.setBounds(110, 26, 99, 28);
+		panel_1.add(txtProvCod);
+		txtProvCod.setColumns(10);
 		
 		lblNombre = new JLabel("Raz\u00F3n social");
 		lblNombre.setBounds(21, 75, 77, 19);
@@ -187,52 +223,53 @@ public class FrmDetComp extends JDialog implements ActionListener {
 		lblNombre.setPreferredSize(new Dimension(50, 16));
 		panel_1.add(lblNombre);
 		
-		button = new JButton("...");
-		button.setBounds(244, 26, 37, 28);
-		panel_1.add(button);
+		btnBucarProv = new JButton("...");
+		btnBucarProv.addActionListener(this);
+		btnBucarProv.setBounds(208, 26, 37, 28);
+		panel_1.add(btnBucarProv);
 		
 		lblTelfono = new JLabel("Tel\u00E9fono");
-		lblTelfono.setBounds(343, 75, 50, 19);
+		lblTelfono.setBounds(330, 75, 50, 19);
 		lblTelfono.setFont(new Font("Serif", Font.PLAIN, 14));
 		lblTelfono.setPreferredSize(new Dimension(50, 16));
 		panel_1.add(lblTelfono);
 		
-		textField_3 = new JTextField();
-		textField_3.setBackground(SystemColor.control);
-		textField_3.setEditable(false);
-		textField_3.setBounds(110, 71, 187, 28);
-		panel_1.add(textField_3);
-		textField_3.setColumns(20);
+		txtProvRZ = new JTextField();
+		txtProvRZ.setBackground(SystemColor.control);
+		txtProvRZ.setEditable(false);
+		txtProvRZ.setBounds(110, 71, 208, 28);
+		panel_1.add(txtProvRZ);
+		txtProvRZ.setColumns(20);
 		
-		textField_4 = new JTextField();
-		textField_4.setBackground(SystemColor.control);
-		textField_4.setEditable(false);
-		textField_4.setBounds(405, 71, 106, 28);
-		panel_1.add(textField_4);
-		textField_4.setColumns(10);
+		txtProvTel = new JTextField();
+		txtProvTel.setBackground(SystemColor.control);
+		txtProvTel.setEditable(false);
+		txtProvTel.setBounds(392, 71, 119, 28);
+		panel_1.add(txtProvTel);
+		txtProvTel.setColumns(10);
 		
 		lblDireccin = new JLabel("Direcci\u00F3n");
 		lblDireccin.setPreferredSize(new Dimension(50, 16));
 		lblDireccin.setFont(new Font("Serif", Font.PLAIN, 14));
-		lblDireccin.setBounds(293, 30, 66, 19);
+		lblDireccin.setBounds(257, 30, 66, 19);
 		panel_1.add(lblDireccin);
 		
-		textField_11 = new JTextField();
-		textField_11.setEditable(false);
-		textField_11.setColumns(10);
-		textField_11.setBackground(SystemColor.menu);
-		textField_11.setBounds(371, 26, 140, 28);
-		panel_1.add(textField_11);
+		txtProvDir = new JTextField();
+		txtProvDir.setEditable(false);
+		txtProvDir.setColumns(10);
+		txtProvDir.setBackground(SystemColor.menu);
+		txtProvDir.setBounds(324, 26, 187, 28);
+		panel_1.add(txtProvDir);
 		
 		panel_3 = new JPanel();
 		panel_3.setBackground(SystemColor.control);
-		panel_3.setBounds(7, 267, 850, 335);
+		panel_3.setBounds(7, 274, 850, 345);
 		contentPanel.add(panel_3);
 		panel_3.setLayout(null);
 		
 		panel_4 = new JPanel();
 		panel_4.setBackground(SystemColor.control);
-		panel_4.setBounds(7, 7, 621, 286);
+		panel_4.setBounds(7, 7, 621, 262);
 		panel_4.setBorder(new TitledBorder(null, "Detalle", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel_3.add(panel_4);
 		panel_4.setLayout(new BorderLayout(0, 0));
@@ -247,11 +284,12 @@ public class FrmDetComp extends JDialog implements ActionListener {
 		panel_5 = new JPanel();
 		panel_5.setBackground(SystemColor.control);
 		panel_5.setBorder(new LineBorder(new Color(180, 180, 180), 2));
-		panel_5.setBounds(640, 16, 200, 254);
+		panel_5.setBounds(640, 7, 200, 254);
 		panel_3.add(panel_5);
 		panel_5.setLayout(null);
 		
 		btnEliminarProducto = new JButton("Eliminar detalle");
+		btnEliminarProducto.addActionListener(this);
 		btnEliminarProducto.setBackground(new Color(75, 0, 130));
 		btnEliminarProducto.setForeground(Color.WHITE);
 		btnEliminarProducto.setFont(new Font("Serif", Font.BOLD, 14));
@@ -265,41 +303,63 @@ public class FrmDetComp extends JDialog implements ActionListener {
 		btnModificarDetalle.setBounds(34, 52, 141, 35);
 		panel_5.add(btnModificarDetalle);
 		
-		btnCancelarDetalle = new JButton("Cancelar pedido");
-		btnCancelarDetalle.setBackground(new Color(75, 0, 130));
-		btnCancelarDetalle.setForeground(Color.WHITE);
-		btnCancelarDetalle.setFont(new Font("Serif", Font.BOLD, 14));
-		btnCancelarDetalle.setBounds(34, 160, 141, 35);
-		panel_5.add(btnCancelarDetalle);
+		btnCancelarPedido = new JButton("Cancelar pedido");
+		btnCancelarPedido.addActionListener(this);
+		btnCancelarPedido.setBackground(new Color(75, 0, 130));
+		btnCancelarPedido.setForeground(Color.WHITE);
+		btnCancelarPedido.setFont(new Font("Serif", Font.BOLD, 14));
+		btnCancelarPedido.setBounds(34, 160, 141, 35);
+		panel_5.add(btnCancelarPedido);
 		
-		btnRegistrarDetalle = new JButton("Registrar pedido");
-		btnRegistrarDetalle.setBackground(new Color(75, 0, 130));
-		btnRegistrarDetalle.setForeground(Color.WHITE);
-		btnRegistrarDetalle.setFont(new Font("Serif", Font.BOLD, 14));
-		btnRegistrarDetalle.setBounds(34, 120, 141, 35);
-		panel_5.add(btnRegistrarDetalle);
+		btnRegistrarPedido = new JButton("Registrar pedido");
+		btnRegistrarPedido.addActionListener(this);
+		btnRegistrarPedido.setBackground(new Color(75, 0, 130));
+		btnRegistrarPedido.setForeground(Color.WHITE);
+		btnRegistrarPedido.setFont(new Font("Serif", Font.BOLD, 14));
+		btnRegistrarPedido.setBounds(34, 120, 141, 35);
+		panel_5.add(btnRegistrarPedido);
 		
-		btnImprimirVenta = new JButton("Imprimir pedido");
-		btnImprimirVenta.setBackground(new Color(75, 0, 130));
-		btnImprimirVenta.setForeground(Color.WHITE);
-		btnImprimirVenta.setFont(new Font("Serif", Font.BOLD, 14));
-		btnImprimirVenta.setBounds(34, 198, 141, 35);
-		panel_5.add(btnImprimirVenta);
+		btnImprimirPedido = new JButton("Imprimir pedido");
+		btnImprimirPedido.setBackground(new Color(75, 0, 130));
+		btnImprimirPedido.setForeground(Color.WHITE);
+		btnImprimirPedido.setFont(new Font("Serif", Font.BOLD, 14));
+		btnImprimirPedido.setBounds(34, 198, 141, 35);
+		panel_5.add(btnImprimirPedido);
 		
 		lblTotal = new JLabel("Total S/. ");
-		lblTotal.setBounds(439, 299, 55, 19);
+		lblTotal.setBounds(408, 318, 86, 19);
 		lblTotal.setFont(new Font("Serif", Font.BOLD, 14));
 		panel_3.add(lblTotal);
 		
-		textField = new JTextField();
-		textField.setBounds(506, 295, 122, 28);
-		panel_3.add(textField);
-		textField.setColumns(10);
+		txtTotal = new JTextField();
+		txtTotal.setBounds(506, 314, 122, 25);
+		panel_3.add(txtTotal);
+		txtTotal.setColumns(10);
+		
+		txtSubtotal = new JTextField();
+		txtSubtotal.setColumns(10);
+		txtSubtotal.setBounds(256, 281, 122, 25);
+		panel_3.add(txtSubtotal);
+		
+		lblSubtotalS = new JLabel("Subtotal S/. ");
+		lblSubtotalS.setFont(new Font("Serif", Font.BOLD, 14));
+		lblSubtotalS.setBounds(158, 285, 86, 19);
+		panel_3.add(lblSubtotalS);
+		
+		lblIgvs = new JLabel("IGV S/. ");
+		lblIgvs.setFont(new Font("Serif", Font.BOLD, 14));
+		lblIgvs.setBounds(408, 285, 86, 19);
+		panel_3.add(lblIgvs);
+		
+		txtIgv = new JTextField();
+		txtIgv.setColumns(10);
+		txtIgv.setBounds(506, 281, 122, 25);
+		panel_3.add(txtIgv);
 		
 		panel_2 = new JPanel();
 		panel_2.setBackground(SystemColor.control);
 		panel_2.setBorder(new TitledBorder(null, "Producto", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(59, 59, 59)));
-		panel_2.setBounds(334, 128, 523, 132);
+		panel_2.setBounds(334, 128, 523, 141);
 		contentPanel.add(panel_2);
 		panel_2.setLayout(null);
 		
@@ -309,54 +369,220 @@ public class FrmDetComp extends JDialog implements ActionListener {
 		lblProducto.setBounds(18, 34, 74, 19);
 		panel_2.add(lblProducto);
 		
-		textField_5 = new JTextField();
-		textField_5.setBackground(SystemColor.control);
-		textField_5.setEditable(false);
-		textField_5.setColumns(10);
-		textField_5.setBounds(82, 30, 146, 28);
-		panel_2.add(textField_5);
+		txtProdDesc = new JTextField();
+		txtProdDesc.setBackground(SystemColor.control);
+		txtProdDesc.setEditable(false);
+		txtProdDesc.setColumns(10);
+		txtProdDesc.setBounds(82, 30, 355, 28);
+		panel_2.add(txtProdDesc);
 		
-		button_1 = new JButton("...");
-		button_1.setBounds(227, 30, 37, 28);
-		panel_2.add(button_1);
+		btnBuscarProd = new JButton("...");
+		btnBuscarProd.addActionListener(this);
+		btnBuscarProd.setBounds(449, 30, 37, 28);
+		panel_2.add(btnBuscarProd);
 		
 		lblPrecio = new JLabel("Precio");
 		lblPrecio.setPreferredSize(new Dimension(50, 16));
 		lblPrecio.setFont(new Font("Serif", Font.PLAIN, 14));
-		lblPrecio.setBounds(332, 34, 74, 19);
+		lblPrecio.setBounds(209, 69, 74, 19);
 		panel_2.add(lblPrecio);
 		
-		textField_6 = new JTextField();
-		textField_6.setBackground(SystemColor.control);
-		textField_6.setEditable(false);
-		textField_6.setColumns(10);
-		textField_6.setBounds(387, 30, 99, 28);
-		panel_2.add(textField_6);
+		txtProdPrecio = new JTextField();
+		txtProdPrecio.setBackground(SystemColor.control);
+		txtProdPrecio.setEditable(false);
+		txtProdPrecio.setColumns(10);
+		txtProdPrecio.setBounds(264, 65, 99, 28);
+		panel_2.add(txtProdPrecio);
 		
 		btnAgregar = new JButton("Agregar");
 		btnAgregar.addActionListener(this);
 		btnAgregar.setForeground(new Color(255, 255, 255));
 		btnAgregar.setFont(new Font("Serif", Font.BOLD, 14));
 		btnAgregar.setBackground(new Color(128, 128, 0));
-		btnAgregar.setBounds(260, 74, 105, 30);
+		btnAgregar.setBounds(375, 94, 105, 30);
 		panel_2.add(btnAgregar);
 		
 		lblCantidad = new JLabel("Cantidad");
 		lblCantidad.setPreferredSize(new Dimension(50, 16));
 		lblCantidad.setFont(new Font("Serif", Font.PLAIN, 14));
-		lblCantidad.setBounds(18, 80, 74, 19);
+		lblCantidad.setBounds(18, 105, 74, 19);
 		panel_2.add(lblCantidad);
 		
-		textField_10 = new JTextField();
-		textField_10.setColumns(10);
-		textField_10.setBounds(82, 76, 90, 28);
-		panel_2.add(textField_10);
+		txtProdCant = new JTextField();
+		txtProdCant.setColumns(10);
+		txtProdCant.setBounds(82, 100, 99, 28);
+		panel_2.add(txtProdCant);
+		
+		txtProdStock = new JTextField();
+		txtProdStock.setEditable(false);
+		txtProdStock.setColumns(10);
+		txtProdStock.setBackground(SystemColor.menu);
+		txtProdStock.setBounds(82, 65, 99, 28);
+		panel_2.add(txtProdStock);
+		
+		lblStock = new JLabel("Stock");
+		lblStock.setPreferredSize(new Dimension(50, 16));
+		lblStock.setFont(new Font("Serif", Font.PLAIN, 14));
+		lblStock.setBounds(18, 69, 74, 19);
+		panel_2.add(lblStock);
+		
+		modelo = new DetCompraTableModel();
+		tblDetalle.setModel(modelo);
+		
+		txtCodigo.setText(nComp.nextCod());
+		dpFecha.setDate(LocalDate.now());
+		
+		miInit();
 	}
+	
+	public FrmDetComp(Compra comp){
+		this();
+		operacion = 1;
+		this.comp = comp;
+		txtCodigo.setText(comp.getId());
+		dpFecha.setDate(comp.getFecha());
+		txtTrab.setText(comp.getTrab().getNombre() + " " + comp.getTrab().getApellido());
+		modelo.setData(nDet.getDetallesByVenta(comp.getId()));
+		CargarProveedor(comp.getProv());
+		txtSubtotal.setText(comunes.formatDouble(comp.getSubtotal()));
+		txtIgv.setText(comunes.formatDouble(comp.MontoIGV()));
+		txtTotal.setText(comunes.formatDouble(comp.getCalcTotal()));
+	}
+	
+	private void miInit() {
+		
+		tblDetalle.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				if (!tblDetalle.getSelectionModel().isSelectionEmpty()) {
+					int fila = tblDetalle.getSelectedRow();
+					DetCompra det = modelo.getDetCompra(fila);
+					CargarProducto(nProd.getProductoByID(det.getProd().getID()));
+					txtProdPrecio.setText(comunes.formatDouble(det.getPrecio()));
+					txtProdCant.setText(det.getCant() + "");
+				}
+
+			}
+		});
+		
+		if (FrmPrincipal.currentUser != null){
+			txtTrab.setText(FrmPrincipal.currentUser.getNombre() + " " + FrmPrincipal.currentUser.getApellido());
+		}
+		
+		this.comp.setId(txtCodigo.getText());
+	}
+	
+	public void CargarProducto(Producto prod) {
+		this.prod = prod;
+		txtProdDesc.setText(this.prod.getDescripcion());
+		txtProdPrecio.setText(comunes.formatDouble(this.prod.getPreCompra()));
+		txtProdStock.setText(this.prod.getStockAcual() + "");
+	}
+	
+	public void CargarProveedor(Proveedor prov){
+		this.prov = prov;
+		txtProvCod.setText(this.prov.getID());
+		txtProvDir.setText(this.prov.getDireccion());
+		txtProvRZ.setText(this.prov.getRaz_Soc());
+		txtProvTel.setText(this.prov.getTelf());
+		
+	}
+	
+	private void LimpiarProd() {
+		txtProdDesc.setText("");
+		txtProdPrecio.setText("");
+		txtProdCant.setText("");
+		txtProdStock.setText("");
+		this.prod = null;
+	}
+	
+	public void CalcularTotales(){
+		ArrayList<DetCompra> lista = modelo.getData();
+		double subtotal = 0;
+		for(DetCompra item : lista){
+			subtotal += item.CalcSubtotal();
+		}
+		this.comp.setSubtotal(subtotal);
+		txtSubtotal.setText(comunes.formatDouble(this.comp.getSubtotal()));
+		txtIgv.setText(comunes.formatDouble(comp.MontoIGV()));
+		txtTotal.setText(comunes.formatDouble(comp.getCalcTotal()));
+	}
+	
 	public void actionPerformed(ActionEvent arg0) {
+		if (arg0.getSource() == btnRegistrarPedido) {
+			actionPerformedBtnRegistrarPedido(arg0);
+		}
+		if (arg0.getSource() == btnBucarProv) {
+			actionPerformedBtnBucarProv(arg0);
+		}
+		if (arg0.getSource() == btnBuscarProd) {
+			actionPerformedBtnBuscarProd(arg0);
+		}
+		if (arg0.getSource() == btnEliminarProducto) {
+			actionPerformedBtnEliminarProducto(arg0);
+		}
+		if (arg0.getSource() == btnCancelarPedido) {
+			actionPerformedBtnCancelarPedido(arg0);
+		}
 		if (arg0.getSource() == btnAgregar) {
 			actionPerformedBtnAgregar(arg0);
 		}
 	}
 	protected void actionPerformedBtnAgregar(ActionEvent arg0) {
+		DetCompra det = new DetCompra();
+		det.setCodCompra(this.comp.getId());
+		det.setProd(this.prod);
+		det.setCant(Integer.parseInt(txtProdCant.getText()));
+		det.setPrecio(this.prod.getPreCompra());
+
+		if (modelo.ExisteDetalle(det)) {
+			modelo.updateDetCompra(modelo.PosicionDetProd(det), det);
+			
+		} else {
+			modelo.addDetCompra(det);
+			LimpiarProd();
+		}
+		CalcularTotales();
+	}
+	protected void actionPerformedBtnCancelarPedido(ActionEvent arg0) {
+		this.dispose();
+	}
+	protected void actionPerformedBtnEliminarProducto(ActionEvent arg0) {
+		if (!tblDetalle.getSelectionModel().isSelectionEmpty()) {
+			int fila = tblDetalle.getSelectedRow();
+			DetCompra det = modelo.getDetCompra(fila);
+			modelo.deleteDetCompra(fila);
+			CalcularTotales();
+
+		} else {
+			JOptionPane.showMessageDialog(this, "Debe selecionar un registro para realizar esta operación",
+					"Selección Errónea", JOptionPane.WARNING_MESSAGE);
+		}
+	}
+	protected void actionPerformedBtnBuscarProd(ActionEvent arg0) {
+		FrmBProducto bProd = new FrmBProducto(this);
+		bProd.setVisible(true);
+	}
+	protected void actionPerformedBtnBucarProv(ActionEvent arg0) {
+		FrmBProveedor bProv = new FrmBProveedor(this);
+		bProv.setVisible(true);
+	}
+	protected void actionPerformedBtnRegistrarPedido(ActionEvent arg0) {
+		this.comp.setProv(prov);
+		comp.setFecha(dpFecha.getDate());
+		comp.setIGV(0.18);
+		CalcularTotales();
+		if(operacion == 0){
+			this.comp.setTrab(FrmPrincipal.currentUser);
+			nComp.InsertarCompra(comp, modelo.getData());
+			JOptionPane.showMessageDialog(this, "Pedido Registrado");
+			this.dispose();
+		}
+		else if (operacion == 1){
+			nComp.ModificarCompra(comp, modelo.getData());
+			JOptionPane.showMessageDialog(this, "Pedido Modificado");
+			this.dispose();
+		}
 	}
 }

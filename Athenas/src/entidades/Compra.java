@@ -17,6 +17,8 @@ public class Compra {
 	public Compra(){
 		prov = new Proveedor();
 		trab = new Trabajador();
+		estado = 0;
+		IGV = 0.18;
 	}
 	
 	public Compra(String id, Proveedor prov, Trabajador trab, LocalDate fecha, double iGV, int estado) {

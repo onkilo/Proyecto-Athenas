@@ -541,8 +541,7 @@ public class FrmCliente extends JInternalFrame implements KeyListener, ActionLis
 
 	protected void actionPerformedBtnImprimir(ActionEvent arg0) {
 		try {
-			JasperPrint jp = JasperFillManager.fillReport("src/reportes/ListaClientes.jasper", null,
-					Conexion.Conectar());
+			JasperPrint jp = JasperFillManager.fillReport("src/reportes/ListaClientes.jasper", null, Conexion.Conectar());
 			JasperViewer jv = new JasperViewer(jp, false);
 			jv.setTitle("Lista de clientes");
 			jv.setVisible(true);

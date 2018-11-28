@@ -9,9 +9,16 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import net.miginfocom.swing.MigLayout;
+import util.ProveedorTableModel;
+
 import java.awt.SystemColor;
 import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
+
+import entidades.Cliente;
+import entidades.Proveedor;
+import negocio.NegocioProveedor;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JRadioButton;
@@ -19,11 +26,18 @@ import java.awt.Font;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import java.awt.Color;
+import java.awt.event.KeyListener;
+import java.util.ArrayList;
+import java.awt.event.KeyEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
 
-public class FrmBProveedor extends JDialog {
+public class FrmBProveedor extends JDialog implements KeyListener, ActionListener, MouseListener {
 
 	private final JPanel contentPanel = new JPanel();
-	private JTextField textField;
+	private JTextField txtBuscar;
 	private JTable tblProveedor;
 
 	private ButtonGroup btnG;
@@ -32,6 +46,9 @@ public class FrmBProveedor extends JDialog {
 	private JButton btnResetear;
 	private JLabel lblBuscar;
 	private JScrollPane scrollPane;
+	private ProveedorTableModel modelo;
+	private NegocioProveedor nProv = new NegocioProveedor();
+	private FrmDetComp vent;
 
 	/**
 	 * Launch the application.
@@ -68,11 +85,13 @@ public class FrmBProveedor extends JDialog {
 		lblBuscar = new JLabel("Buscar");
 		contentPanel.add(lblBuscar, "cell 0 0,alignx center");
 
-		textField = new JTextField();
-		contentPanel.add(textField, "cell 1 0,alignx leading");
-		textField.setColumns(20);
+		txtBuscar = new JTextField();
+		txtBuscar.addKeyListener(this);
+		contentPanel.add(txtBuscar, "cell 1 0,alignx leading");
+		txtBuscar.setColumns(20);
 
 		btnResetear = new JButton("Resetear");
+		btnResetear.addActionListener(this);
 		btnResetear.setFont(new Font("Serif", Font.BOLD, 14));
 		btnResetear.setForeground(new Color(255, 255, 255));
 		btnResetear.setBackground(new Color(128, 128, 0));
@@ -101,7 +120,11 @@ public class FrmBProveedor extends JDialog {
 		panel.add(scrollPane, BorderLayout.CENTER);
 
 		tblProveedor = new JTable();
+		tblProveedor.addMouseListener(this);
 		scrollPane.setViewportView(tblProveedor);
+		
+		modelo = new ProveedorTableModel();
+		tblProveedor.setModel(modelo);
 		
 		btnG = new ButtonGroup();
 		btnG.add(rdbtPorRazon);
@@ -109,5 +132,63 @@ public class FrmBProveedor extends JDialog {
 		
 		rdbtPorCodigo.setSelected(true);
 	}
+	
+	public FrmBProveedor(FrmDetComp vent){
+		this();
+		this.vent = vent;
+		setLocationRelativeTo(this.vent);
+		modelo.setData(nProv.Listar());
+	}
 
+	public void keyPressed(KeyEvent arg0) {
+	}
+	public void keyReleased(KeyEvent e) {
+		if (e.getSource() == txtBuscar) {
+			keyReleasedTextField(e);
+		}
+	}
+	public void keyTyped(KeyEvent e) {
+	}
+	protected void keyReleasedTextField(KeyEvent e) {
+		ArrayList<Proveedor> busqueda = new ArrayList<Proveedor>();
+		String patron = txtBuscar.getText();
+		if (rdbtPorCodigo.isSelected()) {
+			busqueda = nProv.getProveedoresByID(patron);
+		} else if (rdbtPorRazon.isSelected()) {
+			busqueda = nProv.getProveedoresByRzSocial(patron);
+		}
+		modelo.setData(busqueda);
+	}
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnResetear) {
+			actionPerformedBtnResetear(e);
+		}
+	}
+	protected void actionPerformedBtnResetear(ActionEvent e) {
+		txtBuscar.setText("");
+		modelo.setData(nProv.Listar());
+	}
+	public void mouseClicked(MouseEvent arg0) {
+		if (arg0.getSource() == tblProveedor) {
+			mouseClickedTblProveedor(arg0);
+		}
+	}
+	public void mouseEntered(MouseEvent arg0) {
+	}
+	public void mouseExited(MouseEvent arg0) {
+	}
+	public void mousePressed(MouseEvent arg0) {
+	}
+	public void mouseReleased(MouseEvent arg0) {
+	}
+	protected void mouseClickedTblProveedor(MouseEvent e) {
+		if(e.getClickCount() ==2){
+			if(this.vent != null){
+				int fila = tblProveedor.getSelectedRow();
+				Proveedor prov = modelo.getProveedor(fila);
+				this.vent.CargarProveedor(prov);
+				this.dispose();
+			}
+		}
+	}
 }

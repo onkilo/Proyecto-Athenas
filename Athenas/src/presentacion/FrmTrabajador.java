@@ -5,6 +5,9 @@ import java.awt.EventQueue;
 import javax.swing.JInternalFrame;
 import java.awt.Color;
 import net.miginfocom.swing.MigLayout;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
 import util.TrabajadorTableModel;
 
 import javax.swing.JPanel;
@@ -13,6 +16,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
+import conexion.Conexion;
 import entidades.Proveedor;
 import entidades.Trabajador;
 import negocio.NegocioTrabajador;
@@ -368,6 +372,7 @@ public class FrmTrabajador extends JInternalFrame implements KeyListener, Action
 		tblTrabajador.setModel(modelo);
 		
 		btnImprimir = new JButton("");
+		btnImprimir.addActionListener(this);
 		btnImprimir.setIcon(new ImageIcon(FrmTrabajador.class.getResource("/img/icon-imprimir-white.png")));
 		panel_1.add(btnImprimir, "cell 2 3,alignx trailing");
 		btnImprimir.setFont(new Font("SansSerif", Font.BOLD, 12));
@@ -505,6 +510,9 @@ public class FrmTrabajador extends JInternalFrame implements KeyListener, Action
 		modelo.setData(busqueda);
 	}
 	public void actionPerformed(ActionEvent arg0) {
+		if (arg0.getSource() == btnImprimir) {
+			actionPerformedBtnImprimir(arg0);
+		}
 		if (arg0.getSource() == btnEliminar) {
 			actionPerformedBtnEliminar(arg0);
 		}
@@ -591,6 +599,18 @@ public class FrmTrabajador extends JInternalFrame implements KeyListener, Action
 		} else {
 			JOptionPane.showInternalMessageDialog(this, "Debe seleccionar un registro para realzar esta acción",
 					"Advertencia", JOptionPane.WARNING_MESSAGE);
+		}
+	}
+	protected void actionPerformedBtnImprimir(ActionEvent arg0) {
+		try {
+			JasperPrint jp = JasperFillManager.fillReport("src/reportes/ListaTrabajadores.jasper", null, Conexion.Conectar());
+			JasperViewer jv = new JasperViewer(jp, false);
+			jv.setTitle("Lista de clientes");
+			jv.setVisible(true);
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
 		}
 	}
 }

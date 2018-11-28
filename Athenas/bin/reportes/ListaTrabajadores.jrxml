@@ -55,10 +55,10 @@ FROM dbo."Trabajador"]]>
 		<property name="com.jaspersoft.studio.field.label" value="Rol"/>
 	</field>
 	<variable name="NombreCompleto" class="java.lang.String">
-		<variableExpression><![CDATA[CONCATENATE($F{Nombre}, " ", $F{Apellido} )]]></variableExpression>
+		<variableExpression><![CDATA[($F{Nombre}+ " "+ $F{Apellido} )]]></variableExpression>
 	</variable>
 	<variable name="SexDes" class="java.lang.String">
-		<variableExpression><![CDATA[IF(EQUALS($F{Sexo}, "F"), "Femenino", "Masculino" )]]></variableExpression>
+		<variableExpression><![CDATA[($F{Sexo}.equalsIgnoreCase("F")? "Femenino":"Masculino" )]]></variableExpression>
 	</variable>
 	<background>
 		<band splitType="Stretch"/>
@@ -70,11 +70,11 @@ FROM dbo."Trabajador"]]>
 			</rectangle>
 			<staticText>
 				<reportElement x="-10" y="0" width="555" height="60" forecolor="#FFFFFF" uuid="05d3ff6e-bd70-47ae-a16a-4d58855d307a"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font fontName="Serif" size="26"/>
 					<paragraph leftIndent="20"/>
 				</textElement>
-				<text><![CDATA[Todas las promociones]]></text>
+				<text><![CDATA[Trabajadores en nómina]]></text>
 			</staticText>
 		</band>
 	</title>

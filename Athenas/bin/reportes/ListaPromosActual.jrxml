@@ -48,13 +48,13 @@ WHERE
 		<property name="com.jaspersoft.studio.field.label" value="FecFin"/>
 	</field>
 	<variable name="TipoDesc" class="java.lang.String">
-		<variableExpression><![CDATA[IF($F{Tipo} == 0,"Fijo", "Porcentual")]]></variableExpression>
+		<variableExpression><![CDATA[($F{Tipo} == 0 ? "Fijo": "Porcentual")]]></variableExpression>
 	</variable>
 	<variable name="FechIniFormat" class="java.lang.String">
-		<variableExpression><![CDATA[DATEFORMAT($F{FecIni}, "dd/MM/yyyy")]]></variableExpression>
+		<variableExpression><![CDATA[(new SimpleDateFormat("dd/MM/yyyy").format($F{FecIni}))]]></variableExpression>
 	</variable>
 	<variable name="FechFinFormat" class="java.lang.String">
-		<variableExpression><![CDATA[DATEFORMAT($F{FecFin}, "dd/MM/yyyy" )]]></variableExpression>
+		<variableExpression><![CDATA[(new SimpleDateFormat("dd/MM/yyyy").format($F{FecFin}))]]></variableExpression>
 	</variable>
 	<background>
 		<band splitType="Stretch"/>

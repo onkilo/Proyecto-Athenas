@@ -5,6 +5,9 @@ import java.awt.EventQueue;
 import javax.swing.JInternalFrame;
 import java.awt.Color;
 import net.miginfocom.swing.MigLayout;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
 import util.PromoTableModel;
 
 import javax.swing.JPanel;
@@ -33,6 +36,7 @@ import javax.swing.JRadioButton;
 import javax.swing.SwingConstants;
 import com.github.lgooddatepicker.components.DatePicker;
 
+import conexion.Conexion;
 import entidades.Producto;
 import entidades.Promo;
 import negocio.NegocioPromo;
@@ -357,6 +361,7 @@ public class FrmPromo extends JInternalFrame implements MouseListener, ActionLis
 		panel_7.add(rdbtnVencidas, "cell 2 0,alignx center");
 		
 		btnImprimir = new JButton("");
+		btnImprimir.addActionListener(this);
 		btnImprimir.setIcon(new ImageIcon(FrmPromo.class.getResource("/img/icon-imprimir-white.png")));
 		panel_1.add(btnImprimir, "cell 2 3,alignx trailing");
 		btnImprimir.setFont(new Font("SansSerif", Font.BOLD, 12));
@@ -497,6 +502,9 @@ public class FrmPromo extends JInternalFrame implements MouseListener, ActionLis
 		modelo.setData(busqueda);
 	}
 	public void actionPerformed(ActionEvent arg0) {
+		if (arg0.getSource() == btnImprimir) {
+			actionPerformedBtnImprimir(arg0);
+		}
 		if (arg0.getSource() == rdbtnVencidas) {
 			actionPerformedRdbtnVencidas(arg0);
 		}
@@ -608,5 +616,27 @@ public class FrmPromo extends JInternalFrame implements MouseListener, ActionLis
 	}
 	protected void actionPerformedRdbtnVencidas(ActionEvent arg0) {
 		DecideListado();
+	}
+	protected void actionPerformedBtnImprimir(ActionEvent arg0) {
+		try {
+			String reporte = "";
+			if(rdbtnActuales.isSelected()){
+				reporte = "src/reportes/ListaPromosActual.jasper";
+			}
+			else if (rdbtnVencidas.isSelected()){
+				reporte = "src/reportes/ListaPromosVencidas.jasper";
+			}
+			else if (rdbtnTodas.isSelected()){
+				reporte = "src/reportes/ListaPromos.jasper";
+			}
+			JasperPrint jp = JasperFillManager.fillReport(reporte, null, Conexion.Conectar());
+			JasperViewer jv = new JasperViewer(jp, false);
+			jv.setTitle("Lista de clientes");
+			jv.setVisible(true);
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
 	}
 }
