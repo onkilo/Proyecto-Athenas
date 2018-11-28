@@ -442,7 +442,6 @@ public class FrmProducto extends JInternalFrame implements KeyListener, ActionLi
 		txtStockActual.setEnabled(estado);
 		txtStockMin.setEnabled(estado);
 		cboCategoria.setEnabled(estado);
-		lblImg.setEnabled(estado);
 		btnBuscarImg.setEnabled(estado);
 
 		btnBuscarImg.setEnabled(estado);
@@ -458,6 +457,7 @@ public class FrmProducto extends JInternalFrame implements KeyListener, ActionLi
 		txtStockActual.setText("");
 		txtStockMin.setText("");
 		lblImg.setText("");
+		lblImg.setIcon(null);
 		txtImg.setText("");
 		cboCategoria.setSelectedIndex(0);
 

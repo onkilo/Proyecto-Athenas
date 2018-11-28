@@ -9,9 +9,12 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
 import javax.swing.event.ChangeListener;
@@ -43,11 +46,11 @@ public class FrmPrincipal extends JFrame implements ActionListener, ChangeListen
 	private JMenuItem mntmCompras;
 	private JMenuItem mntmTrabajadores;
 	private JDesktopPane pnEscritorio;
-	
-	//Persona logeada
+
+	// Persona logeada
 	public static Trabajador currentUser = new Trabajador();
-	
-	//Ventanas de casa opcion de menu
+
+	// Ventanas de casa opcion de menu
 	FrmProveedor prov = null;
 	FrmCliente cli = null;
 	FrmProducto prod = null;
@@ -55,6 +58,7 @@ public class FrmPrincipal extends JFrame implements ActionListener, ChangeListen
 	FrmTrabajador trab = null;
 	FrmCompras com = null;
 	FrmVentas vent = null;
+
 	/**
 	 * Launch the application.
 	 */
@@ -84,23 +88,23 @@ public class FrmPrincipal extends JFrame implements ActionListener, ChangeListen
 		setMinimumSize(new Dimension(1024, 700));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1024, 700);
-		
+
 		menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
-		
+
 		mnArhivo = new JMenu("Archivo");
 		mnArhivo.setFont(new Font("Serif", Font.PLAIN, 15));
 		mnArhivo.addChangeListener(this);
 		mnArhivo.setIcon(new ImageIcon(FrmPrincipal.class.getResource("/img/icon-archivo-black.png")));
 		menuBar.add(mnArhivo);
-		
+
 		mntmSalir = new JMenuItem("Salir");
 		mntmSalir.setFont(new Font("Serif", Font.PLAIN, 15));
 		mntmSalir.addChangeListener(this);
 		mntmSalir.setIcon(new ImageIcon(FrmPrincipal.class.getResource("/img/icon-salir-black.png")));
 		mntmSalir.addActionListener(this);
 		mnArhivo.add(mntmSalir);
-		
+
 		mntmCerrarSesin = new JMenuItem("Cerrar sesi\u00F3n");
 		mntmCerrarSesin.setFont(new Font("Serif", Font.PLAIN, 15));
 		mntmCerrarSesin.addChangeListener(this);
@@ -108,73 +112,73 @@ public class FrmPrincipal extends JFrame implements ActionListener, ChangeListen
 		mntmCerrarSesin.setIcon(new ImageIcon(FrmPrincipal.class.getResource("/img/icon-logout-black.png")));
 		mntmCerrarSesin.addActionListener(this);
 		mnArhivo.add(mntmCerrarSesin);
-		
+
 		mnMantenimiento = new JMenu("Mantenimiento");
 		mnMantenimiento.setFont(new Font("Serif", Font.PLAIN, 15));
 		mnMantenimiento.addChangeListener(this);
 		mnMantenimiento.setIcon(new ImageIcon(FrmPrincipal.class.getResource("/img/icon-mantenimiento-black.png")));
 		menuBar.add(mnMantenimiento);
-		
+
 		mntmProducto = new JMenuItem("Producto");
 		mntmProducto.addActionListener(this);
 		mntmProducto.setFont(new Font("Serif", Font.PLAIN, 15));
 		mntmProducto.addChangeListener(this);
 		mntmProducto.setIcon(new ImageIcon(FrmPrincipal.class.getResource("/img/icon-productos-black.png")));
 		mnMantenimiento.add(mntmProducto);
-		
+
 		mntmProveedor = new JMenuItem("Proveedor");
 		mntmProveedor.addActionListener(this);
 		mntmProveedor.setFont(new Font("Serif", Font.PLAIN, 15));
 		mntmProveedor.addChangeListener(this);
 		mntmProveedor.setIcon(new ImageIcon(FrmPrincipal.class.getResource("/img/icon-proveedor-black.png")));
 		mnMantenimiento.add(mntmProveedor);
-		
+
 		mntmPromocin = new JMenuItem("Promoci\u00F3n");
 		mntmPromocin.addActionListener(this);
 		mntmPromocin.setFont(new Font("Serif", Font.PLAIN, 15));
 		mntmPromocin.addChangeListener(this);
 		mntmPromocin.setIcon(new ImageIcon(FrmPrincipal.class.getResource("/img/icon-promocion-black.png")));
 		mnMantenimiento.add(mntmPromocin);
-		
+
 		mntmCliente = new JMenuItem("Cliente");
 		mntmCliente.addActionListener(this);
 		mntmCliente.setFont(new Font("Serif", Font.PLAIN, 15));
 		mntmCliente.addChangeListener(this);
 		mntmCliente.setIcon(new ImageIcon(FrmPrincipal.class.getResource("/img/icon-cliente-black.png")));
 		mnMantenimiento.add(mntmCliente);
-		
+
 		mnOperaciones = new JMenu("Operaciones");
 		mnOperaciones.setFont(new Font("Serif", Font.PLAIN, 15));
 		mnOperaciones.addChangeListener(this);
 		mnOperaciones.setIcon(new ImageIcon(FrmPrincipal.class.getResource("/img/icon-operaciones-black.png")));
 		menuBar.add(mnOperaciones);
-		
+
 		mntmVentas = new JMenuItem("Ventas");
 		mntmVentas.addActionListener(this);
 		mntmVentas.setFont(new Font("Serif", Font.PLAIN, 15));
 		mntmVentas.addChangeListener(this);
 		mntmVentas.setIcon(new ImageIcon(FrmPrincipal.class.getResource("/img/icon-venta-black.png")));
 		mnOperaciones.add(mntmVentas);
-		
+
 		mntmCompras = new JMenuItem("Compras");
 		mntmCompras.addActionListener(this);
 		mntmCompras.setFont(new Font("Serif", Font.PLAIN, 15));
 		mntmCompras.addChangeListener(this);
 		mntmCompras.setIcon(new ImageIcon(FrmPrincipal.class.getResource("/img/icon-compra-black.png")));
 		mnOperaciones.add(mntmCompras);
-		
+
 		mnReportes = new JMenu("Reportes");
 		mnReportes.setFont(new Font("Serif", Font.PLAIN, 15));
 		mnReportes.addChangeListener(this);
 		mnReportes.setIcon(new ImageIcon(FrmPrincipal.class.getResource("/img/icon-reportes-black.png")));
 		menuBar.add(mnReportes);
-		
+
 		mnAdministrador = new JMenu("Administrador");
 		mnAdministrador.setFont(new Font("Serif", Font.PLAIN, 15));
 		mnAdministrador.addChangeListener(this);
 		mnAdministrador.setIcon(new ImageIcon(FrmPrincipal.class.getResource("/img/icon-administrador-black.png")));
 		menuBar.add(mnAdministrador);
-		
+
 		mntmTrabajadores = new JMenuItem("Trabajadores");
 		mntmTrabajadores.addActionListener(this);
 		mntmTrabajadores.setFont(new Font("Serif", Font.PLAIN, 15));
@@ -185,39 +189,62 @@ public class FrmPrincipal extends JFrame implements ActionListener, ChangeListen
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
-		
+
 		pnEscritorio = new JDesktopPane();
 		pnEscritorio.setBorder(null);
 		contentPane.add(pnEscritorio, BorderLayout.CENTER);
-		
+
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
-		
+
 		Conexion.Conectar();
 		CheckPrivilegios();
+		
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowOpened(WindowEvent e) {
+				// TODO Auto-generated method stub
+				super.windowOpened(e);
+				if (FrmPrincipal.currentUser == null || currentUser.getUsuario() == null) {
+					int ingreso = JOptionPane.showConfirmDialog(null,
+							"Ha ingresado al sistema sin usar el login. \nAlgunos módulos no funcionarán correctamente\n"
+									+ " \n¿Desea ingresar usando el login?",
+							"Ingreso erróneo", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
+					
+					if(ingreso == JOptionPane.YES_OPTION){
+						getGUI().dispose();
+						FrmLogin login = new FrmLogin();
+						login.setVisible(true);
+					}
+				}
+					
+			}
+		});
+
 	}
 
-	
-	private void CambiaIcono(ChangeEvent e, String categoria){
+	private void CambiaIcono(ChangeEvent e, String categoria) {
 		JMenuItem item = (JMenuItem) e.getSource();
 		String ruta1 = "/img/icon-" + categoria + "-white.png";
-		String ruta2= "/img/icon-" + categoria + "-black.png";
-		if(item.isSelected() || item.isArmed()){
+		String ruta2 = "/img/icon-" + categoria + "-black.png";
+		if (item.isSelected() || item.isArmed()) {
 			item.setIcon(new ImageIcon(FrmPrincipal.class.getResource(ruta1)));
-		}else{
+		} else {
 			item.setIcon(new ImageIcon(FrmPrincipal.class.getResource(ruta2)));
 		}
 	}
-	
-	private void CheckPrivilegios(){
-		if(FrmPrincipal.currentUser != null && currentUser.getUsuario() != null){
-			if(FrmPrincipal.currentUser.getRol().equalsIgnoreCase("Vendedor")){
+
+	private JFrame getGUI(){
+		return this;
+	}
+	private void CheckPrivilegios() {
+		if (FrmPrincipal.currentUser != null && currentUser.getUsuario() != null) {
+			if (FrmPrincipal.currentUser.getRol().equalsIgnoreCase("Vendedor")) {
 				mnAdministrador.setVisible(false);
 				mnReportes.setVisible(false);
 			}
 		}
-		
 	}
-	
+
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == mntmCompras) {
 			actionPerformedMntmCompras(e);
@@ -247,14 +274,17 @@ public class FrmPrincipal extends JFrame implements ActionListener, ChangeListen
 			actionPerformedMntmSalir(e);
 		}
 	}
+
 	protected void actionPerformedMntmSalir(ActionEvent e) {
 		System.exit(0);
 	}
+
 	protected void actionPerformedMntmCerrarSesin(ActionEvent e) {
 		this.dispose();
 		FrmLogin login = new FrmLogin();
 		login.setVisible(true);
 	}
+
 	public void stateChanged(ChangeEvent arg0) {
 		if (arg0.getSource() == mntmTrabajadores) {
 			stateChangedMntmTrabajadores(arg0);
@@ -299,78 +329,99 @@ public class FrmPrincipal extends JFrame implements ActionListener, ChangeListen
 			stateChangedMntmCerrarSesin(arg0);
 		}
 	}
+
 	protected void stateChangedMntmCerrarSesin(ChangeEvent e) {
 		CambiaIcono(e, "logout");
 	}
+
 	protected void stateChangedMntmSalir(ChangeEvent e) {
 		CambiaIcono(e, "salir");
 	}
+
 	protected void stateChangedMnArhivo(ChangeEvent e) {
 		CambiaIcono(e, "archivo");
 	}
+
 	protected void stateChangedMnMantenimiento(ChangeEvent e) {
 		CambiaIcono(e, "mantenimiento");
 	}
+
 	protected void stateChangedMntmProducto(ChangeEvent e) {
 		CambiaIcono(e, "productos");
 	}
+
 	protected void stateChangedMntmProveedor(ChangeEvent e) {
 		CambiaIcono(e, "proveedor");
 	}
+
 	protected void stateChangedMntmPromocin(ChangeEvent e) {
 		CambiaIcono(e, "promocion");
 	}
+
 	protected void stateChangedMntmCliente(ChangeEvent e) {
 		CambiaIcono(e, "cliente");
 	}
+
 	protected void stateChangedMnOperaciones(ChangeEvent e) {
 		CambiaIcono(e, "operaciones");
 	}
+
 	protected void stateChangedMntmVentas(ChangeEvent e) {
 		CambiaIcono(e, "venta");
 	}
+
 	protected void stateChangedMntmCompras(ChangeEvent e) {
 		CambiaIcono(e, "compra");
 	}
+
 	protected void stateChangedMnReportes(ChangeEvent e) {
 		CambiaIcono(e, "reportes");
 	}
+
 	protected void stateChangedMnAdministrador(ChangeEvent e) {
 		CambiaIcono(e, "administrador");
 	}
+
 	protected void stateChangedMntmTrabajadores(ChangeEvent e) {
 		CambiaIcono(e, "trabajador");
 	}
+
 	protected void actionPerformedMntmProveedor(ActionEvent e) {
 		prov = new FrmProveedor();
 		pnEscritorio.add(prov);
 		prov.setVisible(true);
 	}
+
 	protected void actionPerformedMntmCliente(ActionEvent e) {
 		cli = new FrmCliente();
 		pnEscritorio.add(cli);
 		cli.setVisible(true);
 	}
+
 	protected void actionPerformedMntmProducto(ActionEvent e) {
 		prod = new FrmProducto();
 		pnEscritorio.add(prod);
 		prod.setVisible(true);
 	}
+
 	protected void actionPerformedMntmPromocin(ActionEvent e) {
 		prom = new FrmPromo();
 		pnEscritorio.add(prom);
 		prom.setVisible(true);
 	}
+
 	protected void actionPerformedMntmTrabajadores(ActionEvent e) {
 		trab = new FrmTrabajador();
 		pnEscritorio.add(trab);
 		trab.setVisible(true);
 	}
+
 	protected void actionPerformedMntmVentas(ActionEvent e) {
 		vent = new FrmVentas();
 		pnEscritorio.add(vent);
 		vent.setVisible(true);
 	}
+
 	protected void actionPerformedMntmCompras(ActionEvent e) {
 		com = new FrmCompras();
 		pnEscritorio.add(com);

@@ -91,6 +91,38 @@ public class NegocioDetVenta {
 		return exito;
 	}
 	
+	public boolean InsertarDetalle(DetVenta obj, Connection con){
+		boolean exito = false;
+
+		sql = "{call USP_DetVentMantenimiento(?,?,?,?,?,?)}";
+		
+		try {
+			cstm = con.prepareCall(sql);
+			cstm.setString(1, "1");
+			cstm.setString(2, obj.getCodVenta());
+			cstm.setString(3, obj.getProd().getID());
+			cstm.setInt(4, obj.getCant());
+			cstm.setDouble(5, obj.getPrecio());
+			cstm.setDouble(6, obj.getDescUni());
+			
+			cstm.executeUpdate();
+			
+			exito = false;
+			
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			try {
+				if (cstm != null)
+					cstm.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		
+		return exito;
+	}
+	
 	public boolean ModificarDetalle(DetVenta obj){
 		boolean exito = false;
 
@@ -126,6 +158,39 @@ public class NegocioDetVenta {
 		
 		return exito;
 	}
+	
+/*	public boolean ModificarDetalle(DetVenta obj, Connection con){
+		boolean exito = false;
+
+		sql = "{call USP_DetVentMantenimiento(?,?,?,?,?,?)}";
+		
+		try {
+			
+			cstm = con.prepareCall(sql);
+			cstm.setString(1, "2");
+			cstm.setString(2, obj.getCodVenta());
+			cstm.setString(3, obj.getProd().getID());
+			cstm.setInt(4, obj.getCant());
+			cstm.setDouble(5, obj.getPrecio());
+			cstm.setDouble(6, obj.getDescUni());
+			
+			cstm.executeUpdate();
+			
+			exito = false;
+			
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			try {
+				if (cstm != null)
+					cstm.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		
+		return exito;
+	}*/
 	
 	//para eliminar el detalle se necesita la combinación de el cod de venta y el del producto
 	public boolean EliminarDetalle(String vent, String prod){
@@ -194,6 +259,35 @@ public class NegocioDetVenta {
 		return exito;
 	}
 	
+	//para eliminacion transaccional uso el 'con' de parametro
+	public boolean EliminarDetalles(String vent, Connection con){
+		boolean exito = false;
+
+		sql = "{call USP_DetVentMantenimiento(?,?)}";
+		
+		try {
+			cstm = con.prepareCall(sql);
+			cstm.setString(1, "4");
+			cstm.setString(2, vent);
+			
+			cstm.executeUpdate();
+			
+			exito = false;
+			
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			try {
+				if (cstm != null)
+					cstm.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		
+		return exito;
+	}
+	
 	public ArrayList<DetVenta> getDetallesByVenta(String venta) {
 		ArrayList<DetVenta> lista = new ArrayList<DetVenta>();
 
@@ -204,6 +298,7 @@ public class NegocioDetVenta {
 		try {
 			con = Conexion.Conectar();
 			pst = con.prepareStatement(sql);
+			pst.setString(1, venta);
 			rs = pst.executeQuery();
 			while(rs.next()){
 				DetVenta obj = new DetVenta();

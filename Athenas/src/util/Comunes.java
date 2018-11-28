@@ -2,6 +2,10 @@ package util;
 
 import java.awt.Color;
 import java.awt.SystemColor;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 import javax.swing.JTextField;
 
@@ -15,5 +19,13 @@ public class Comunes {
 			obj.setBackground(Color.WHITE);
 			obj.setEditable(true);
 		}
+	}
+	
+	public String formatDouble(double num){
+		//Cambiar despues
+		DecimalFormatSymbols simbolos = new DecimalFormatSymbols(Locale.US);
+		NumberFormat formatoDouble = new DecimalFormat("#0.00", simbolos);
+		
+		return formatoDouble.format(num);
 	}
 }

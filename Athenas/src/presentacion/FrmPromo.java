@@ -76,6 +76,7 @@ public class FrmPromo extends JInternalFrame implements MouseListener, ActionLis
 	private PromoTableModel modelo;
 	private ButtonGroup btnGTipo;
 	private ButtonGroup btnG;
+	private ButtonGroup btnGEstado;
 	private JRadioButton rdbtnPorProducto;
 	private JLabel lblSexo;
 	private JRadioButton rdbtnPorcentual;
@@ -89,6 +90,10 @@ public class FrmPromo extends JInternalFrame implements MouseListener, ActionLis
 	private Producto prod = new Producto();
 	private String opGuardar = "";
 	private FrmBProducto bProd = null;
+	private JPanel panel_7;
+	private JRadioButton rdbtnActuales;
+	private JRadioButton rdbtnVencidas;
+	private JRadioButton rdbtnTodas;
 	
 	/**
 	 * Launch the application.
@@ -243,7 +248,7 @@ public class FrmPromo extends JInternalFrame implements MouseListener, ActionLis
 		panel_1.setBackground(SystemColor.control);
 		panel_1.setBorder(new TitledBorder(null, "Listado de promociones", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(59, 59, 59)));
 		getContentPane().add(panel_1, "cell 1 0 1 2,grow");
-		panel_1.setLayout(new MigLayout("", "[100px:n][grow][grow]", "[][][grow][]"));
+		panel_1.setLayout(new MigLayout("", "[100px:n,grow][grow][grow]", "[][][grow][]"));
 		
 		lblBuscar = new JLabel("Buscar ");
 		lblBuscar.setFont(new Font("Serif", Font.PLAIN, 16));
@@ -334,6 +339,23 @@ public class FrmPromo extends JInternalFrame implements MouseListener, ActionLis
 		modelo = new PromoTableModel();
 		tblPromo.setModel(modelo);
 		
+		panel_7 = new JPanel();
+		panel_7.setBackground(SystemColor.control);
+		panel_1.add(panel_7, "cell 0 3 2 1,grow");
+		panel_7.setLayout(new MigLayout("", "[grow][grow][grow]", "[]"));
+		
+		rdbtnTodas = new JRadioButton("Todas");
+		rdbtnTodas.addActionListener(this);
+		panel_7.add(rdbtnTodas, "cell 0 0,alignx center");
+		
+		rdbtnActuales = new JRadioButton("Actuales");
+		rdbtnActuales.addActionListener(this);
+		panel_7.add(rdbtnActuales, "cell 1 0,alignx center");
+		
+		rdbtnVencidas = new JRadioButton("Vencidas");
+		rdbtnVencidas.addActionListener(this);
+		panel_7.add(rdbtnVencidas, "cell 2 0,alignx center");
+		
 		btnImprimir = new JButton("");
 		btnImprimir.setIcon(new ImageIcon(FrmPromo.class.getResource("/img/icon-imprimir-white.png")));
 		panel_1.add(btnImprimir, "cell 2 3,alignx trailing");
@@ -352,6 +374,12 @@ public class FrmPromo extends JInternalFrame implements MouseListener, ActionLis
 		btnGTipo.add(rdbtnFijo);
 		btnGTipo.add(rdbtnPorcentual);
 		
+		btnGEstado = new ButtonGroup();
+		btnGEstado.add(rdbtnActuales);
+		btnGEstado.add(rdbtnTodas);
+		btnGEstado.add(rdbtnVencidas);
+		
+		rdbtnActuales.setSelected(true);
 		rdbtnPorCodigo.setSelected(true);
 		rdbtnFijo.setSelected(true);
 		
@@ -359,7 +387,7 @@ public class FrmPromo extends JInternalFrame implements MouseListener, ActionLis
 	}
 
 	private void miInit(){
-		modelo.setData(nProm.Listar());
+		DecideListado();
 		
 		tblPromo.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			
@@ -374,9 +402,22 @@ public class FrmPromo extends JInternalFrame implements MouseListener, ActionLis
 		});
 	}
 	
+	private void DecideListado(){
+		if(rdbtnActuales.isSelected()){
+			modelo.setData(nProm.ListarActuales());
+		}
+		else if(rdbtnVencidas.isSelected()){
+			modelo.setData(nProm.ListarVencidas());
+		}
+		else if (rdbtnTodas.isSelected()){
+			modelo.setData(nProm.Listar());
+		}
+	}
+	
 	private void LlenaDatos(Promo obj){
 		txtCodigo.setText(obj.getID());
-		txtProducto.setText(obj.getProd().getDescripcion());
+		prod = obj.getProd();
+		txtProducto.setText(prod.getDescripcion());
 		txtValor.setText(obj.getValor() + "");
 		if(obj.getTipo() == 0){
 			rdbtnFijo.setSelected(true);
@@ -406,6 +447,7 @@ public class FrmPromo extends JInternalFrame implements MouseListener, ActionLis
 		txtProducto.setText("");
 		txtValor.setText("");
 		rdbtnFijo.setSelected(true);
+		prod = new Producto();
 		
 		dpInicial.setDate(LocalDate.now());
 		dpFinal.setDate(LocalDate.now());
@@ -455,6 +497,15 @@ public class FrmPromo extends JInternalFrame implements MouseListener, ActionLis
 		modelo.setData(busqueda);
 	}
 	public void actionPerformed(ActionEvent arg0) {
+		if (arg0.getSource() == rdbtnVencidas) {
+			actionPerformedRdbtnVencidas(arg0);
+		}
+		if (arg0.getSource() == rdbtnActuales) {
+			actionPerformedRdbtnActuales(arg0);
+		}
+		if (arg0.getSource() == rdbtnTodas ) {
+			actionPerformedRdbtnTodas(arg0);
+		}
 		if (arg0.getSource() == btnBuscarProd) {
 			actionPerformedBtnBuscarProd(arg0);
 		}
@@ -524,7 +575,7 @@ public class FrmPromo extends JInternalFrame implements MouseListener, ActionLis
 		} else if (opGuardar.equals("Modificar")) {
 			nProm.ModificarPromo(LeerPromo());
 		}
-		modelo.setData(nProm.Listar());
+		DecideListado();
 	}
 	protected void actionPerformedBtnEliminar(ActionEvent arg0) {
 		if (!tblPromo.getSelectionModel().isSelectionEmpty()) {
@@ -533,7 +584,7 @@ public class FrmPromo extends JInternalFrame implements MouseListener, ActionLis
 			if (confirmar == JOptionPane.YES_OPTION) {
 				String cod = txtCodigo.getText();
 				nProm.EliminarPromo(cod);
-				modelo.setData(nProm.Listar());
+				DecideListado();
 				ReseteaCampos();
 				JOptionPane.showInternalMessageDialog(this, "Registro eliminado", "Confirmación",
 						JOptionPane.INFORMATION_MESSAGE);
@@ -548,5 +599,14 @@ public class FrmPromo extends JInternalFrame implements MouseListener, ActionLis
 			bProd = new FrmBProducto(this);
 			bProd.setVisible(true);
 		
+	}
+	protected void actionPerformedRdbtnTodas(ActionEvent arg0) {
+		DecideListado();
+	}
+	protected void actionPerformedRdbtnActuales(ActionEvent arg0) {
+		DecideListado();
+	}
+	protected void actionPerformedRdbtnVencidas(ActionEvent arg0) {
+		DecideListado();
 	}
 }

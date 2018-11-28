@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ListaProveedores" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="27338e4e-4a03-4c12-91d0-e636eae02168">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ListaProveedores" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="27338e4e-4a03-4c12-91d0-e636eae02168">
 	<property name="com.jaspersoft.studio.data.sql.tables">
 		<![CDATA[ZGJvLiJQcm92ZWVkb3IiICwxNSwxNSwxZWJkN2YzZC1lNzFiLTRhMjAtOWI5OS0xNmU4MGFkZWRi
 MWM7]]>
 	</property>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="BDAthenasCon"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<queryString language="SQL">
 		<![CDATA[SELECT *
 FROM dbo."Proveedor"]]>
@@ -34,7 +43,7 @@ FROM dbo."Proveedor"]]>
 	<title>
 		<band height="80" splitType="Stretch">
 			<rectangle>
-				<reportElement x="-20" y="-20" width="595" height="100" backcolor="#1D103D" uuid="7c35a9e3-9b10-476f-82c3-f2a07225ccb7"/>
+				<reportElement x="-20" y="-20" width="841" height="100" backcolor="#1D103D" uuid="7c35a9e3-9b10-476f-82c3-f2a07225ccb7"/>
 			</rectangle>
 			<staticText>
 				<reportElement x="-10" y="0" width="555" height="60" forecolor="#FFFFFF" uuid="cb35a573-6d66-4128-9c58-c3252090846a"/>
@@ -60,7 +69,7 @@ FROM dbo."Proveedor"]]>
 	<columnHeader>
 		<band height="31" splitType="Stretch">
 			<staticText>
-				<reportElement positionType="FixRelativeToBottom" mode="Opaque" x="-10" y="0" width="60" height="30" forecolor="#FFFFFF" backcolor="#006666" uuid="7291e1b9-72b5-4ae7-82b8-5c3b9dfebba9">
+				<reportElement positionType="FixRelativeToBottom" mode="Opaque" x="-10" y="0" width="89" height="30" forecolor="#FFFFFF" backcolor="#006666" uuid="7291e1b9-72b5-4ae7-82b8-5c3b9dfebba9">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="09662ca5-5212-4841-8ff0-7c90cae60f7b"/>
 				</reportElement>
 				<box>
@@ -73,10 +82,10 @@ FROM dbo."Proveedor"]]>
 					<font fontName="Serif" size="16" isBold="true" isStrikeThrough="false"/>
 					<paragraph leftIndent="10"/>
 				</textElement>
-				<text><![CDATA[ID]]></text>
+				<text><![CDATA[CÓDIGO]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="50" y="0" width="100" height="30" forecolor="#FFFFFF" backcolor="#006666" uuid="b37fbe23-4655-4193-80ab-378a2ec01507">
+				<reportElement mode="Opaque" x="79" y="0" width="161" height="30" forecolor="#FFFFFF" backcolor="#006666" uuid="b37fbe23-4655-4193-80ab-378a2ec01507">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5e0955b3-f9ae-457c-8769-d72ffef1a615"/>
 				</reportElement>
 				<box>
@@ -92,7 +101,7 @@ FROM dbo."Proveedor"]]>
 				<text><![CDATA[Razón Social]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="150" y="0" width="110" height="30" forecolor="#FFFFFF" backcolor="#006666" uuid="a1d0b85c-c5fe-434b-b032-abc94fa894c3">
+				<reportElement mode="Opaque" x="240" y="0" width="158" height="30" forecolor="#FFFFFF" backcolor="#006666" uuid="a1d0b85c-c5fe-434b-b032-abc94fa894c3">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="3ee20811-54ee-4f86-8d59-1ce14daf6155"/>
 				</reportElement>
 				<box>
@@ -108,7 +117,7 @@ FROM dbo."Proveedor"]]>
 				<text><![CDATA[Representante]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="260" y="0" width="140" height="30" forecolor="#FFFFFF" backcolor="#006666" uuid="8bd7e6a2-d82b-4e82-bb86-398ab1c72b17">
+				<reportElement mode="Opaque" x="397" y="0" width="183" height="30" forecolor="#FFFFFF" backcolor="#006666" uuid="8bd7e6a2-d82b-4e82-bb86-398ab1c72b17">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="72dfc69a-f4fc-4d24-86b0-bb251c37270d"/>
 				</reportElement>
 				<box>
@@ -124,7 +133,7 @@ FROM dbo."Proveedor"]]>
 				<text><![CDATA[Email]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="400" y="0" width="70" height="30" forecolor="#FFFFFF" backcolor="#006666" uuid="dbc1ef46-02c5-4d30-91aa-095a580cba90">
+				<reportElement mode="Opaque" x="580" y="0" width="80" height="30" forecolor="#FFFFFF" backcolor="#006666" uuid="dbc1ef46-02c5-4d30-91aa-095a580cba90">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0be1fa17-a45c-4681-9419-5d65bebd1f78"/>
 				</reportElement>
 				<box>
@@ -140,7 +149,7 @@ FROM dbo."Proveedor"]]>
 				<text><![CDATA[Teléfono]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" mode="Opaque" x="470" y="0" width="95" height="30" forecolor="#FFFFFF" backcolor="#006666" uuid="565a38f1-2c78-468d-85ba-29ce42d14e19">
+				<reportElement positionType="Float" mode="Opaque" x="660" y="0" width="144" height="30" forecolor="#FFFFFF" backcolor="#006666" uuid="565a38f1-2c78-468d-85ba-29ce42d14e19">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="86dba9c3-678d-4a57-8b7a-cc55e0b6c749"/>
 				</reportElement>
 				<box>
@@ -160,7 +169,7 @@ FROM dbo."Proveedor"]]>
 	<detail>
 		<band height="31" splitType="Stretch">
 			<textField>
-				<reportElement positionType="FixRelativeToBottom" x="-10" y="0" width="60" height="30" uuid="3b06f2ca-91ef-4962-9d29-afaec88ed964">
+				<reportElement positionType="FixRelativeToBottom" x="-10" y="0" width="89" height="30" uuid="3b06f2ca-91ef-4962-9d29-afaec88ed964">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="09662ca5-5212-4841-8ff0-7c90cae60f7b"/>
 				</reportElement>
 				<box>
@@ -174,7 +183,7 @@ FROM dbo."Proveedor"]]>
 				<textFieldExpression><![CDATA[$F{ID}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="50" y="0" width="100" height="30" uuid="c9462373-92c5-453b-9a16-2479b382611e">
+				<reportElement x="80" y="0" width="160" height="30" uuid="c9462373-92c5-453b-9a16-2479b382611e">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5e0955b3-f9ae-457c-8769-d72ffef1a615"/>
 				</reportElement>
 				<box>
@@ -188,7 +197,7 @@ FROM dbo."Proveedor"]]>
 				<textFieldExpression><![CDATA[$F{Rz_Social}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="150" y="0" width="110" height="30" uuid="7e6c582e-6033-411f-a861-d471f57b6f4e">
+				<reportElement x="240" y="0" width="158" height="30" uuid="7e6c582e-6033-411f-a861-d471f57b6f4e">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="3ee20811-54ee-4f86-8d59-1ce14daf6155"/>
 				</reportElement>
 				<box>
@@ -202,7 +211,7 @@ FROM dbo."Proveedor"]]>
 				<textFieldExpression><![CDATA[$F{Representante}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="260" y="0" width="140" height="30" uuid="f39f0a54-bed4-48eb-9c52-b1bbf4179576">
+				<reportElement x="397" y="0" width="183" height="30" uuid="f39f0a54-bed4-48eb-9c52-b1bbf4179576">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="72dfc69a-f4fc-4d24-86b0-bb251c37270d"/>
 				</reportElement>
 				<box>
@@ -216,7 +225,7 @@ FROM dbo."Proveedor"]]>
 				<textFieldExpression><![CDATA[$F{Email}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="400" y="0" width="70" height="30" uuid="2b65fc8f-590e-4ba0-b862-5ef9ff5ec1d7">
+				<reportElement x="580" y="0" width="80" height="30" uuid="2b65fc8f-590e-4ba0-b862-5ef9ff5ec1d7">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0be1fa17-a45c-4681-9419-5d65bebd1f78"/>
 				</reportElement>
 				<box>
@@ -230,7 +239,7 @@ FROM dbo."Proveedor"]]>
 				<textFieldExpression><![CDATA[$F{Telefono}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="470" y="0" width="95" height="30" uuid="c892d079-7b47-4abb-9530-4554792bdbe9">
+				<reportElement x="660" y="0" width="144" height="30" uuid="c892d079-7b47-4abb-9530-4554792bdbe9">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="86dba9c3-678d-4a57-8b7a-cc55e0b6c749"/>
 				</reportElement>
 				<box>

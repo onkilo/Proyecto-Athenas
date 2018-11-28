@@ -43,7 +43,7 @@ public class DetVentaTableModel extends AbstractTableModel {
 		case 0 : return obj.getProd().getID();
 		case 1 : return obj.getProd().getDescripcion();
 		case 2 : return obj.getCant();
-		case 3 : return obj.getProd().getPreVenta();
+		case 3 : return obj.getPrecio();
 		case 4 : return obj.DescTotal();
 		case 5 : return obj.getSubDesc();
 		default : return null;
@@ -96,5 +96,29 @@ public class DetVentaTableModel extends AbstractTableModel {
 	public void setData(ArrayList<DetVenta> data) {
 		this.data = data;
 		fireTableDataChanged();
+	}
+	
+	public boolean ExisteVenta(DetVenta obj){
+		boolean existe = false;
+		
+		for(DetVenta item : data){
+			if(item.getProd().getID().equals(obj.getProd().getID()) && item.getCodVenta().equals(obj.getCodVenta())){
+				return true;
+			}
+		}
+		
+		return existe;
+	}
+	
+	public int PosicionDetProd(DetVenta obj){
+		int pos = -1;
+		String venta = obj.getCodVenta();
+		String prod = obj.getProd().getID();
+		for(int i = 0; i < data.size(); i++){
+			if(venta.equals(data.get(i).getCodVenta()) && prod.equals(data.get(i).getProd().getID())){
+				return i;
+			}
+		}
+		return pos;
 	}
 }

@@ -23,6 +23,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JRadioButton;
 import javax.swing.SwingConstants;
+import javax.swing.ImageIcon;
 
 public class FrmCompras extends JInternalFrame {
 	private JPanel panel;
@@ -161,11 +162,13 @@ public class FrmCompras extends JInternalFrame {
 		panel_1.add(txtBuscar, "cell 1 0,growx");
 		txtBuscar.setColumns(20);
 		
-		btnResetear = new JButton("Resetear");
+		btnResetear = new JButton("");
+		btnResetear.setMinimumSize(new Dimension(25, 25));
+		btnResetear.setIcon(new ImageIcon(FrmCompras.class.getResource("/img/icon-resetear-white.png")));
 		btnResetear.setFont(new Font("SansSerif", Font.BOLD, 12));
 		btnResetear.setForeground(new Color(255, 255, 255));
 		btnResetear.setBackground(new Color(128, 128, 0));
-		btnResetear.setPreferredSize(new Dimension(100, 30));
+		btnResetear.setPreferredSize(new Dimension(60, 30));
 		panel_1.add(btnResetear, "cell 2 0,alignx leading");
 		
 		panel_6 = new JPanel();
@@ -198,7 +201,8 @@ public class FrmCompras extends JInternalFrame {
 		modelo = new DefaultTableModel();
 		tblProveedor.setModel(modelo);
 		
-		btnImprimir = new JButton("Imprimir");
+		btnImprimir = new JButton("");
+		btnImprimir.setIcon(new ImageIcon(FrmCompras.class.getResource("/img/icon-imprimir-white.png")));
 		panel_1.add(btnImprimir, "cell 2 3,alignx trailing");
 		btnImprimir.setFont(new Font("SansSerif", Font.BOLD, 12));
 		btnImprimir.setForeground(new Color(255, 255, 255));

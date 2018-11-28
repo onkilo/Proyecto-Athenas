@@ -18,10 +18,16 @@
 		<item value="181" key="y"/>
 		<item value="365" key="height"/>
 	</section>
-	<section name="org.eclipse.wb.internal.swing.model.property.editor.icon.IconPropertyEditor$ImageDialog">
-		<item value="150" key="x"/>
+	<section name="org.eclipse.wb.internal.swing.model.property.editor.icon.ImagePropertyEditor$ImageDialog">
+		<item value="242" key="x"/>
 		<item value="881" key="width"/>
-		<item value="121" key="y"/>
+		<item value="84" key="y"/>
+		<item value="559" key="height"/>
+	</section>
+	<section name="org.eclipse.wb.internal.swing.model.property.editor.icon.IconPropertyEditor$ImageDialog">
+		<item value="209" key="x"/>
+		<item value="881" key="width"/>
+		<item value="87" key="y"/>
 		<item value="580" key="height"/>
 	</section>
 </section>

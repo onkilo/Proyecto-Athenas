@@ -33,7 +33,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 
-public class FrmBProducto extends JDialog implements  ActionListener, KeyListener, MouseListener {
+public class FrmBProducto extends JDialog implements ActionListener, KeyListener, MouseListener {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtBuscar;
@@ -45,11 +45,13 @@ public class FrmBProducto extends JDialog implements  ActionListener, KeyListene
 	private JButton btnResetear;
 	private JLabel lblBuscar;
 	private JScrollPane scrollPane;
-	
+
 	private NegocioProducto nProd = new NegocioProducto();
-	private FrmPromo ventProm;
+	private FrmPromo ventProm = null;
 	private Producto prod;
 	private ProductoTableModel modelo;
+	private FrmDetVentas ventDetVent = null;
+
 	/**
 	 * Launch the application.
 	 */
@@ -122,21 +124,27 @@ public class FrmBProducto extends JDialog implements  ActionListener, KeyListene
 		tblProducto = new JTable();
 		tblProducto.addMouseListener(this);
 		scrollPane.setViewportView(tblProducto);
-		
+
 		btnG = new ButtonGroup();
 		btnG.add(rdbtPorDescripcion);
 		btnG.add(rdbtPorCodigo);
-		
+
 		rdbtPorCodigo.setSelected(true);
-		
+
 		modelo = new ProductoTableModel();
 		tblProducto.setModel(modelo);
 		modelo.setData(nProd.listar());
 	}
-	
-	public FrmBProducto (FrmPromo vent){
+
+	public FrmBProducto(FrmPromo vent) {
 		this();
 		this.ventProm = vent;
+		this.setLocationRelativeTo(vent);
+	}
+
+	public FrmBProducto(FrmDetVentas vent) {
+		this();
+		this.ventDetVent = vent;
 		this.setLocationRelativeTo(vent);
 	}
 
@@ -145,19 +153,24 @@ public class FrmBProducto extends JDialog implements  ActionListener, KeyListene
 			actionPerformedBtnResetear(arg0);
 		}
 	}
+
 	protected void actionPerformedBtnResetear(ActionEvent arg0) {
 		txtBuscar.setText("");
 		modelo.setData(nProd.listar());
 	}
+
 	public void keyPressed(KeyEvent arg0) {
 	}
+
 	public void keyReleased(KeyEvent arg0) {
 		if (arg0.getSource() == txtBuscar) {
 			keyReleasedTxtBuscar(arg0);
 		}
 	}
+
 	public void keyTyped(KeyEvent e) {
 	}
+
 	protected void keyReleasedTxtBuscar(KeyEvent arg0) {
 		ArrayList<Producto> busqueda = new ArrayList<Producto>();
 		String patron = txtBuscar.getText();
@@ -168,32 +181,41 @@ public class FrmBProducto extends JDialog implements  ActionListener, KeyListene
 		}
 		modelo.setData(busqueda);
 	}
+
 	public void mouseClicked(MouseEvent e) {
 		if (e.getSource() == tblProducto) {
 			mouseClickedTblProducto(e);
 		}
 	}
+
 	public void mouseEntered(MouseEvent e) {
 	}
+
 	public void mouseExited(MouseEvent e) {
 	}
+
 	public void mousePressed(MouseEvent e) {
 	}
+
 	public void mouseReleased(MouseEvent e) {
 	}
+
 	protected void mouseClickedTblProducto(MouseEvent e) {
-		if(this.ventProm != null){
-			if(e.getClickCount() == 2){
-				if(!tblProducto.getSelectionModel().isSelectionEmpty()){
-					int fila = tblProducto.getSelectedRow();
-					this.prod = modelo.getProducto(fila);
+		if (e.getClickCount() == 2) {
+			if (!tblProducto.getSelectionModel().isSelectionEmpty()) {
+				int fila = tblProducto.getSelectedRow();
+				this.prod = modelo.getProducto(fila);
+
+				if (this.ventProm != null) {
 					this.ventProm.setProd(prod);
 					this.ventProm.getTxtProd().setText(prod.getDescripcion());
+					this.dispose();
+				} else if (this.ventDetVent != null) {
+					this.ventDetVent.CargarProducto(prod);
 					this.dispose();
 				}
 			}
 		}
-		
-		
+
 	}
 }

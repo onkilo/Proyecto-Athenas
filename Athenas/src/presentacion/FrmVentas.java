@@ -18,6 +18,7 @@ import negocio.NegocioVenta;
 import javax.swing.UIManager;
 import javax.swing.border.LineBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -32,6 +33,8 @@ import javax.swing.JRadioButton;
 import javax.swing.SwingConstants;
 import javax.swing.ImageIcon;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.awt.event.KeyEvent;
 import java.awt.event.ActionListener;
@@ -117,6 +120,7 @@ public class FrmVentas extends JInternalFrame implements KeyListener, ActionList
 		btnNuevo.setPreferredSize(new Dimension(150, 40));
 		
 		btnModificar = new JButton("Modificar venta");
+		btnModificar.addActionListener(this);
 		btnModificar.setHorizontalAlignment(SwingConstants.LEADING);
 		btnModificar.setIcon(new ImageIcon(FrmVentas.class.getResource("/img/icon-modificar-white.png")));
 		btnModificar.setFont(new Font("Serif", Font.BOLD, 14));
@@ -126,6 +130,7 @@ public class FrmVentas extends JInternalFrame implements KeyListener, ActionList
 		btnModificar.setPreferredSize(new Dimension(150, 40));
 		
 		btnEliminar = new JButton("Eliminar venta");
+		btnEliminar.addActionListener(this);
 		btnEliminar.setHorizontalAlignment(SwingConstants.LEADING);
 		btnEliminar.setIcon(new ImageIcon(FrmVentas.class.getResource("/img/icon-eliminar-white.png")));
 		btnEliminar.setFont(new Font("Serif", Font.BOLD, 14));
@@ -158,11 +163,13 @@ public class FrmVentas extends JInternalFrame implements KeyListener, ActionList
 		txtBuscar.setColumns(20);
 		
 		btnResetear = new JButton("");
+		btnResetear.setMinimumSize(new Dimension(25, 25));
+		btnResetear.setIcon(new ImageIcon(FrmVentas.class.getResource("/img/icon-resetear-white.png")));
 		btnResetear.addActionListener(this);
 		btnResetear.setFont(new Font("SansSerif", Font.BOLD, 12));
 		btnResetear.setForeground(new Color(255, 255, 255));
 		btnResetear.setBackground(new Color(128, 128, 0));
-		btnResetear.setPreferredSize(new Dimension(100, 30));
+		btnResetear.setPreferredSize(new Dimension(60, 30));
 		panel_1.add(btnResetear, "cell 2 0,alignx leading");
 		
 		panel_6 = new JPanel();
@@ -234,6 +241,12 @@ public class FrmVentas extends JInternalFrame implements KeyListener, ActionList
 		txtCant.setText(modelo.getRowCount() + "");
 	}
 	public void actionPerformed(ActionEvent arg0) {
+		if (arg0.getSource() == btnEliminar) {
+			actionPerformedBtnEliminar(arg0);
+		}
+		if (arg0.getSource() == btnModificar) {
+			actionPerformedBtnModificar(arg0);
+		}
 		if (arg0.getSource() == btnNuevo) {
 			actionPerformedBtnNuevo(arg0);
 		}
@@ -250,5 +263,46 @@ public class FrmVentas extends JInternalFrame implements KeyListener, ActionList
 		FrmDetVentas formDet = new FrmDetVentas();
 		formDet.setLocationRelativeTo(this);
 		formDet.setVisible(true);
+		formDet.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosed(WindowEvent e) {
+				super.windowClosed(e);
+				modelo.setData(nVent.Listar());
+			}
+		});
+	}
+	protected void actionPerformedBtnModificar(ActionEvent arg0) {
+		if(!tblProveedor.getSelectionModel().isSelectionEmpty()){
+			int fila = tblProveedor.getSelectedRow();
+			Venta venta = modelo.getVenta(fila);
+			FrmDetVentas formDet = new FrmDetVentas(venta);
+			formDet.setLocationRelativeTo(this);
+			formDet.setVisible(true);
+			formDet.addWindowListener(new WindowAdapter() {
+				@Override
+				public void windowClosed(WindowEvent e) {
+					super.windowClosed(e);
+					modelo.setData(nVent.Listar());
+				}
+			});
+		}else{
+			JOptionPane.showInternalMessageDialog(this, "Debe selecionar un registro para realizar esta operación", "Seleción Errónea", JOptionPane.WARNING_MESSAGE);
+		}
+	}
+	protected void actionPerformedBtnEliminar(ActionEvent arg0) {
+		if(!tblProveedor.getSelectionModel().isSelectionEmpty()){
+			int confirmar =JOptionPane.showInternalConfirmDialog(this, "¿Desea eliminar este registro?", "Confirmación", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+			if(confirmar == JOptionPane.YES_OPTION){
+				int fila = tblProveedor.getSelectedRow();
+				Venta venta = modelo.getVenta(fila);
+				nVent.EliminarVenta(venta);
+				JOptionPane.showInternalMessageDialog(this, "Registro eliminado satisfactoriamente", "Eliminación", JOptionPane.INFORMATION_MESSAGE);
+				modelo.setData(nVent.Listar());
+			}
+			
+		}
+		else{
+			JOptionPane.showInternalMessageDialog(this, "Debe selecionar un registro para realizar esta operación", "Seleción Errónea", JOptionPane.WARNING_MESSAGE);
+		}
 	}
 }

@@ -1,0 +1,301 @@
+package negocio;
+
+import java.sql.*;
+
+import entidades.Producto;
+import entidades.DetVenta;
+import conexion.Conexion;
+import java.util.ArrayList;
+
+public class NegocioDetVenta {
+
+	private Connection con;
+	private CallableStatement cstm;
+	private PreparedStatement pst;
+	private Statement st;
+	private String sql = "";
+	private ResultSet rs;
+
+	public ArrayList<DetVenta> Listar() {
+		ArrayList<DetVenta> lista = new ArrayList<DetVenta>();
+
+		sql = "select dv.Cod_Venta as Venta, p.ID as CodPRod, p.Descripcion as DescProd,"
+				+ " dv.Cantidad as Cantidad, dv.Precio as Precio, isnull(dv.Desct, 0) as DescUni "
+				+ "from Det_Venta dv inner join Producto p on dv.Cod_Produc = p.ID";
+
+		try {
+			con = Conexion.Conectar();
+			st = con.createStatement();
+			rs = st.executeQuery(sql);
+			while(rs.next()){
+				DetVenta obj = new DetVenta();
+				obj.setCodVenta(rs.getString("Venta"));
+				obj.getProd().setID(rs.getString("CodProd"));
+				obj.getProd().setDescripcion(rs.getString("DescProd"));
+				obj.setCant(rs.getInt("Cantidad"));
+				obj.setPrecio(rs.getDouble("Precio"));
+				obj.setDescUni(rs.getDouble("DescUni"));
+				
+				lista.add(obj);
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (st != null)
+					st.close();
+				if (con != null)
+					con.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		return lista;
+	}
+	
+	public boolean InsertarDetalle(DetVenta obj){
+		boolean exito = false;
+
+		sql = "{call USP_DetVentMantenimiento(?,?,?,?,?,?)}";
+		
+		try {
+			
+			con = Conexion.Conectar();
+			cstm = con.prepareCall(sql);
+			cstm.setString(1, "1");
+			cstm.setString(2, obj.getCodVenta());
+			cstm.setString(3, obj.getProd().getID());
+			cstm.setInt(4, obj.getCant());
+			cstm.setDouble(5, obj.getPrecio());
+			cstm.setDouble(6, obj.getDescUni());
+			
+			cstm.executeUpdate();
+			
+			exito = false;
+			
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			try {
+				if (cstm != null)
+					cstm.close();
+				if (con != null)
+					con.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		
+		return exito;
+	}
+	
+	public boolean InsertarDetalle(DetVenta obj, Connection con){
+		boolean exito = false;
+
+		sql = "{call USP_DetVentMantenimiento(?,?,?,?,?,?)}";
+		
+		try {
+			cstm = con.prepareCall(sql);
+			cstm.setString(1, "1");
+			cstm.setString(2, obj.getCodVenta());
+			cstm.setString(3, obj.getProd().getID());
+			cstm.setInt(4, obj.getCant());
+			cstm.setDouble(5, obj.getPrecio());
+			cstm.setDouble(6, obj.getDescUni());
+			
+			cstm.executeUpdate();
+			
+			exito = false;
+			
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			try {
+				if (cstm != null)
+					cstm.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		
+		return exito;
+	}
+	
+	public boolean ModificarDetalle(DetVenta obj){
+		boolean exito = false;
+
+		sql = "{call USP_DetVentMantenimiento(?,?,?,?,?,?)}";
+		
+		try {
+			
+			con = Conexion.Conectar();
+			cstm = con.prepareCall(sql);
+			cstm.setString(1, "2");
+			cstm.setString(2, obj.getCodVenta());
+			cstm.setString(3, obj.getProd().getID());
+			cstm.setInt(4, obj.getCant());
+			cstm.setDouble(5, obj.getPrecio());
+			cstm.setDouble(6, obj.getDescUni());
+			
+			cstm.executeUpdate();
+			
+			exito = false;
+			
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			try {
+				if (cstm != null)
+					cstm.close();
+				if (con != null)
+					con.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		
+		return exito;
+	}
+	
+	public boolean ModificarDetalle(DetVenta obj, Connection con){
+		boolean exito = false;
+
+		sql = "{call USP_DetVentMantenimiento(?,?,?,?,?,?)}";
+		
+		try {
+			
+			cstm = con.prepareCall(sql);
+			cstm.setString(1, "2");
+			cstm.setString(2, obj.getCodVenta());
+			cstm.setString(3, obj.getProd().getID());
+			cstm.setInt(4, obj.getCant());
+			cstm.setDouble(5, obj.getPrecio());
+			cstm.setDouble(6, obj.getDescUni());
+			
+			cstm.executeUpdate();
+			
+			exito = false;
+			
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			try {
+				if (cstm != null)
+					cstm.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		
+		return exito;
+	}
+	
+	//para eliminar el detalle se necesita la combinación de el cod de venta y el del producto
+	public boolean EliminarDetalle(String vent, String prod){
+		boolean exito = false;
+
+		sql = "{call USP_DetVentMantenimiento(?,?,?)}";
+		
+		try {
+			
+			con = Conexion.Conectar();
+			cstm = con.prepareCall(sql);
+			cstm.setString(1, "3");
+			cstm.setString(2, vent);
+			cstm.setString(3, prod);
+			
+			cstm.executeUpdate();
+			
+			exito = false;
+			
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			try {
+				if (cstm != null)
+					cstm.close();
+				if (con != null)
+					con.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		
+		return exito;
+	}
+	
+	//elimina todo el detalle de una boleta
+	public boolean EliminarDetalles(String vent){
+		boolean exito = false;
+
+		sql = "{call USP_DetVentMantenimiento(?,?)}";
+		
+		try {
+			
+			con = Conexion.Conectar();
+			cstm = con.prepareCall(sql);
+			cstm.setString(1, "4");
+			cstm.setString(2, vent);
+			
+			cstm.executeUpdate();
+			
+			exito = false;
+			
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			try {
+				if (cstm != null)
+					cstm.close();
+				if (con != null)
+					con.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		
+		return exito;
+	}
+	
+	public ArrayList<DetVenta> getDetallesByVenta(String venta) {
+		ArrayList<DetVenta> lista = new ArrayList<DetVenta>();
+
+		sql = "select dv.Cod_Venta as Venta, p.ID as CodPRod, p.Descripcion as DescProd,"
+				+ " dv.Cantidad as Cantidad, dv.Precio as Precio, isnull(dv.Desct, 0) as DescUni "
+				+ "from Det_Venta dv inner join Producto p on dv.Cod_Produc = p.ID WHERE dv.Cod_Venta = ?";
+
+		try {
+			con = Conexion.Conectar();
+			pst = con.prepareStatement(sql);
+			pst.setString(1, venta);
+			rs = pst.executeQuery();
+			while(rs.next()){
+				DetVenta obj = new DetVenta();
+				obj.setCodVenta(rs.getString("Venta"));
+				obj.getProd().setID(rs.getString("CodProd"));
+				obj.getProd().setDescripcion(rs.getString("DescProd"));
+				obj.setCant(rs.getInt("Cantidad"));
+				obj.setPrecio(rs.getDouble("Precio"));
+				obj.setDescUni(rs.getDouble("DescUni"));
+				
+				lista.add(obj);
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pst != null)
+					pst.close();
+				if (con != null)
+					con.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		return lista;
+	}
+}

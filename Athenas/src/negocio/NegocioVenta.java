@@ -3,6 +3,7 @@ package negocio;
 import java.sql.*;
 
 import entidades.Cliente;
+import entidades.DetVenta;
 import entidades.Trabajador;
 import entidades.Venta;
 import conexion.Conexion;
@@ -16,6 +17,7 @@ public class NegocioVenta {
 	private Statement st;
 	private String sql = "";
 	private ResultSet rs;
+	private NegocioDetVenta nDet;
 
 	public ArrayList<Venta> Listar() {
 		ArrayList<Venta> lista = new ArrayList<Venta>();
@@ -25,7 +27,7 @@ public class NegocioVenta {
 				+ " v.IGV AS IGV, isnull(v.DescTotal, 0) AS DescTotal, sum(dv.Precio * dv.Cantidad) AS Subtotal "
 				+ "FROM Venta v INNER JOIN Cliente c ON v.Cod_Cliente = c.ID INNER JOIN Trabajador t "
 				+ "ON v.Cod_Trabajador = t.ID INNER JOIN Det_Venta dv ON v.Cod_Venta = dv.Cod_Venta "
-				+ "GROUP BY v.Cod_Venta, c.ID, c.Nombre, c.Apellido, c.Telefono, t.ID, t.Nombre, t.Apellido, v.Fecha, v.IGV, isnull(v.DescTotal, 0)";
+				+ "GROUP BY v.Cod_Venta, c.ID, c.DNI, c.Nombre, c.Apellido, c.Telefono, t.ID, t.Nombre, t.Apellido, v.Fecha, v.IGV, isnull(v.DescTotal, 0)";
 
 		try {
 
@@ -174,6 +176,138 @@ public class NegocioVenta {
 		return exito;
 	}
 
+	// Metodos para insertar | modificar | eliminar venta y detalle
+	public boolean InsertarVenta(Venta obj, ArrayList<DetVenta> detalle) {
+		boolean exito = false;
+
+		sql = "{call USP_VentaMantenimiento(?,?,?,?,?,?,?)}";
+
+		try {
+
+			con = Conexion.Conectar();
+			con.setAutoCommit(false);
+
+			cstm = con.prepareCall(sql);
+			cstm.setString(1, "1");
+			cstm.setString(2, obj.getCodVenta());
+			cstm.setString(3, obj.getCli().getID());
+			cstm.setString(4, obj.getTrab().getID());
+			cstm.setDate(5, obj.getSQlFecha());
+			cstm.setDouble(6, obj.getIGV());
+			cstm.setDouble(7, obj.getDescTotal());
+			cstm.executeUpdate();
+
+			nDet = new NegocioDetVenta();
+			for (DetVenta item : detalle) {
+				nDet.InsertarDetalle(item, con);
+			}
+
+			con.commit();
+			con.setAutoCommit(true);
+
+			exito = true;
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			try {
+				if (cstm != null)
+					cstm.close();
+				if (con != null)
+					con.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+
+		return exito;
+	}
+
+	public boolean ModificarVenta(Venta obj, ArrayList<DetVenta> detalle) {
+		boolean exito = false;
+
+		sql = "{call USP_VentaMantenimiento(?,?,?,?,?,?,?)}";
+
+		try {
+
+			con = Conexion.Conectar();
+			con.setAutoCommit(false);
+			cstm = con.prepareCall(sql);
+			cstm.setString(1, "2");
+			cstm.setString(2, obj.getCodVenta());
+			cstm.setString(3, obj.getCli().getID());
+			cstm.setString(4, obj.getTrab().getID());
+			cstm.setDate(5, obj.getSQlFecha());
+			cstm.setDouble(6, obj.getIGV());
+			cstm.setDouble(7, obj.getDescTotal());
+
+			cstm.executeUpdate();
+
+			nDet = new NegocioDetVenta();
+			nDet.EliminarDetalles(obj.getCodVenta());
+			for(DetVenta item : detalle){
+				nDet.InsertarDetalle(item, con);
+			}
+			con.commit();
+			con.setAutoCommit(true);
+			exito = true;
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			try {
+				if (cstm != null)
+					cstm.close();
+				if (con != null)
+					con.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+
+		return exito;
+	}
+	
+	//Recibo un objeto venta simplemente para poder sobrecargar el metodo de eliminacion
+	//si no hay uso alguno el metodo de elimnacion que recibe un string se eliminara posteriormente
+	public boolean EliminarVenta(Venta obj) {
+		boolean exito = false;
+
+		sql = "{call USP_VentaMantenimiento(?,?)}";
+
+		try {
+
+			con = Conexion.Conectar();
+			con.setAutoCommit(false);
+			//para eliminar toda la venta eliminamos primero el detalle
+			nDet = new NegocioDetVenta();
+			nDet.EliminarDetalles(obj.getCodVenta(), con);
+			//luego eliminamos la venta en sí
+			cstm = con.prepareCall(sql);
+			cstm.setString(1, "3");
+			cstm.setString(2, obj.getCodVenta());
+			cstm.executeUpdate();
+			
+			con.commit();
+			con.setAutoCommit(true);
+			exito = true;
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			try {
+				if (cstm != null)
+					cstm.close();
+				if (con != null)
+					con.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+
+		return exito;
+	}
+
 	public Venta getVentaByID(String cod) {
 		Venta obj = null;
 
@@ -182,7 +316,7 @@ public class NegocioVenta {
 				+ " v.IGV AS IGV, isnull(v.DescTotal, 0) AS DescTotal, sum(dv.Precio * dv.Cantidad) AS Subtotal "
 				+ "FROM Venta v INNER JOIN Cliente c ON v.Cod_Cliente = c.ID INNER JOIN Trabajador t "
 				+ "ON v.Cod_Trabajador = t.ID INNER JOIN Det_Venta dv ON v.Cod_Venta = dv.Cod_Venta WHERE v.Cod_Venta = ? "
-				+ "GROUP BY v.Cod_Venta, c.ID, c.Nombre, c.Apellido, c.Telefono, t.ID, t.Nombre, t.Apellido, v.Fecha, v.IGV, isnull(v.DescTotal, 0) ";
+				+ "GROUP BY v.Cod_Venta, c.ID, c.DNI, c.Nombre, c.Apellido, c.Telefono, t.ID, t.Nombre, t.Apellido, v.Fecha, v.IGV, isnull(v.DescTotal, 0) ";
 
 		try {
 
@@ -234,7 +368,7 @@ public class NegocioVenta {
 				+ " v.IGV AS IGV, isnull(v.DescTotal, 0) AS DescTotal, sum(dv.Precio * dv.Cantidad) AS Subtotal "
 				+ "FROM Venta v INNER JOIN Cliente c ON v.Cod_Cliente = c.ID INNER JOIN Trabajador t "
 				+ "ON v.Cod_Trabajador = t.ID INNER JOIN Det_Venta dv ON v.Cod_Venta = dv.Cod_Venta WHERE v.Cod_Venta like ? "
-				+ "GROUP BY v.Cod_Venta, c.ID, c.Nombre, c.Apellido, c.Telefono, t.ID, t.Nombre, t.Apellido, v.Fecha, v.IGV, isnull(v.DescTotal, 0) ";
+				+ "GROUP BY v.Cod_Venta, c.ID, c.DNI, c.Nombre, c.Apellido, c.Telefono, t.ID, t.Nombre, t.Apellido, v.Fecha, v.IGV, isnull(v.DescTotal, 0) ";
 
 		try {
 
@@ -288,7 +422,7 @@ public class NegocioVenta {
 				+ " v.IGV AS IGV, isnull(v.DescTotal, 0) AS DescTotal, sum(dv.Precio * dv.Cantidad) AS Subtotal "
 				+ "FROM Venta v INNER JOIN Cliente c ON v.Cod_Cliente = c.ID INNER JOIN Trabajador t "
 				+ "ON v.Cod_Trabajador = t.ID INNER JOIN Det_Venta dv ON v.Cod_Venta = dv.Cod_Venta WHERE (c.Nombre + ' ' + c.Apellido) like ? "
-				+ "GROUP BY v.Cod_Venta, c.ID, c.Nombre, c.Apellido, c.Telefono, t.ID, t.Nombre, t.Apellido, v.Fecha, v.IGV, isnull(v.DescTotal, 0)";
+				+ "GROUP BY v.Cod_Venta, c.ID, c.DNI, c.Nombre, c.Apellido, c.Telefono, t.ID, t.Nombre, t.Apellido, v.Fecha, v.IGV, isnull(v.DescTotal, 0)";
 
 		try {
 
@@ -333,7 +467,7 @@ public class NegocioVenta {
 
 		return lista;
 	}
-	
+
 	public String nextCod() {
 		sql = "{call USP_NextCod(?)}";
 		String cod = "";

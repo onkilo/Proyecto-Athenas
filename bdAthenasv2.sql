@@ -200,7 +200,7 @@ GO
 /*
 	TRIGGER DE VENTAS
 */
-IF (EXISTS(SELECT * FROM SYS.triggers WHERE name = 'Tr_Ventas'))
+/*IF (EXISTS(SELECT * FROM SYS.triggers WHERE name = 'Tr_Ventas'))
 	DROP TRIGGER Tr_Ventas
 GO
 
@@ -217,7 +217,7 @@ AS
 	END
 	ELSE
 		RAISERROR('Cantidad insuficiente de producto',16,1)
-GO
+GO*/
 
 IF OBJECT_ID('Det_Comp') IS NOT NULL
 	DROP TABLE Det_Comp

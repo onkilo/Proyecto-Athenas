@@ -60,6 +60,96 @@ public class NegocioPromo {
 		return lista;
 	}
 	
+	public ArrayList<Promo> ListarActuales(){
+		ArrayList<Promo> lista = new ArrayList<Promo>();
+		
+		sql = "SELECT pm.ID AS PromoID,pd.ID as ProdID, pd.Descripcion as Producto,"
+				+ " pm.Tipo as Tipo, pm.Valor as Valor, pm.FecIni as Inicio, pm.FecFin as Fin"
+				+ " FROM Promo pm INNER JOIN Producto pd ON pm.Cod_Prod = pd.ID WHERE GETDATE() BETWEEN pm.FecIni and pm.FecFin";
+		
+		try {
+			
+			con = Conexion.Conectar();
+			st = con.createStatement();
+			rs = st.executeQuery(sql);
+			
+			while(rs.next()){
+				Promo obj = new Promo();
+				obj.setID(rs.getString("PromoID"));
+				obj.getProd().setID(rs.getString("ProdID"));
+				obj.getProd().setDescripcion(rs.getString("Producto"));
+				obj.setTipo(rs.getInt("Tipo"));
+				obj.setValor(rs.getDouble("Valor"));
+				obj.setSqlFecIni(rs.getDate("Inicio"));
+				obj.setSQlFecFin(rs.getDate("Fin"));
+				
+				lista.add(obj);
+				
+			}
+			
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (st != null)
+					st.close();
+				if (con != null)
+					con.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		
+		return lista;
+	}
+	
+	public ArrayList<Promo> ListarVencidas(){
+		ArrayList<Promo> lista = new ArrayList<Promo>();
+		
+		sql = "SELECT pm.ID AS PromoID,pd.ID as ProdID, pd.Descripcion as Producto,"
+				+ " pm.Tipo as Tipo, pm.Valor as Valor, pm.FecIni as Inicio, pm.FecFin as Fin"
+				+ " FROM Promo pm INNER JOIN Producto pd ON pm.Cod_Prod = pd.ID WHERE GETDATE() > pm.FecFin";
+		
+		try {
+			
+			con = Conexion.Conectar();
+			st = con.createStatement();
+			rs = st.executeQuery(sql);
+			
+			while(rs.next()){
+				Promo obj = new Promo();
+				obj.setID(rs.getString("PromoID"));
+				obj.getProd().setID(rs.getString("ProdID"));
+				obj.getProd().setDescripcion(rs.getString("Producto"));
+				obj.setTipo(rs.getInt("Tipo"));
+				obj.setValor(rs.getDouble("Valor"));
+				obj.setSqlFecIni(rs.getDate("Inicio"));
+				obj.setSQlFecFin(rs.getDate("Fin"));
+				
+				lista.add(obj);
+				
+			}
+			
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (st != null)
+					st.close();
+				if (con != null)
+					con.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		
+		return lista;
+	}
+	
 	public boolean InsertarPromo(Promo obj){
 		boolean exito  = false;
 		
@@ -298,6 +388,34 @@ public class NegocioPromo {
 		}
 		
 		return lista;
+	}
+	
+	public double getDescuento(String prod){
+		double desc = 0;
+		
+		sql = "{? = call dbo.UFC_Descuento_Producto(?)}";
+		
+		try {
+			con = Conexion.Conectar();
+			cstm = con.prepareCall(sql);
+			cstm.registerOutParameter(1, Types.DECIMAL);
+			cstm.setString(2, prod);
+			cstm.execute();
+			desc = cstm.getDouble(1);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			try {
+				if (cstm != null)
+					cstm.close();
+				if (con != null)
+					con.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		
+		return desc;
 	}
 	
 	public String nextCod() {

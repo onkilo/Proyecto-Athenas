@@ -10,5 +10,16 @@ go
 select dv.Cod_Venta as Venta, p.ID as CodPRod, p.Descripcion as DescProd, dv.Cantidad as Cantidad, dv.Precio as Precio, isnull(dv.Desct, 0) as DescUni from Det_Venta dv inner join Producto p on dv.Cod_Produc = p.ID
 go
 
-update Venta set DescTotal = 0.5 where Cod_Venta = 'OV0001'
+update Venta set DescTotal = 0.5 where Cod_Venta = 'OV0002'
 go
+
+SELECT * FROM Promo inner join Producto on Promo.Cod_Prod = Producto.id
+go
+
+select case pm.Tipo
+		when 0 then pm.Valor
+		when 1 then pd.Precio_Venta * (pm.Valor/100)
+		end
+from Promo pm inner join Producto pd 
+on pd.ID = pm.Cod_Prod
+where Cod_Prod = 'PR0010' and GETDATE() between FecIni and FecFin

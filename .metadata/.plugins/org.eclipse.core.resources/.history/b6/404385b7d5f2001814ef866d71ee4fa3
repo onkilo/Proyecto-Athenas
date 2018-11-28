@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="02661181-0f7b-4098-9759-3550d3713706">
+	<property name="com.jaspersoft.studio.data.sql.tables">
+		<![CDATA[ZGJvLiJQcm9tbyIgLDE2Miw0MSw5YmUzZDhjZC1iYzE3LTQ5MjMtYjY4MC1lN2M3ZTI5Mjg3Njc7
+ZGJvLiJQcm9kdWN0byIgLDE1LDE1LDFmODkzNTNhLTE4MWYtNDM1OS1hY2MyLTYxNzA2ZmUwNWFj
+Zjs=]]>
+	</property>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="BDAthenasCon"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT dbo."Promo"."ID",
+	dbo."Producto"."Descripcion" as Producto,
+	dbo."Promo"."Tipo",
+	dbo."Promo"."Valor",
+	dbo."Promo"."FecIni",
+	dbo."Promo"."FecFin"
+FROM dbo."Promo"
+	inner join dbo."Producto" ON 
+	 dbo."Producto"."ID" = dbo."Promo"."Cod_Prod"]]>
+	</queryString>
+	<field name="ID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ID"/>
+	</field>
+	<field name="Producto" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Producto"/>
+	</field>
+	<field name="Tipo" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="Tipo"/>
+	</field>
+	<field name="Valor" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="Valor"/>
+	</field>
+	<field name="FecIni" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.label" value="FecIni"/>
+	</field>
+	<field name="FecFin" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.label" value="FecFin"/>
+	</field>
+	<variable name="TipoDesc" class="java.lang.String">
+		<variableExpression><![CDATA[IF($F{Tipo} == 0)"Porcentual"]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

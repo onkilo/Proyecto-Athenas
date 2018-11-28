@@ -15,6 +15,7 @@ import java.awt.SystemColor;
 import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 
+import entidades.Cliente;
 import negocio.NegocioCliente;
 
 import javax.swing.JLabel;
@@ -25,8 +26,15 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import java.awt.Color;
 import javax.swing.ListSelectionModel;
+import java.awt.event.KeyListener;
+import java.util.ArrayList;
+import java.awt.event.KeyEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
 
-public class FrmBCliente extends JDialog {
+public class FrmBCliente extends JDialog implements KeyListener, ActionListener, MouseListener {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtBuscar;
@@ -41,6 +49,7 @@ public class FrmBCliente extends JDialog {
 	
 	private ClienteTableModel modelo;
 	private NegocioCliente nCliente = new NegocioCliente();
+	private FrmDetVentas vent;
 
 	/**
 	 * Launch the application.
@@ -78,10 +87,12 @@ public class FrmBCliente extends JDialog {
 		contentPanel.add(lblBuscar, "cell 0 0,alignx center");
 
 		txtBuscar = new JTextField();
+		txtBuscar.addKeyListener(this);
 		contentPanel.add(txtBuscar, "cell 1 0,alignx leading");
 		txtBuscar.setColumns(20);
 
 		btnResetear = new JButton("Resetear");
+		btnResetear.addActionListener(this);
 		btnResetear.setFont(new Font("Serif", Font.BOLD, 14));
 		btnResetear.setForeground(new Color(255, 255, 255));
 		btnResetear.setBackground(new Color(128, 128, 0));
@@ -110,6 +121,7 @@ public class FrmBCliente extends JDialog {
 		panel.add(scrollPane, BorderLayout.CENTER);
 
 		tblCliente = new JTable();
+		tblCliente.addMouseListener(this);
 		tblCliente.setRowHeight(20);
 		tblCliente.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane.setViewportView(tblCliente);
@@ -125,5 +137,65 @@ public class FrmBCliente extends JDialog {
 		
 		modelo.setData(nCliente.Listar());
 	}
+	
+	public FrmBCliente (FrmDetVentas vent){
+		this();
+		this.vent = vent;
+		setLocationRelativeTo(vent);
+	}
+	
+	
+	
+	public void keyPressed(KeyEvent arg0) {
+	}
+	public void keyReleased(KeyEvent arg0) {
+		if (arg0.getSource() == txtBuscar) {
+			keyReleasedTxtBuscar(arg0);
+		}
+	}
+	public void keyTyped(KeyEvent arg0) {
+	}
+	protected void keyReleasedTxtBuscar(KeyEvent arg0) {
+		ArrayList<Cliente> busqueda = new ArrayList<Cliente>();
+		String patron = txtBuscar.getText();
+		if (rdbtPorCodigo.isSelected()) {
+			busqueda = nCliente.getClientesByID(patron);
+		} else if (rdbtPorNombre.isSelected()) {
+			busqueda = nCliente.getClientesByNombre(patron);
+		}
 
+		modelo.setData(busqueda);
+	}
+	public void actionPerformed(ActionEvent arg0) {
+		if (arg0.getSource() == btnResetear) {
+			actionPerformedBtnResetear(arg0);
+		}
+	}
+	protected void actionPerformedBtnResetear(ActionEvent arg0) {
+		txtBuscar.setText("");
+		modelo.setData(nCliente.Listar());
+	}
+	public void mouseClicked(MouseEvent arg0) {
+		if (arg0.getSource() == tblCliente) {
+			mouseClickedTblCliente(arg0);
+		}
+	}
+	public void mouseEntered(MouseEvent arg0) {
+	}
+	public void mouseExited(MouseEvent arg0) {
+	}
+	public void mousePressed(MouseEvent arg0) {
+	}
+	public void mouseReleased(MouseEvent arg0) {
+	}
+	protected void mouseClickedTblCliente(MouseEvent e) {
+		if(e.getClickCount() ==2){
+			if(this.vent != null){
+				int fila = tblCliente.getSelectedRow();
+				Cliente cli = modelo.getCliente(fila);
+				this.vent.CargarCliente(cli);
+				this.dispose();
+			}
+		}
+	}
 }

@@ -395,6 +395,7 @@ IF(@OPERACION = '1') --======PARA INSERTAR DETALLE DE VENTA
 			BEGIN
 				INSERT INTO Det_Venta(Cod_Venta,Cod_Produc, Cantidad, Precio, Desct)
 				VALUES (@Venta,@Producto, @cant, @Precio, @descto)
+				UPDATE Producto SET Stock_Actual = Stock_Actual - @cant WHERE ID = @Producto
 				SET @OPERACION = 'INSERCI�N EXITOSA'
 			END
 		ELSE
@@ -404,19 +405,46 @@ IF(@OPERACION = '1') --======PARA INSERTAR DETALLE DE VENTA
 		END
 ELSE IF (@OPERACION = '2') --======PARA MODIFICAR DETALLE DE VENTA
 	BEGIN
+		DECLARE @cantActual int--OBTENEMOS CANTIDAD ANTIGUA DEL DETALLE
+		SELECT @cantActual = Cantidad FROM Det_Venta WHERE Cod_Produc = @Producto AND Cod_Produc = @Producto
+		SET @cantActual -= @cant--RESTAMOS LA ANTIGUA CON LA ENTRANTE
+
 		UPDATE DBO.Det_Venta SET Cod_Produc = @Producto, Cantidad = @cant, Precio = @Precio, Desct = @descto
 		WHERE Cod_Venta = @Venta and Cod_Produc = @Producto
+
+		UPDATE Producto SET Stock_Actual = Stock_Actual + @cantActual --SUMAMOS LA CANTIDAD AL STOCK
 		SET @OPERACION = 'ACTUALIZACI�N SATISFACTORIA'
 	END
 ELSE IF (@OPERACION = '3')--======PARA BORRAR 1 DETALLE DE VENTA
 	BEGIN
-	DELETE FROM DBO.Det_Venta WHERE Cod_Venta = @Venta AND Cod_Produc = @Producto
-	SET @OPERACION = 'REGISTRO ELIMINADO'
+		DECLARE @cantBorrada int
+		SELECT @cantBorrada = Cantidad FROM Det_Venta WHERE Cod_Venta = @Venta AND Cod_Produc = @Producto
+
+		DELETE FROM DBO.Det_Venta WHERE Cod_Venta = @Venta AND Cod_Produc = @Producto
+
+		UPDATE Producto SET Stock_Actual = Stock_Actual + @cantBorrada WHERE ID = @Producto
+		SET @OPERACION = 'REGISTRO ELIMINADO'
 	END
 ELSE IF (@OPERACION = '4')--======PARA BORRAR TODOS LOS DETALLES DE UNA VENTA
 	BEGIN
-	DELETE FROM DBO.Det_Venta WHERE Cod_Venta = @Venta
-	SET @OPERACION = 'REGISTROS ELIMINADOS'
+		
+		DECLARE c_EliminaDet CURSOR 
+		FOR SELECT Cod_Produc, Cantidad FROM Det_Venta WHERE Cod_Venta = @Venta
+		DECLARE @codProd varchar(10), @cantProd int
+
+		OPEN c_EliminaDet
+		FETCH c_EliminaDet INTO @codProd, @cantProd
+		WHILE @@FETCH_STATUS = 0
+		BEGIN
+			UPDATE Producto SET Stock_Actual = Stock_Actual + @cantProd WHERE ID = @codProd
+			FETCH c_EliminaDet INTO @codProd, @cantProd
+		END
+		CLOSE c_EliminaDet
+		DEALLOCATE c_EliminaDet
+
+		DELETE FROM DBO.Det_Venta WHERE Cod_Venta = @Venta
+
+		SET @OPERACION = 'REGISTROS ELIMINADOS'
 	END
 GO
 
@@ -459,5 +487,28 @@ ELSE IF (@OPERACION = '4')--======PARA BORRAR TODOS LOS DETALLES DE UNA COMPRA
 	SET @OPERACION = 'REGISTROS ELIMINADOS'
 	END
 GO
+
+--FUNCIÓN PARA DEVOLVER EL DESCUENTO DE UN PRODUCTO -> DEVUELVE 0 SI NO HAY DESCUENTO
+CREATE OR ALTER FUNCTION UFC_Descuento_Producto
+(
+	@prod VARCHAR(10)
+) RETURNS DECIMAL(10,2)
+as
+BEGIN
+	DECLARE @desc DECIMAL(10,2)
+
+	select @desc = case pm.Tipo
+		when 0 then pm.Valor
+		when 1 then pd.Precio_Venta * (pm.Valor/100)
+		end
+	from Promo pm inner join Producto pd 
+	on pd.ID = pm.Cod_Prod
+	where Cod_Prod = @prod and GETDATE() between FecIni and FecFin
+	
+	RETURN ISNULL(@desc, 0)
+END
+GO
+
+
 
 

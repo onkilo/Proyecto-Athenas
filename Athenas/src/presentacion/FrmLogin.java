@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import conexion.Conexion;
 import entidades.Trabajador;
 import negocio.NegocioTrabajador;
 
@@ -24,8 +25,10 @@ import javax.swing.JButton;
 import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;
 
-public class FrmLogin extends JFrame implements ActionListener {
+public class FrmLogin extends JFrame implements ActionListener, KeyListener {
 
 	private JPanel contentPane;
 	private JPanel panel;
@@ -122,6 +125,7 @@ public class FrmLogin extends JFrame implements ActionListener {
 		txtUsuario.setColumns(10);
 
 		txtPass = new JPasswordField();
+		txtPass.addKeyListener(this);
 		txtPass.setBounds(218, 135, 197, 28);
 		contentPane.add(txtPass);
 
@@ -150,33 +154,11 @@ public class FrmLogin extends JFrame implements ActionListener {
 		setLocationRelativeTo(null);
 
 		hiddenChar = txtPass.getEchoChar();
+		
+		Conexion.Conectar();
 	}
 
-	public void actionPerformed(ActionEvent arg0) {
-		if (arg0.getSource() == btnIngresar) {
-			actionPerformedBtnIngresar(arg0);
-		}
-		if (arg0.getSource() == cxbMostrarPass) {
-			actionPerformedChckbxMostrarContrasea(arg0);
-		}
-		if (arg0.getSource() == btnCancelar) {
-			actionPerformedBtnCancelar(arg0);
-		}
-	}
-
-	protected void actionPerformedBtnCancelar(ActionEvent arg0) {
-		System.exit(0);
-	}
-
-	protected void actionPerformedChckbxMostrarContrasea(ActionEvent arg0) {
-		if (cxbMostrarPass.isSelected()) {
-			txtPass.setEchoChar((char) 0);
-		} else {
-			txtPass.setEchoChar(hiddenChar);
-		}
-	}
-
-	protected void actionPerformedBtnIngresar(ActionEvent arg0) {
+	private void Ingresar(){
 		String user = txtUsuario.getText();
 		String pass = new String(txtPass.getPassword());
 		
@@ -206,6 +188,48 @@ public class FrmLogin extends JFrame implements ActionListener {
 				JOptionPane.showMessageDialog(this, "Número de intentos excedidos. El sistema se cerrará",  "Máximo de intentos", JOptionPane.ERROR_MESSAGE);
 				System.exit(0);
 			}
+		}
+	}
+	
+	public void actionPerformed(ActionEvent arg0) {
+		if (arg0.getSource() == btnIngresar) {
+			actionPerformedBtnIngresar(arg0);
+		}
+		if (arg0.getSource() == cxbMostrarPass) {
+			actionPerformedChckbxMostrarContrasea(arg0);
+		}
+		if (arg0.getSource() == btnCancelar) {
+			actionPerformedBtnCancelar(arg0);
+		}
+	}
+
+	protected void actionPerformedBtnCancelar(ActionEvent arg0) {
+		System.exit(0);
+	}
+
+	protected void actionPerformedChckbxMostrarContrasea(ActionEvent arg0) {
+		if (cxbMostrarPass.isSelected()) {
+			txtPass.setEchoChar((char) 0);
+		} else {
+			txtPass.setEchoChar(hiddenChar);
+		}
+	}
+
+	protected void actionPerformedBtnIngresar(ActionEvent arg0) {
+		Ingresar();
+	}
+	public void keyPressed(KeyEvent arg0) {
+	}
+	public void keyReleased(KeyEvent e) {
+		if (e.getSource() == txtPass) {
+			keyReleasedTxtPass(e);
+		}
+	}
+	public void keyTyped(KeyEvent e) {
+	}
+	protected void keyReleasedTxtPass(KeyEvent e) {
+		if(e.getKeyCode() == KeyEvent.VK_ENTER){
+			Ingresar();
 		}
 	}
 }
