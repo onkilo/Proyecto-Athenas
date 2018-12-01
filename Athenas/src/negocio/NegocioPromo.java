@@ -65,7 +65,7 @@ public class NegocioPromo {
 		
 		sql = "SELECT pm.ID AS PromoID,pd.ID as ProdID, pd.Descripcion as Producto,"
 				+ " pm.Tipo as Tipo, pm.Valor as Valor, pm.FecIni as Inicio, pm.FecFin as Fin"
-				+ " FROM Promo pm INNER JOIN Producto pd ON pm.Cod_Prod = pd.ID WHERE GETDATE() BETWEEN pm.FecIni and pm.FecFin";
+				+ " FROM Promo pm INNER JOIN Producto pd ON pm.Cod_Prod = pd.ID WHERE convert(varchar,GETDATE(),101) BETWEEN pm.FecIni and pm.FecFin";
 		
 		try {
 			
@@ -110,7 +110,7 @@ public class NegocioPromo {
 		
 		sql = "SELECT pm.ID AS PromoID,pd.ID as ProdID, pd.Descripcion as Producto,"
 				+ " pm.Tipo as Tipo, pm.Valor as Valor, pm.FecIni as Inicio, pm.FecFin as Fin"
-				+ " FROM Promo pm INNER JOIN Producto pd ON pm.Cod_Prod = pd.ID WHERE GETDATE() > pm.FecFin";
+				+ " FROM Promo pm INNER JOIN Producto pd ON pm.Cod_Prod = pd.ID WHERE convert(varchar,GETDATE(),101) > pm.FecFin";
 		
 		try {
 			

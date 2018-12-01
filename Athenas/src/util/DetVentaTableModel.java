@@ -11,6 +11,7 @@ public class DetVentaTableModel extends AbstractTableModel {
 	
 	private ArrayList<DetVenta> data;
 	private String[] columnas = {"Código", "Descripción", "Cantidad", "Precio", "Descuento", "Subtotal"};
+	Comunes comon = new Comunes();
 
 	public DetVentaTableModel() {
 		data = new ArrayList<DetVenta>();
@@ -43,9 +44,9 @@ public class DetVentaTableModel extends AbstractTableModel {
 		case 0 : return obj.getProd().getID();
 		case 1 : return obj.getProd().getDescripcion();
 		case 2 : return obj.getCant();
-		case 3 : return obj.getPrecio();
-		case 4 : return obj.DescTotal();
-		case 5 : return obj.getSubDesc();
+		case 3 : return comon.formatDouble(obj.getPrecio());
+		case 4 : return comon.formatDouble(obj.DescTotal());
+		case 5 : return comon.formatDouble(obj.getSubDesc());
 		default : return null;
 		}
 	}

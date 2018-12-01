@@ -14,7 +14,8 @@ public class VentaTableModel extends AbstractTableModel {
 	private ArrayList<Venta> data;
 	private String[] columnas = {"Código", "Cliente", "Trabajador", "Fecha", "IGV", "Descuento", "Total"};
 	private DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd-MM-uuuu");
-
+	Comunes comon = new Comunes();
+	
 	public VentaTableModel() {
 		data = new ArrayList<Venta>();
 	}
@@ -47,9 +48,9 @@ public class VentaTableModel extends AbstractTableModel {
 		case 1 : return obj.getCli().getNombre() + " " + obj.getCli().getApellido();
 		case 2 : return obj.getTrab().getNombre() + " " + obj.getTrab().getApellido();
 		case 3 : return obj.getFecha().format(formato);
-		case 4 : return obj.MontoIGV();
-		case 5 : return obj.getDescTotal();
-		case 6 : return obj.getCalcTotal();
+		case 4 : return comon.formatDouble(obj.MontoIGV());
+		case 5 : return comon.formatDouble(obj.getDescTotal());
+		case 6 : return comon.formatDouble(obj.getCalcTotal());
 		default : return null;
 		}
 	}

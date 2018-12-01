@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CDP" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8457c7a9-108b-4569-b03e-190dc7694fd7">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="BDAthenasCon"/>
+	<parameter name="Venta" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT dbo."Venta"."Cod_Venta",
+	dbo."Venta"."Fecha",
+	dbo."Venta"."IGV",
+	dbo."Venta"."DescTotal",
+	concat(dbo."Cliente"."Nombre", ' ', dbo."Cliente"."Apellido")
+	 AS CliNom,
+	dbo."Cliente"."ID" AS CliCod,
+	dbo."Cliente"."Telefono" AS CliTel,
+	dbo."Cliente"."DNI" AS CliDNI,
+	concat(dbo."Trabajador"."Nombre", ' ',dbo."Trabajador"."Apellido" )
+	 AS TrabNom
+FROM dbo."Cliente"
+	INNER JOIN dbo."Venta" ON 
+	 dbo."Venta"."Cod_Cliente" = dbo."Cliente"."ID" 
+	INNER JOIN dbo."Trabajador" ON 
+	 dbo."Trabajador"."ID" = dbo."Venta"."Cod_Trabajador" 
+WHERE 
+	 dbo."Venta"."Cod_Venta" = $P{Venta}]]>
+	</queryString>
+	<field name="Cod_Venta" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Cod_Venta"/>
+	</field>
+	<field name="Fecha" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.label" value="Fecha"/>
+	</field>
+	<field name="IGV" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="IGV"/>
+	</field>
+	<field name="DescTotal" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="DescTotal"/>
+	</field>
+	<field name="CliNom" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CliNom"/>
+	</field>
+	<field name="CliCod" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CliCod"/>
+	</field>
+	<field name="CliTel" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CliTel"/>
+	</field>
+	<field name="CliDNI" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CliDNI"/>
+	</field>
+	<field name="TrabNom" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="TrabNom"/>
+	</field>
+	<variable name="FechaFormat" class="java.lang.String">
+		<variableExpression><![CDATA[(new SimpleDateFormat("dd-MMMM-yyyy").format($F{Fecha}))]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="96" splitType="Stretch">
+			<staticText>
+				<reportElement x="348" y="0" width="160" height="30" uuid="be2839ed-2531-416d-bc87-401014c68ef5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Comprobante Electrónico]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="348" y="30" width="160" height="30" uuid="d48fe690-8d0d-446b-b178-c3f754d1c2da"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Bodega Athenas]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="378" y="60" width="100" height="30" uuid="48038e7a-e9e1-4a91-b140-630ae98fc767"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[RUC : 00000000]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Transparent" x="312" y="-2" width="232" height="98" uuid="41eb2425-4eaf-4628-8a35-0fac735916ac"/>
+				<graphicElement>
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</graphicElement>
+			</rectangle>
+		</band>
+	</title>
+	<detail>
+		<band height="125" splitType="Stretch">
+			<rectangle>
+				<reportElement mode="Transparent" x="10" y="0" width="289" height="99" uuid="20b4ce73-4a09-4de1-bbba-c3968fa67e4d"/>
+			</rectangle>
+			<textField>
+				<reportElement x="112" y="10" width="188" height="25" uuid="b61ddf90-373e-4049-bf07-9ce16d3e733b"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<paragraph leftIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Cod_Venta}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="12" y="10" width="100" height="25" uuid="6bc2fcc4-7510-48bf-b46f-e59dc0d9f52d"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<paragraph leftIndent="10"/>
+				</textElement>
+				<text><![CDATA[Código de venta :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="12" y="37" width="100" height="25" uuid="1c230465-4379-4125-a439-b89acb2bee6e"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<paragraph leftIndent="10"/>
+				</textElement>
+				<text><![CDATA[Fecha : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="12" y="62" width="100" height="25" uuid="a8fdb9ea-3717-4020-802b-bd28870c1a09"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<paragraph leftIndent="10"/>
+				</textElement>
+				<text><![CDATA[Vendedor : ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="112" y="62" width="188" height="25" uuid="2d375120-92a7-4c0f-a7f6-226becc7b0ae"/>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TrabNom}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="112" y="37" width="188" height="25" uuid="1666e2c4-9a81-428e-af54-baf53e2038ac"/>
+				<textElement>
+					<paragraph leftIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{FechaFormat}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="299" y="0" width="245" height="99" uuid="fcc186d4-abad-4ecd-92e6-223124e6e869"/>
+			</rectangle>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

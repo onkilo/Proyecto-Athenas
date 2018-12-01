@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ListaPromociones" pageWidth="700" pageHeight="842" columnWidth="660" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="02661181-0f7b-4098-9759-3550d3713706">
-	<property name="com.jaspersoft.studio.data.sql.tables">
-		<![CDATA[ZGJvLiJQcm9kdWN0byIgLDE1LDE1LGFkZDllMjFjLTMxODMtNDFiYi1hYWNlLTAxNWY4MjY2YjNl
-ODtkYm8uIlByb21vIiAsMTYyLDQxLDljNDM1ODQ4LTNjZTMtNGY5Yi04NTQxLTRkOGZjNmUyYWQ1
-OTs=]]>
-	</property>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="BDAthenasCon"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
@@ -27,7 +23,7 @@ FROM dbo."Promo"
 	inner join dbo."Producto" ON 
 	 dbo."Producto"."ID" = dbo."Promo"."Cod_Prod" 
 WHERE 
-	 getdate() > dbo."Promo"."FecFin"]]>
+	 convert(varchar,GETDATE(),101) > dbo."Promo"."FecFin"]]>
 	</queryString>
 	<field name="ID" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="ID"/>

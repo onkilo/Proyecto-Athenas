@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Pedido" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="077cbece-2e68-4fde-9e81-5566884752b9">
+	<property name="com.jaspersoft.studio.data.sql.tables">
+		<![CDATA[IkNvbXByYSIgLDE1LDE1LGRiZmY3OWI4LTllZDUtNGI1Yi04ZjMwLTIwNTUzZjMxZmFlZTsiUHJv
+dmVlZG9yIiAsMzE2LDE1LGU1ZmVkYmU4LTRjYTAtNDhjMC1hZDE1LWE5ODlhZDlhZGQ4YzsiRGV0
+X0NvbXAiICwxMDUsMTUsMGZhMzlkMmYtZjcyNS00YWI2LTk0YjgtNjljNjg0ODdiMGE5OyJUcmFi
+YWphZG9yIiAsMjE1LDE1LDE0MTk4MTcxLTJlMzYtNGVkYS04NWU2LTBmZTIwY2RlZjMyODs=
+]]>
+	</property>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="BDAthenasCon"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT c.Cod_Compra as CodCompra,c.Estado as Estado, c.Fecha as Fecha, p.Rz_Social as ProvRz, p.Direccion as ProvDir, p.Telefono as ProvTel, t.Nombre + ' ' + t.Apellido as Trab, sum(dc.Cantidad*dc.Precio) as Subtotal, 
+	 sum(dc.Cantidad*dc.Precio) * c.IGV as IGVMonto, sum(dc.Cantidad*dc.Precio) + sum(dc.Cantidad*dc.Precio) * c.IGV as Total
+FROM Compra c inner join Det_Comp dc on c.Cod_Compra = dc.Cod_Compra inner join Trabajador t on c.Cod_Trabajador = t.ID inner join Proveedor p on c.Cod_Proveedor = p.ID
+group by c.Cod_Compra, c.Fecha, p.Rz_Social, p.Direccion, p.Telefono, c.IGV, t.Nombre, t.Apellido, c.Estado]]>
+	</queryString>
+	<field name="CodCompra" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CodCompra"/>
+	</field>
+	<field name="Estado" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="Estado"/>
+	</field>
+	<field name="Fecha" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.label" value="Fecha"/>
+	</field>
+	<field name="ProvRz" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ProvRz"/>
+	</field>
+	<field name="ProvDir" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ProvDir"/>
+	</field>
+	<field name="ProvTel" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ProvTel"/>
+	</field>
+	<field name="Trab" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Trab"/>
+	</field>
+	<field name="Subtotal" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="Subtotal"/>
+	</field>
+	<field name="IGVMonto" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="IGVMonto"/>
+	</field>
+	<field name="Total" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="Total"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

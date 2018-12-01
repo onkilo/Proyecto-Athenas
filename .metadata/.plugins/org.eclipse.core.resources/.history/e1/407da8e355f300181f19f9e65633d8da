@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CDP" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8457c7a9-108b-4569-b03e-190dc7694fd7">
+	<property name="com.jaspersoft.studio.data.sql.tables">
+		<![CDATA[ZGJvLiJWZW50YSIgLDE2NSw3OSw0ZjJiNjdmMS1lMGU1LTRkZDgtYTk3My1mZWQ4ZTA2ZDQ4MTI7
+ZGJvLiJUcmFiYWphZG9yIiAsNDQ1LDE1LDc1MmZiMjdkLTQxMGItNDkzNS1hODVmLTkwMGEyMWUx
+YTVhNTtkYm8uIlByb2R1Y3RvIiAsMTY1LDMwMSw5OGRlODM0MS0xOTBhLTQxOGQtOTlhOS1mN2Rl
+NTEyYTYwZWI7ZGJvLiJEZXRfVmVudGEiICwxNSwyMTYsMDZlMzIzZTItMjQyZS00YmUzLTkxODQt
+ODE4NmJhZDkxODkwO2Riby4iQ2xpZW50ZSIgLDMzMywyMDEsNmQ1NzY0OGUtNDg3OC00ZmM2LWI4
+ODItOWE4M2ZlMzVhODQ4Ow==
+]]>
+	</property>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="BDAthenasCon"/>
+	<parameter name="Venta" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT dbo."Venta"."Cod_Venta",
+	dbo."Venta"."Fecha",
+	dbo."Venta"."IGV",
+	dbo."Venta"."DescTotal",
+	dbo."Producto"."Descripcion" AS ProdDesc,
+	dbo."Det_Venta"."Cod_Produc" AS CodProd,
+	dbo."Det_Venta"."Cantidad",
+	dbo."Det_Venta"."Precio",
+	dbo."Det_Venta"."Desct" AS DescUni,
+	dbo."Cliente"."Nombre" AS CliNom,
+	dbo."Cliente"."Apellido" AS CliApe,
+	dbo."Cliente"."ID" AS CliCod,
+	dbo."Cliente"."Telefono" AS CliTel,
+	dbo."Cliente"."DNI" AS CliDNI,
+	dbo."Trabajador"."Nombre" AS TrabNom,
+	dbo."Trabajador"."Apellido" AS TrabApe
+FROM dbo."Det_Venta"
+	INNER JOIN dbo."Venta" ON 
+	 dbo."Det_Venta"."Cod_Venta" = dbo."Venta"."Cod_Venta" 
+	INNER JOIN dbo."Cliente" ON 
+	 dbo."Venta"."Cod_Cliente" = dbo."Cliente"."ID" 
+	INNER JOIN dbo."Producto" ON 
+	 dbo."Det_Venta"."Cod_Produc" = dbo."Producto"."ID" 
+	INNER JOIN dbo."Trabajador" ON 
+	 dbo."Venta"."Cod_Trabajador" = dbo."Trabajador"."ID" 
+WHERE 
+	 dbo."Venta"."Cod_Venta" = $P{Venta}]]>
+	</queryString>
+	<field name="Cod_Venta" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Cod_Venta"/>
+	</field>
+	<field name="Fecha" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.label" value="Fecha"/>
+	</field>
+	<field name="IGV" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="IGV"/>
+	</field>
+	<field name="DescTotal" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="DescTotal"/>
+	</field>
+	<field name="ProdDesc" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ProdDesc"/>
+	</field>
+	<field name="CodProd" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CodProd"/>
+	</field>
+	<field name="Cantidad" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="Cantidad"/>
+	</field>
+	<field name="Precio" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="Precio"/>
+	</field>
+	<field name="DescUni" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="DescUni"/>
+	</field>
+	<field name="CliNom" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CliNom"/>
+	</field>
+	<field name="CliApe" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CliApe"/>
+	</field>
+	<field name="CliCod" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CliCod"/>
+	</field>
+	<field name="CliTel" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CliTel"/>
+	</field>
+	<field name="CliDNI" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CliDNI"/>
+	</field>
+	<field name="TrabNom" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="TrabNom"/>
+	</field>
+	<field name="TrabApe" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="TrabApe"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="98" splitType="Stretch">
+			<staticText>
+				<reportElement x="380" y="0" width="160" height="30" uuid="be2839ed-2531-416d-bc87-401014c68ef5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Comprobante Electrónico]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="380" y="30" width="160" height="30" uuid="d48fe690-8d0d-446b-b178-c3f754d1c2da"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Bodega Athenas]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="410" y="60" width="100" height="30" uuid="48038e7a-e9e1-4a91-b140-630ae98fc767"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[RUC : 00000000]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

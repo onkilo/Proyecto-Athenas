@@ -1,0 +1,200 @@
+package negocio;
+
+import java.sql.*;
+import java.util.ArrayList;
+import entidades.*;
+import conexion.Conexion;
+
+public class NegocioCompra {
+	
+	private Connection con;
+	private CallableStatement cstm;
+	private PreparedStatement pst;
+	private Statement st;
+	private String sql = "";
+	private ResultSet rs;
+	private NegocioDetCompra nDet;
+	
+	public ArrayList<Compra> Listar(){
+		ArrayList<Compra> lista = new ArrayList<Compra>();
+		
+		sql = "select oc.Cod_Compra as Compra, oc.Fecha as Fecha, oc.IGV as IGV, oc.Estado as Estado, t.ID as CodTrab, "
+				+ "t.Nombre as NomTrab, t.Apellido as ApeTrab, pv.ID as CodProv, pv.Direccion as DirProv, pv.Rz_Social as RZProv, "
+				+ "pv.Telefono as TelProv, sum(dc.Cantidad * dc.Precio) as Subtotal  "
+				+ "from Compra oc inner join Det_Comp dc on oc.Cod_Compra = dc.Cod_Compra inner join Trabajador t "
+				+ "on oc.Cod_Trabajador = t.ID inner join Proveedor pv on oc.Cod_Proveedor = pv.ID group by oc.Cod_Compra, "
+				+ "oc.Fecha, oc.IGV, oc.Estado, t.ID , t.Nombre, t.Apellido, pv.ID, pv.Direccion, pv.Rz_Social, pv.Telefono";
+		
+		try {
+			con = Conexion.Conectar();
+			st = con.createStatement();
+			rs = st.executeQuery(sql);
+			while(rs.next()){
+				Compra obj = new Compra();
+				obj.setId(rs.getString("Compra"));
+				obj.setSqlFecha(rs.getDate("Fecha"));
+				obj.setIGV(rs.getDouble("IGV"));
+				obj.setEstado(rs.getInt("Estado"));
+				obj.getTrab().setID(rs.getString("CodTrab"));
+				obj.getTrab().setNombre(rs.getString("NomTrab"));
+				obj.getTrab().setApellido(rs.getString("ApeTrab"));
+				obj.getProv().setID(rs.getString("CodProv"));
+				obj.getTrab().setDireccion(rs.getString("DirProv"));
+				obj.getProv().setRaz_Soc(rs.getString("RZProv"));
+				obj.getProv().setTelf(rs.getString("TelProv"));
+				obj.setSubtotal(rs.getDouble("Subtotal"));
+				
+				lista.add(obj);
+				
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (st != null)
+					st.close();
+				if (con != null)
+					con.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		
+		return lista;
+	}
+	
+	
+	public boolean InsertarCompra(Compra obj, ArrayList<DetCompra> detalle){
+		boolean exito = false;
+		
+		sql = "{call USP_CompraMantenimiento(?,?,?,?,?,?)}";
+		
+		try {
+			con = Conexion.Conectar();
+			con.setAutoCommit(false);
+			cstm = con.prepareCall(sql);
+			cstm.setString(1, "1");
+			cstm.setString(2, obj.getId());
+			cstm.setString(3, obj.getProv().getID());
+			cstm.setString(4, obj.getTrab().getID());
+			cstm.setDate(5, obj.getSQlFecha());
+			cstm.setDouble(6, obj.getIGV());
+			
+			cstm.executeUpdate();
+			
+			nDet = new NegocioDetCompra();
+			for(DetCompra item : detalle){
+				nDet.InsertarDetalle(item, con);
+			}
+			
+			con.commit();
+			con.setAutoCommit(true);
+			exito = true;
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		return exito;
+	}
+	
+	public boolean ModificarPorRecibir(Compra obj, ArrayList<DetCompra> detalle){
+		boolean exito = false;
+		
+		sql = "{call USP_CompraMantenimiento(?,?,?,?,?,?,?)}";
+		
+		try {
+			con = Conexion.Conectar();
+			con.setAutoCommit(false);
+			cstm = con.prepareCall(sql);
+			cstm.setString(1, "2");
+			cstm.setString(2, obj.getId());
+			cstm.setString(3, obj.getProv().getID());
+			cstm.setString(4, obj.getTrab().getID());
+			cstm.setDate(5, obj.getSQlFecha());
+			cstm.setDouble(6, obj.getIGV());
+			cstm.setInt(7, obj.getEstado());
+			
+			cstm.executeUpdate();
+			
+			nDet = new NegocioDetCompra();
+			nDet.EliminarDetalles(obj.getId(), con);
+			
+			for(DetCompra item : detalle){
+				nDet.InsertarDetalle(item, con);
+			}
+			
+			con.commit();
+			con.setAutoCommit(true);
+			exito = true;
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		return exito;
+	}
+	
+	//Modifica los parametros y también recibe de ser necesario
+	public boolean ModificarCompra(Compra obj, ArrayList<DetCompra> detalle){
+		boolean exito = false;
+		
+		sql = "{call USP_CompraMantenimiento(?,?,?,?,?,?,?)}";
+		
+		try {
+			con = Conexion.Conectar();
+			con.setAutoCommit(false);
+			
+			nDet = new NegocioDetCompra();
+			nDet.EliminarDetalles(obj.getId(), con);
+			
+			cstm = con.prepareCall(sql);
+			cstm.setString(1, "2");
+			cstm.setString(2, obj.getId());
+			cstm.setString(3, obj.getProv().getID());
+			cstm.setString(4, obj.getTrab().getID());
+			cstm.setDate(5, obj.getSQlFecha());
+			cstm.setDouble(6, obj.getIGV());
+			cstm.setInt(7, obj.getEstado());
+			
+			cstm.executeUpdate();
+			
+			for(DetCompra item : detalle){
+				nDet.InsertarDetalle(item, con);
+			}
+			
+			con.commit();
+			con.setAutoCommit(true);
+			exito = true;
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		return exito;
+	}
+	
+	public String nextCod() {
+		sql = "{call USP_NextCod(?)}";
+		String cod = "";
+		try {
+			con = Conexion.Conectar();
+			cstm = con.prepareCall(sql);
+			cstm.setString(1, "8");
+			cstm.registerOutParameter(1, Types.VARCHAR);
+			cstm.executeUpdate();
+			cod = cstm.getString(1);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			try {
+				if (cstm != null)
+					cstm.close();
+				if (con != null)
+					con.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		return cod;
+	}
+}

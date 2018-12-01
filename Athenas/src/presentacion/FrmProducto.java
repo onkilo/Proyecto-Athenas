@@ -8,12 +8,15 @@ import net.miginfocom.swing.MigLayout;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
+import util.Comunes;
 import util.ProductoTableModel;
+import util.Reporte;
 
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
 import conexion.Conexion;
@@ -107,6 +110,7 @@ public class FrmProducto extends JInternalFrame implements KeyListener, ActionLi
 	private DefaultComboBoxModel<CategoriaProducto> cboModel = new DefaultComboBoxModel<CategoriaProducto>();
 	private File archivoImg = null;
 	private String opGuardar = "";
+	Comunes comon = new Comunes();
 
 	/**
 	 * Launch the application.
@@ -165,7 +169,8 @@ public class FrmProducto extends JInternalFrame implements KeyListener, ActionLi
 		panel.add(lblRaznSocial, "cell 0 1,alignx center");
 
 		txtDescripcion = new JTextField();
-		txtDescripcion.setEnabled(false);
+		txtDescripcion.setEditable(false);
+		txtDescripcion.setBackground(SystemColor.control);
 		panel.add(txtDescripcion, "cell 1 1,alignx leading");
 		txtDescripcion.setColumns(20);
 
@@ -175,7 +180,8 @@ public class FrmProducto extends JInternalFrame implements KeyListener, ActionLi
 		panel.add(lblRepresentante, "cell 0 2,alignx center");
 
 		txtPreCompra = new JTextField();
-		txtPreCompra.setEnabled(false);
+		txtPreCompra.setEditable(false);
+		txtPreCompra.setBackground(SystemColor.control);
 		panel.add(txtPreCompra, "cell 1 2,alignx leading");
 		txtPreCompra.setColumns(20);
 
@@ -185,7 +191,8 @@ public class FrmProducto extends JInternalFrame implements KeyListener, ActionLi
 		panel.add(lblEmail, "cell 0 3,alignx center");
 
 		txtPreVenta = new JTextField();
-		txtPreVenta.setEnabled(false);
+		txtPreVenta.setEditable(false);
+		txtPreVenta.setBackground(SystemColor.control);
 		panel.add(txtPreVenta, "cell 1 3,alignx leading");
 		txtPreVenta.setColumns(20);
 
@@ -195,7 +202,8 @@ public class FrmProducto extends JInternalFrame implements KeyListener, ActionLi
 		panel.add(lblTelfono, "cell 0 4,alignx center");
 
 		txtStockActual = new JTextField();
-		txtStockActual.setEnabled(false);
+		txtStockActual.setEditable(false);
+		txtStockActual.setBackground(SystemColor.control);
 		panel.add(txtStockActual, "cell 1 4,alignx leading");
 		txtStockActual.setColumns(10);
 
@@ -205,7 +213,8 @@ public class FrmProducto extends JInternalFrame implements KeyListener, ActionLi
 		panel.add(lblSexo, "cell 0 5,alignx center");
 
 		txtStockMin = new JTextField();
-		txtStockMin.setEnabled(false);
+		txtStockMin.setEditable(false);
+		txtStockMin.setBackground(SystemColor.control);
 		txtStockMin.setColumns(10);
 		panel.add(txtStockMin, "cell 1 5,alignx leading");
 
@@ -227,7 +236,8 @@ public class FrmProducto extends JInternalFrame implements KeyListener, ActionLi
 		panel.add(lblImagen, "cell 0 7,alignx center");
 
 		txtImg = new JTextField();
-		txtImg.setEnabled(false);
+		txtImg.setEditable(false);
+		txtImg.setBackground(SystemColor.control);
 		panel.add(txtImg, "flowx,cell 1 7,alignx leading");
 		txtImg.setColumns(18);
 
@@ -323,6 +333,8 @@ public class FrmProducto extends JInternalFrame implements KeyListener, ActionLi
 		panel_5.add(scrollPane, BorderLayout.CENTER);
 
 		tblProducto = new JTable();
+		tblProducto.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		tblProducto.setRowHeight(20);
 		tblProducto.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane.setViewportView(tblProducto);
 
@@ -425,7 +437,7 @@ public class FrmProducto extends JInternalFrame implements KeyListener, ActionLi
 					lblImg.setText("");
 					lblImg.setIcon(new ImageIcon(img));
 				}
-				
+				imgIS.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -441,11 +453,11 @@ public class FrmProducto extends JInternalFrame implements KeyListener, ActionLi
 	}
 
 	private void Habilita(boolean estado) {
-		txtDescripcion.setEnabled(estado);
-		txtPreCompra.setEnabled(estado);
-		txtPreVenta.setEnabled(estado);
-		txtStockActual.setEnabled(estado);
-		txtStockMin.setEnabled(estado);
+		comon.habTextField(txtDescripcion, estado);
+		comon.habTextField(txtPreCompra, estado);
+		comon.habTextField(txtPreVenta, estado);
+		comon.habTextField(txtStockActual, estado);
+		comon.habTextField(txtStockMin, estado);
 		cboCategoria.setEnabled(estado);
 		btnBuscarImg.setEnabled(estado);
 
@@ -465,7 +477,7 @@ public class FrmProducto extends JInternalFrame implements KeyListener, ActionLi
 		lblImg.setIcon(null);
 		txtImg.setText("");
 		cboCategoria.setSelectedIndex(0);
-
+		archivoImg = null;
 	}
 
 	private Producto leerProducto() {
@@ -491,6 +503,8 @@ public class FrmProducto extends JInternalFrame implements KeyListener, ActionLi
 
 	private void LeerImg() {
 		JFileChooser open = new JFileChooser();
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Imágenes(jpg,gif,png)", "jpg", "gif", "png");
+		open.setFileFilter(filter);
 		int opcion = open.showOpenDialog(this);
 		if (opcion == JFileChooser.APPROVE_OPTION) {
 			archivoImg = open.getSelectedFile();
@@ -627,15 +641,6 @@ public class FrmProducto extends JInternalFrame implements KeyListener, ActionLi
 		LeerImg();
 	}
 	protected void actionPerformedBtnImprimir(ActionEvent arg0) {
-		try {
-			JasperPrint jp = JasperFillManager.fillReport("src/reportes/ListaProductos.jasper", null, Conexion.Conectar());
-			JasperViewer jv = new JasperViewer(jp, false);
-			jv.setTitle("Lista de clientes");
-			jv.setVisible(true);
-
-		} catch (Exception e) {
-
-			e.printStackTrace();
-		}
+		Reporte.CreaReporte("src/reportes/ListaProductos.jasper");
 	}
 }

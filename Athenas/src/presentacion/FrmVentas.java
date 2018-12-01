@@ -5,12 +5,18 @@ import java.awt.EventQueue;
 import javax.swing.JInternalFrame;
 import java.awt.Color;
 import net.miginfocom.swing.MigLayout;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
+import util.Reporte;
 import util.VentaTableModel;
 
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
+import conexion.Conexion;
 import entidades.Trabajador;
 import entidades.Venta;
 import negocio.NegocioVenta;
@@ -36,16 +42,19 @@ import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.awt.event.KeyEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.ListSelectionModel;
 
 public class FrmVentas extends JInternalFrame implements KeyListener, ActionListener {
 	private JPanel panel;
 	private JPanel panel_1;
 	private JPanel panel_5;
 	private JScrollPane scrollPane;
-	private JTable tblProveedor;
+	private JTable tblVentas;
 	private JTextField txtBuscar;
 	private JButton btnResetear;
 	private JButton btnImprimir;
@@ -193,14 +202,18 @@ public class FrmVentas extends JInternalFrame implements KeyListener, ActionList
 		scrollPane.setBackground(SystemColor.control);
 		panel_5.add(scrollPane, BorderLayout.CENTER);
 		
-		tblProveedor = new JTable();
-		scrollPane.setViewportView(tblProveedor);
+		tblVentas = new JTable();
+		tblVentas.setRowHeight(20);
+		tblVentas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tblVentas.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		scrollPane.setViewportView(tblVentas);
 		setBounds(0, 0, 1100, 600);
 		
 		modelo = new VentaTableModel();
-		tblProveedor.setModel(modelo);
+		tblVentas.setModel(modelo);
 		
 		btnImprimir = new JButton("");
+		btnImprimir.addActionListener(this);
 		btnImprimir.setIcon(new ImageIcon(FrmVentas.class.getResource("/img/icon-imprimir-white.png")));
 		panel_1.add(btnImprimir, "cell 2 3,alignx trailing");
 		btnImprimir.setFont(new Font("SansSerif", Font.BOLD, 12));
@@ -241,6 +254,9 @@ public class FrmVentas extends JInternalFrame implements KeyListener, ActionList
 		txtCant.setText(modelo.getRowCount() + "");
 	}
 	public void actionPerformed(ActionEvent arg0) {
+		if (arg0.getSource() == btnImprimir) {
+			actionPerformedBtnImprimir(arg0);
+		}
 		if (arg0.getSource() == btnEliminar) {
 			actionPerformedBtnEliminar(arg0);
 		}
@@ -272,8 +288,8 @@ public class FrmVentas extends JInternalFrame implements KeyListener, ActionList
 		});
 	}
 	protected void actionPerformedBtnModificar(ActionEvent arg0) {
-		if(!tblProveedor.getSelectionModel().isSelectionEmpty()){
-			int fila = tblProveedor.getSelectedRow();
+		if(!tblVentas.getSelectionModel().isSelectionEmpty()){
+			int fila = tblVentas.getSelectedRow();
 			Venta venta = modelo.getVenta(fila);
 			FrmDetVentas formDet = new FrmDetVentas(venta);
 			formDet.setLocationRelativeTo(this);
@@ -290,10 +306,10 @@ public class FrmVentas extends JInternalFrame implements KeyListener, ActionList
 		}
 	}
 	protected void actionPerformedBtnEliminar(ActionEvent arg0) {
-		if(!tblProveedor.getSelectionModel().isSelectionEmpty()){
+		if(!tblVentas.getSelectionModel().isSelectionEmpty()){
 			int confirmar =JOptionPane.showInternalConfirmDialog(this, "¿Desea eliminar este registro?", "Confirmación", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 			if(confirmar == JOptionPane.YES_OPTION){
-				int fila = tblProveedor.getSelectedRow();
+				int fila = tblVentas.getSelectedRow();
 				Venta venta = modelo.getVenta(fila);
 				nVent.EliminarVenta(venta);
 				JOptionPane.showInternalMessageDialog(this, "Registro eliminado satisfactoriamente", "Eliminación", JOptionPane.INFORMATION_MESSAGE);
@@ -305,4 +321,14 @@ public class FrmVentas extends JInternalFrame implements KeyListener, ActionList
 			JOptionPane.showInternalMessageDialog(this, "Debe selecionar un registro para realizar esta operación", "Seleción Errónea", JOptionPane.WARNING_MESSAGE);
 		}
 	}
+	protected void actionPerformedBtnImprimir(ActionEvent arg0) {
+		if(!tblVentas.getSelectionModel().isSelectionEmpty()){
+			int fila = tblVentas.getSelectedRow();
+			Venta venta = modelo.getVenta(fila);
+			Map<String, Object> param = new HashMap<>();
+			param.put("CodVenta", venta.getCodVenta());
+			Reporte.CreaReporte("src/reportes/CDP.jasper", param);
+		}
+	}
+	
 }

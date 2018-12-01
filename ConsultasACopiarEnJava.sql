@@ -23,3 +23,20 @@ select case pm.Tipo
 from Promo pm inner join Producto pd 
 on pd.ID = pm.Cod_Prod
 where Cod_Prod = 'PR0010' and GETDATE() between FecIni and FecFin
+go
+
+select * from Det_Comp
+go
+SELECT * FROM Compra
+GO
+
+select oc.Cod_Compra as Compra, oc.Fecha as Fecha, oc.IGV as IGV, oc.Estado as Estado, t.ID as CodTrab, t.Nombre as NomTrab, t.Apellido as ApeTrab, pv.ID as CodProv, pv.Direccion as DirProv, pv.Rz_Social as RZProv, pv.Telefono as TelProv, sum(dc.Cantidad * dc.Precio) as Subtotal  from Compra oc inner join Det_Comp dc on oc.Cod_Compra = dc.Cod_Compra inner join Trabajador t on oc.Cod_Trabajador = t.ID inner join Proveedor pv on oc.Cod_Proveedor = pv.ID group by oc.Cod_Compra, oc.Fecha, oc.IGV, oc.Estado, t.ID , t.Nombre, t.Apellido, pv.ID, pv.Direccion, pv.Rz_Social, pv.Telefono
+go
+
+select dc.Cod_Compra as Compra, p.ID as Producto, p.Descripcion as ProdDesc, dc.Cantidad as Cantidad, dc.Precio as Precio  from Det_Comp dc inner join Producto p on dc.Cod_Produc = p.ID
+GO
+
+DECLARE @COD VARCHAR(10) = '7'
+EXEC USP_NextCod @COD OUT
+PRINT @COD
+SELECT MAX(Cod_Compra) FROM Compra

@@ -1,0 +1,48 @@
+package util;
+
+import java.util.ArrayList;
+
+import javax.swing.table.AbstractTableModel;
+
+import entidades.DetCompra;
+
+public class DetCompraTableModel extends AbstractTableModel {
+	
+	private ArrayList<DetCompra> data;
+	private String[] columnas = {"Código", "Descripción", "Cantidad", "Precio", "Subtotal"};
+	
+	public DetCompraTableModel() {
+		data = new ArrayList<DetCompra>();
+	}
+	
+	public DetCompraTableModel(ArrayList<DetCompra> data) {
+		this.data = data;
+	}
+
+	@Override
+	public int getColumnCount() {
+		return columnas.length;
+	}
+
+	@Override
+	public int getRowCount() {
+		return data.size();
+	}
+
+	@Override
+	public String getColumnName(int column) {
+		return columnas[column];
+	}
+	public Object getValueAt(int rowIndex, int columnIndex) {
+		DetCompra obj = data.get(rowIndex);
+		switch(columnIndex){
+		case 0 : return obj.getProd().getID();
+		case 1 : return obj.getProd().getDescripcion();
+		case 2 : return obj.getCant();
+		case 3 : return obj.getPrecio();
+		case 4 : return obj.CalcSubtotal();
+		}
+		return null;
+	}
+
+}

@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 
 public class FrmDetComp extends JDialog implements ActionListener {
 
@@ -76,7 +77,6 @@ public class FrmDetComp extends JDialog implements ActionListener {
 	private JTextField txtProdPrecio;
 	private JButton btnAgregar;
 	private JButton btnEliminarProducto;
-	private JButton btnModificarDetalle;
 	private JButton btnCancelarPedido;
 	private JButton btnRegistrarPedido;
 	private JButton btnImprimirPedido;
@@ -279,6 +279,9 @@ public class FrmDetComp extends JDialog implements ActionListener {
 		panel_4.add(scrollPane, BorderLayout.CENTER);
 		
 		tblDetalle = new JTable();
+		tblDetalle.setRowHeight(20);
+		tblDetalle.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tblDetalle.setFont(new Font("Times New Roman", Font.PLAIN, 14));
 		scrollPane.setViewportView(tblDetalle);
 		
 		panel_5 = new JPanel();
@@ -295,13 +298,6 @@ public class FrmDetComp extends JDialog implements ActionListener {
 		btnEliminarProducto.setFont(new Font("Serif", Font.BOLD, 14));
 		btnEliminarProducto.setBounds(34, 17, 141, 35);
 		panel_5.add(btnEliminarProducto);
-		
-		btnModificarDetalle = new JButton("Modificar detalle");
-		btnModificarDetalle.setBackground(new Color(75, 0, 130));
-		btnModificarDetalle.setForeground(Color.WHITE);
-		btnModificarDetalle.setFont(new Font("Serif", Font.BOLD, 14));
-		btnModificarDetalle.setBounds(34, 52, 141, 35);
-		panel_5.add(btnModificarDetalle);
 		
 		btnCancelarPedido = new JButton("Cancelar pedido");
 		btnCancelarPedido.addActionListener(this);

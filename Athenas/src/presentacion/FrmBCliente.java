@@ -121,6 +121,7 @@ public class FrmBCliente extends JDialog implements KeyListener, ActionListener,
 		panel.add(scrollPane, BorderLayout.CENTER);
 
 		tblCliente = new JTable();
+		tblCliente.setFont(new Font("Times New Roman", Font.PLAIN, 14));
 		tblCliente.addMouseListener(this);
 		tblCliente.setRowHeight(20);
 		tblCliente.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

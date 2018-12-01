@@ -9,13 +9,20 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.UIManager;
 import net.miginfocom.swing.MigLayout;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
 import util.Comunes;
 import util.DetVentaTableModel;
+import util.Reporte;
 
 import java.awt.SystemColor;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
@@ -26,6 +33,7 @@ import javax.swing.JTextField;
 import java.awt.Font;
 import com.github.lgooddatepicker.components.DatePicker;
 
+import conexion.Conexion;
 import entidades.Cliente;
 import entidades.DetVenta;
 import entidades.Producto;
@@ -87,7 +95,6 @@ public class FrmDetVentas extends JDialog implements ActionListener {
 	private JTextField txtDescuento;
 	private JButton btnAgregar;
 	private JButton btnEliminarDetalle;
-	private JButton btnModificarDetalle;
 	private JButton btnCancelarVenta;
 	private JButton btnRegistrarVenta;
 	private JButton btnImprimirVenta;
@@ -110,7 +117,7 @@ public class FrmDetVentas extends JDialog implements ActionListener {
 	private Cliente cli = null;
 	private DetVentaTableModel modelo;
 	private Venta venta = new Venta();
-	
+
 	private Comunes comunes = new Comunes();
 	int operacion = 0;
 
@@ -284,6 +291,7 @@ public class FrmDetVentas extends JDialog implements ActionListener {
 		panel_4.add(scrollPane, BorderLayout.CENTER);
 
 		tblDetalle = new JTable();
+		tblDetalle.setFont(new Font("Times New Roman", Font.PLAIN, 14));
 		tblDetalle.setRowHeight(20);
 		tblDetalle.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane.setViewportView(tblDetalle);
@@ -304,14 +312,6 @@ public class FrmDetVentas extends JDialog implements ActionListener {
 		btnEliminarDetalle.setBounds(10, 17, 180, 35);
 		panel_5.add(btnEliminarDetalle);
 
-		btnModificarDetalle = new JButton("Modificar detalle");
-		btnModificarDetalle.setIcon(new ImageIcon(FrmDetVentas.class.getResource("/img/icon-modificar-white.png")));
-		btnModificarDetalle.setBackground(new Color(75, 0, 130));
-		btnModificarDetalle.setForeground(Color.WHITE);
-		btnModificarDetalle.setFont(new Font("Serif", Font.BOLD, 14));
-		btnModificarDetalle.setBounds(10, 52, 180, 35);
-		panel_5.add(btnModificarDetalle);
-
 		btnCancelarVenta = new JButton("Cancelar venta");
 		btnCancelarVenta.addActionListener(this);
 		btnCancelarVenta.setIcon(new ImageIcon(FrmDetVentas.class.getResource("/img/icon-cancelar-white.png")));
@@ -331,6 +331,7 @@ public class FrmDetVentas extends JDialog implements ActionListener {
 		panel_5.add(btnRegistrarVenta);
 
 		btnImprimirVenta = new JButton("Imprimir venta");
+		btnImprimirVenta.addActionListener(this);
 		btnImprimirVenta.setIcon(new ImageIcon(FrmDetVentas.class.getResource("/img/icon-imprimir-white.png")));
 		btnImprimirVenta.setBackground(new Color(75, 0, 130));
 		btnImprimirVenta.setForeground(Color.WHITE);
@@ -476,7 +477,7 @@ public class FrmDetVentas extends JDialog implements ActionListener {
 		dpFecha.setDate(LocalDate.now());
 
 		txtCodigo.setText(nVent.nextCod());
-			
+
 		miInit();
 	}
 
@@ -496,7 +497,7 @@ public class FrmDetVentas extends JDialog implements ActionListener {
 	}
 
 	private void miInit() {
-		
+
 		tblDetalle.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
 			@Override
@@ -512,15 +513,14 @@ public class FrmDetVentas extends JDialog implements ActionListener {
 
 			}
 		});
-		
-		if (FrmPrincipal.currentUser != null){
+
+		if (FrmPrincipal.currentUser != null) {
 			txtVendedor.setText(FrmPrincipal.currentUser.getNombre() + " " + FrmPrincipal.currentUser.getApellido());
 		}
-		
+
 		this.venta.setCodVenta(txtCodigo.getText());
 	}
 
-	
 	public void CargarProducto(Producto prod) {
 		this.prod = prod;
 		txtProdDesc.setText(this.prod.getDescripcion());
@@ -545,11 +545,11 @@ public class FrmDetVentas extends JDialog implements ActionListener {
 		this.prod = null;
 	}
 
-	public void CalcularTotales(){
+	public void CalcularTotales() {
 		ArrayList<DetVenta> lista = modelo.getData();
 		double subtotal = 0;
 		double descTotal = 0;
-		for(DetVenta item : lista){
+		for (DetVenta item : lista) {
 			subtotal += item.CalcSubtotal();
 			descTotal += item.DescTotal();
 		}
@@ -560,8 +560,11 @@ public class FrmDetVentas extends JDialog implements ActionListener {
 		txtIGV.setText(comunes.formatDouble(venta.MontoIGV()));
 		txtTotal.setText(comunes.formatDouble(venta.getCalcTotal()));
 	}
-	
+
 	public void actionPerformed(ActionEvent arg0) {
+		if (arg0.getSource() == btnImprimirVenta) {
+			actionPerformedBtnImprimirVenta(arg0);
+		}
 		if (arg0.getSource() == btnRegistrarVenta) {
 			actionPerformedBtnRegistrarVenta(arg0);
 		}
@@ -592,7 +595,7 @@ public class FrmDetVentas extends JDialog implements ActionListener {
 
 		if (modelo.ExisteVenta(det)) {
 			modelo.updateDetVenta(modelo.PosicionDetProd(det), det);
-			
+
 		} else {
 			modelo.adDetVenta(det);
 			LimpiarProd();
@@ -621,25 +624,68 @@ public class FrmDetVentas extends JDialog implements ActionListener {
 		FrmBProducto bProd = new FrmBProducto(this);
 		bProd.setVisible(true);
 	}
+
 	protected void actionPerformedBtnBuscarCliente(ActionEvent arg0) {
 		FrmBCliente bCli = new FrmBCliente(this);
 		bCli.setVisible(true);
 	}
+
 	protected void actionPerformedBtnRegistrarVenta(ActionEvent arg0) {
 		this.venta.setCli(cli);
 		venta.setFecha(dpFecha.getDate());
 		venta.setIGV(0.18);
 		CalcularTotales();
-		if(operacion == 0){
+		if (operacion == 0) {
 			this.venta.setTrab(FrmPrincipal.currentUser);
 			nVent.InsertarVenta(venta, modelo.getData());
 			JOptionPane.showMessageDialog(this, "Venta Registrada");
 			this.dispose();
-		}
-		else if (operacion == 1){
+		} else if (operacion == 1) {
 			nVent.ModificarVenta(venta, modelo.getData());
 			JOptionPane.showMessageDialog(this, "Venta Modificada");
 			this.dispose();
 		}
+	}
+
+	protected void actionPerformedBtnImprimirVenta(ActionEvent arg0) {
+
+		this.venta.setCli(cli);
+		venta.setFecha(dpFecha.getDate());
+		venta.setIGV(0.18);
+		CalcularTotales();
+		if (operacion == 0) {
+			int confirmar = JOptionPane.showConfirmDialog(this,
+					"Es necesario registrar la venta antes de imprimirla"
+							+ "\nSi continúa la venta quedará registrada en el sistema" + "\n¿Desea continuar?",
+					"Imprimir", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+			if (confirmar == JOptionPane.YES_OPTION) {
+				
+				this.venta.setTrab(FrmPrincipal.currentUser);
+				nVent.InsertarVenta(venta, modelo.getData());
+				JOptionPane.showMessageDialog(this, "Venta Registrada");
+				this.dispose();
+				Imprimir(venta);
+			}
+		} else if (operacion == 1) {
+			int confirmar = JOptionPane.showConfirmDialog(this,
+					"Es necesario completar la modificación de la venta antes de imprimirla"
+							+ "\nSi continúa la venta quedará modificada en el sistema" + "\n¿Desea continuar?",
+					"Imprimir", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+			if(confirmar == JOptionPane.YES_OPTION){
+				nVent.ModificarVenta(venta, modelo.getData());
+				JOptionPane.showMessageDialog(this, "Venta Modificada");
+				 this.dispose();
+				 Imprimir(venta);
+			}
+			
+		}
+
+	}
+
+	private void Imprimir(Venta obj) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("CodVenta", obj.getCodVenta());
+		Reporte.CreaReporte("src/reportes/CDP.jasper", param);
+
 	}
 }

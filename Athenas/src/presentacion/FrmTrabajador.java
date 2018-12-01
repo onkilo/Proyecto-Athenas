@@ -8,6 +8,8 @@ import net.miginfocom.swing.MigLayout;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
+import util.Comunes;
+import util.Reporte;
 import util.TrabajadorTableModel;
 
 import javax.swing.JPanel;
@@ -44,6 +46,7 @@ import java.util.ArrayList;
 import java.awt.event.KeyEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.ListSelectionModel;
 
 public class FrmTrabajador extends JInternalFrame implements KeyListener, ActionListener {
 	private JPanel panel;
@@ -97,6 +100,7 @@ public class FrmTrabajador extends JInternalFrame implements KeyListener, Action
 	
 	private String opGuardar = "";
 	private NegocioTrabajador nTrab = new NegocioTrabajador();
+	Comunes comon = new Comunes();
 
 	/**
 	 * Launch the application.
@@ -142,7 +146,8 @@ public class FrmTrabajador extends JInternalFrame implements KeyListener, Action
 		panel.add(lblCdigo, "cell 0 0,alignx center");
 		
 		txtCodigo = new JTextField();
-		txtCodigo.setEnabled(false);
+		txtCodigo.setBackground(SystemColor.control);
+		txtCodigo.setEditable(false);
 		panel.add(txtCodigo, "cell 1 0,alignx leading");
 		txtCodigo.setColumns(10);
 		
@@ -152,7 +157,8 @@ public class FrmTrabajador extends JInternalFrame implements KeyListener, Action
 		panel.add(lblRaznSocial, "cell 0 1,alignx center");
 		
 		txtNombre = new JTextField();
-		txtNombre.setEnabled(false);
+		txtNombre.setBackground(SystemColor.control);
+		txtNombre.setEditable(false);
 		panel.add(txtNombre, "cell 1 1,alignx leading");
 		txtNombre.setColumns(20);
 		
@@ -162,7 +168,8 @@ public class FrmTrabajador extends JInternalFrame implements KeyListener, Action
 		panel.add(lblRepresentante, "cell 0 2,alignx center");
 		
 		txtApellido = new JTextField();
-		txtApellido.setEnabled(false);
+		txtApellido.setBackground(SystemColor.control);
+		txtApellido.setEditable(false);
 		panel.add(txtApellido, "cell 1 2,alignx leading");
 		txtApellido.setColumns(20);
 		
@@ -173,7 +180,8 @@ public class FrmTrabajador extends JInternalFrame implements KeyListener, Action
 		panel.add(lblEmail, "cell 0 3,alignx center");
 		
 		txtTelefono = new JTextField();
-		txtTelefono.setEnabled(false);
+		txtTelefono.setBackground(SystemColor.control);
+		txtTelefono.setEditable(false);
 		panel.add(txtTelefono, "cell 1 3,alignx leading");
 		txtTelefono.setColumns(20);
 		
@@ -183,7 +191,8 @@ public class FrmTrabajador extends JInternalFrame implements KeyListener, Action
 		panel.add(lblTelfono, "cell 0 4,alignx center");
 		
 		txtDni = new JTextField();
-		txtDni.setEnabled(false);
+		txtDni.setBackground(SystemColor.control);
+		txtDni.setEditable(false);
 		panel.add(txtDni, "cell 1 4,alignx leading");
 		txtDni.setColumns(12);
 		
@@ -203,7 +212,8 @@ public class FrmTrabajador extends JInternalFrame implements KeyListener, Action
 		panel.add(lblCorreo, "cell 0 6,alignx center");
 		
 		txtCorreo = new JTextField();
-		txtCorreo.setEnabled(false);
+		txtCorreo.setBackground(SystemColor.control);
+		txtCorreo.setEditable(false);
 		txtCorreo.setColumns(20);
 		panel.add(txtCorreo, "cell 1 6,alignx leading");
 		
@@ -213,7 +223,8 @@ public class FrmTrabajador extends JInternalFrame implements KeyListener, Action
 		panel.add(lblDireccin, "cell 0 7,alignx center");
 		
 		txtDireccion = new JTextField();
-		txtDireccion.setEnabled(false);
+		txtDireccion.setBackground(SystemColor.control);
+		txtDireccion.setEditable(false);
 		txtDireccion.setColumns(20);
 		panel.add(txtDireccion, "cell 1 7,alignx leading");
 		
@@ -223,7 +234,8 @@ public class FrmTrabajador extends JInternalFrame implements KeyListener, Action
 		panel.add(lblUsuario, "cell 0 8,alignx center");
 		
 		txtUsuario = new JTextField();
-		txtUsuario.setEnabled(false);
+		txtUsuario.setBackground(SystemColor.control);
+		txtUsuario.setEditable(false);
 		txtUsuario.setColumns(15);
 		panel.add(txtUsuario, "cell 1 8,alignx leading");
 		
@@ -233,7 +245,8 @@ public class FrmTrabajador extends JInternalFrame implements KeyListener, Action
 		panel.add(lblContrasea, "cell 0 9,alignx center");
 		
 		txtContrasenia = new JTextField();
-		txtContrasenia.setEnabled(false);
+		txtContrasenia.setBackground(SystemColor.control);
+		txtContrasenia.setEditable(false);
 		txtContrasenia.setColumns(15);
 		panel.add(txtContrasenia, "cell 1 9,alignx leading");
 		
@@ -325,6 +338,8 @@ public class FrmTrabajador extends JInternalFrame implements KeyListener, Action
 		panel_5.add(scrollPane, BorderLayout.CENTER);
 		
 		tblTrabajador = new JTable();
+		tblTrabajador.setRowHeight(20);
+		tblTrabajador.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tblTrabajador.setFont(new Font("Times New Roman", Font.PLAIN, 14));
 		scrollPane.setViewportView(tblTrabajador);
 		
@@ -437,15 +452,15 @@ public class FrmTrabajador extends JInternalFrame implements KeyListener, Action
 	}
 	
 	private void Habilita(boolean estado) {
-		txtNombre.setEnabled(estado);
-		txtApellido.setEnabled(estado);
-		txtTelefono.setEnabled(estado);
-		txtDni.setEnabled(estado);
-		txtCorreo.setEnabled(estado);
-		txtDireccion.setEnabled(estado);
-		txtUsuario.setEnabled(estado);
-		txtContrasenia.setEnabled(estado);
-		
+		comon.habTextField(txtNombre, estado);
+		comon.habTextField(txtApellido, estado);
+		comon.habTextField(txtTelefono, estado);
+		comon.habTextField(txtDni, estado);
+		comon.habTextField(txtCorreo, estado);
+		comon.habTextField(txtDireccion, estado);
+		comon.habTextField(txtUsuario, estado);
+		comon.habTextField(txtContrasenia, estado);
+
 		rdbtnFemenino.setEnabled(estado);
 		rdbtnMasculino.setEnabled(estado);
 		cboCargo.setEnabled(estado);
@@ -602,15 +617,6 @@ public class FrmTrabajador extends JInternalFrame implements KeyListener, Action
 		}
 	}
 	protected void actionPerformedBtnImprimir(ActionEvent arg0) {
-		try {
-			JasperPrint jp = JasperFillManager.fillReport("src/reportes/ListaTrabajadores.jasper", null, Conexion.Conectar());
-			JasperViewer jv = new JasperViewer(jp, false);
-			jv.setTitle("Lista de clientes");
-			jv.setVisible(true);
-
-		} catch (Exception e) {
-
-			e.printStackTrace();
-		}
+		Reporte.CreaReporte("src/reportes/ListaTrabajadores.jasper");
 	}
 }

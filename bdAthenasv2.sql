@@ -133,31 +133,31 @@ CREATE TABLE Compra(
 GO
 
 
-IF (EXISTS(SELECT * FROM SYS.triggers WHERE name = 'Tr_Compras'))
-	DROP TRIGGER Tr_Compras
-GO
+--IF (EXISTS(SELECT * FROM SYS.triggers WHERE name = 'Tr_Compras'))
+--	DROP TRIGGER Tr_Compras
+--GO
 
-create trigger Tr_Compras on Compra 
-after update
-as
-	declare @compra varchar(6), @estadoActual int, @estadoAnt int
-	select @compra = i.Cod_Compra, @estadoActual = i.Estado from inserted i
-	select @estadoAnt = d.Estado from deleted d
-	if @estadoAnt = 0 and @estadoActual = 1
-	begin
-		declare c_Detalle cursor for
-		select Cod_Produc, Cantidad from Det_Comp where Cod_Compra = @compra
-		declare @prod varchar(6), @cant int
-		open c_Detalle
-		fetch c_Detalle into @prod, @cant
-		while @@FETCH_STATUS = 0
-		begin
-			update Producto set Stock_Actual = Stock_Actual + @cant where ID = @prod
-			fetch c_Detalle into @prod, @cant
-		end
-	end
-	--else if @estadoAnt = 1 and @estadoActual = 1
-go
+--create trigger Tr_Compras on Compra 
+--after update
+--as
+--	declare @compra varchar(6), @estadoActual int, @estadoAnt int
+--	select @compra = i.Cod_Compra, @estadoActual = i.Estado from inserted i
+--	select @estadoAnt = d.Estado from deleted d
+--	if @estadoAnt = 0 and @estadoActual = 1
+--	begin
+--		declare c_Detalle cursor for
+--		select Cod_Produc, Cantidad from Det_Comp where Cod_Compra = @compra
+--		declare @prod varchar(6), @cant int
+--		open c_Detalle
+--		fetch c_Detalle into @prod, @cant
+--		while @@FETCH_STATUS = 0
+--		begin
+--			update Producto set Stock_Actual = Stock_Actual + @cant where ID = @prod
+--			fetch c_Detalle into @prod, @cant
+--		end
+--	end
+--	--else if @estadoAnt = 1 and @estadoActual = 1
+--go
 
 /*
 	TABLA PARA ALMACENAR LOS ESPECIFICOS DE LAS VENTAS
@@ -237,30 +237,30 @@ IF (EXISTS(SELECT * FROM SYS.triggers WHERE name = 'Tr_DetCompras'))
 	DROP TRIGGER Tr_DetCompras
 GO
 
-create trigger Tr_DetCompras on Det_Comp
-after update
-as
-	declare @compra varchar(6), @cantActual int,@cantAnt int, @prodAnt varchar(6), @prodActual varchar(6), @estado int
-	select @compra = i.Cod_Compra, @prodActual = i.Cod_Produc, @cantActual = i.Cantidad from inserted i
-	select @estado = Estado from Compra where Cod_Compra = @compra
-	select @prodAnt = d.Cod_Produc, @cantAnt = d.Cantidad from deleted d
-	if @estado = 1
-	begin
-		if @prodActual = @prodAnt
-		begin
-			if @cantActual <> @cantAnt
-			begin
-				update Producto set Stock_Actual = Stock_Actual - @cantAnt where ID = @prodActual
-				update Producto set Stock_Actual = Stock_Actual + @cantActual where ID = @prodActual 
-			end
-		end
-		else
-		begin
-			update Producto set Stock_Actual = Stock_Actual - @cantAnt where ID = @prodAnt
-			update Producto set Stock_Actual = Stock_Actual + @cantActual where ID = @prodActual 
-		end
-	end
-go
+--create trigger Tr_DetCompras on Det_Comp
+--after update
+--as
+--	declare @compra varchar(6), @cantActual int,@cantAnt int, @prodAnt varchar(6), @prodActual varchar(6), @estado int
+--	select @compra = i.Cod_Compra, @prodActual = i.Cod_Produc, @cantActual = i.Cantidad from inserted i
+--	select @estado = Estado from Compra where Cod_Compra = @compra
+--	select @prodAnt = d.Cod_Produc, @cantAnt = d.Cantidad from deleted d
+--	if @estado = 1
+--	begin
+--		if @prodActual = @prodAnt
+--		begin
+--			if @cantActual <> @cantAnt
+--			begin
+--				update Producto set Stock_Actual = Stock_Actual - @cantAnt where ID = @prodActual
+--				update Producto set Stock_Actual = Stock_Actual + @cantActual where ID = @prodActual 
+--			end
+--		end
+--		else
+--		begin
+--			update Producto set Stock_Actual = Stock_Actual - @cantAnt where ID = @prodAnt
+--			update Producto set Stock_Actual = Stock_Actual + @cantActual where ID = @prodActual 
+--		end
+--	end
+--go
 
 /*
 	TABLA DE PROMOCIONES

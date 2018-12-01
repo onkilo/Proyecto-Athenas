@@ -15,6 +15,8 @@ import net.sf.jasperreports.view.JRSaveContributor;
 import net.sf.jasperreports.view.JasperViewer;
 import net.sf.jasperreports.view.save.JRPdfSaveContributor;
 import util.ClienteTableModel;
+import util.Comunes;
+import util.Reporte;
 
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
@@ -95,6 +97,7 @@ public class FrmCliente extends JInternalFrame implements KeyListener, ActionLis
 
 	private String opGuardar = null;
 	private NegocioCliente nCliente = new NegocioCliente();
+	Comunes comon = new Comunes();
 
 	/**
 	 * Launch the application.
@@ -142,7 +145,6 @@ public class FrmCliente extends JInternalFrame implements KeyListener, ActionLis
 		panel.add(lblCdigo, "cell 0 0,alignx center");
 
 		txtCodigo = new JTextField();
-		txtCodigo.setEditable(false);
 		txtCodigo.setBackground(SystemColor.control);
 		panel.add(txtCodigo, "cell 1 0,alignx leading");
 		txtCodigo.setColumns(10);
@@ -153,7 +155,7 @@ public class FrmCliente extends JInternalFrame implements KeyListener, ActionLis
 		panel.add(lblRaznSocial, "cell 0 1,alignx center");
 
 		txtNombre = new JTextField();
-		txtNombre.setEnabled(false);
+		txtNombre.setBackground(SystemColor.control);
 		panel.add(txtNombre, "cell 1 1,alignx leading");
 		txtNombre.setColumns(20);
 
@@ -163,7 +165,7 @@ public class FrmCliente extends JInternalFrame implements KeyListener, ActionLis
 		panel.add(lblRepresentante, "cell 0 2,alignx center");
 
 		txtApellido = new JTextField();
-		txtApellido.setEnabled(false);
+		txtApellido.setBackground(SystemColor.control);
 		panel.add(txtApellido, "cell 1 2,alignx leading");
 		txtApellido.setColumns(20);
 
@@ -173,7 +175,7 @@ public class FrmCliente extends JInternalFrame implements KeyListener, ActionLis
 		panel.add(lblEmail, "cell 0 3,alignx center");
 
 		txtTelefono = new JTextField();
-		txtTelefono.setEnabled(false);
+		txtTelefono.setBackground(SystemColor.control);
 		panel.add(txtTelefono, "cell 1 3,alignx leading");
 		txtTelefono.setColumns(20);
 
@@ -183,7 +185,7 @@ public class FrmCliente extends JInternalFrame implements KeyListener, ActionLis
 		panel.add(lblTelfono, "cell 0 4,alignx center");
 
 		txtDni = new JTextField();
-		txtDni.setEnabled(false);
+		txtDni.setBackground(SystemColor.control);
 		panel.add(txtDni, "cell 1 4,alignx leading");
 		txtDni.setColumns(10);
 
@@ -276,6 +278,7 @@ public class FrmCliente extends JInternalFrame implements KeyListener, ActionLis
 		panel_5.add(scrollPane, BorderLayout.CENTER);
 
 		tblCliente = new JTable();
+		tblCliente.setRowHeight(20);
 		tblCliente.setFont(new Font("Times New Roman", Font.PLAIN, 14));
 		tblCliente.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane.setViewportView(tblCliente);
@@ -362,6 +365,7 @@ public class FrmCliente extends JInternalFrame implements KeyListener, ActionLis
 
 		rdbtnPorCodigo.setSelected(true);
 		rdbtnMasculino.setSelected(true);
+		Habilita(false);
 	}
 
 	private void LlenaDatos(Cliente c) {
@@ -378,10 +382,15 @@ public class FrmCliente extends JInternalFrame implements KeyListener, ActionLis
 	}
 
 	private void Habilita(boolean estado) {
-		txtNombre.setEnabled(estado);
+		
+		/*txtNombre.setEnabled(estado);
 		txtApellido.setEnabled(estado);
 		txtTelefono.setEnabled(estado);
-		txtDni.setEnabled(estado);
+		txtDni.setEnabled(estado);*/
+		comon.habTextField(txtNombre, estado);
+		comon.habTextField(txtApellido, estado);
+		comon.habTextField(txtTelefono, estado);
+		comon.habTextField(txtDni, estado);
 		rdbtnFemenino.setEnabled(estado);
 		rdbtnMasculino.setEnabled(estado);
 
@@ -540,15 +549,6 @@ public class FrmCliente extends JInternalFrame implements KeyListener, ActionLis
 	}
 
 	protected void actionPerformedBtnImprimir(ActionEvent arg0) {
-		try {
-			JasperPrint jp = JasperFillManager.fillReport("src/reportes/ListaClientes.jasper", null, Conexion.Conectar());
-			JasperViewer jv = new JasperViewer(jp, false);
-			jv.setTitle("Lista de clientes");
-			jv.setVisible(true);
-
-		} catch (Exception e) {
-
-			e.printStackTrace();
-		}
+		Reporte.CreaReporte("src/reportes/ListaClientes.jasper");
 	}
 }

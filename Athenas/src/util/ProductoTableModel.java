@@ -12,6 +12,7 @@ public class ProductoTableModel extends AbstractTableModel {
 	private ArrayList<Producto> data;
 	
 	private String [] columnas = {"Código", "Descripción", "Precio de compra", "Precio de venta", "Stok Actual", "Stock Mínimo", "Categoría"};
+	Comunes comon = new Comunes();
 	
 	public ProductoTableModel() {
 		data = new ArrayList<Producto>();
@@ -43,8 +44,8 @@ public class ProductoTableModel extends AbstractTableModel {
 		switch(columnIndex){
 		case 0: return obj.getID();
 		case 1: return obj.getDescripcion();
-		case 2: return obj.getPreCompra();
-		case 3: return obj.getPreVenta();
+		case 2: return comon.formatDouble(obj.getPreCompra());
+		case 3: return comon.formatDouble(obj.getPreVenta());
 		case 4: return obj.getStockAcual();
 		case 5: return obj.getStockMin();
 		case 6: return obj.getCate().getDescripcion();

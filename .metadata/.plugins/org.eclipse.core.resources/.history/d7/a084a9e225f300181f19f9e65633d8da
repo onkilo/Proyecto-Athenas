@@ -1,0 +1,43 @@
+package negocio;
+
+import java.sql.*;
+import java.sql.*;
+import java.util.ArrayList;
+import entidades.*;
+import conexion.Conexion;
+
+public class NegocioDetCompra {
+
+	private Connection con;
+	private CallableStatement cstm;
+	private PreparedStatement pst;
+	private Statement st;
+	private String sql = "";
+	private ResultSet rs;
+	
+	public ArrayList<DetCompra> Listar(){
+		ArrayList<DetCompra> lista = new  ArrayList<DetCompra>();
+		sql = "select dc.Cod_Compra as Compra, p.ID as Producto, p.Descripcion as ProdDesc, "
+				+ "dc.Cantidad as Cantidad, dc.Precio as Precio  "
+				+ "from Det_Comp dc inner join Producto p on dc.Cod_Produc = p.ID";
+		
+		try {
+			
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (st != null)
+					st.close();
+				if (con != null)
+					con.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		
+		return lista;
+	}
+}

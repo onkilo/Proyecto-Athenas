@@ -1,0 +1,67 @@
+package negocio;
+
+import java.sql.*;
+import java.util.ArrayList;
+import entidades.*;
+import conexion.Conexion;
+
+public class NegocioCompra {
+	
+	private Connection con;
+	private CallableStatement cstm;
+	private PreparedStatement pst;
+	private Statement st;
+	private String sql = "";
+	private ResultSet rs;
+	
+	public ArrayList<Compra> Listar(){
+		ArrayList<Compra> lista = new ArrayList<Compra>();
+		
+		sql = "select oc.Cod_Compra as Compra, oc.Fecha as Fecha, oc.IGV as IGV, oc.Estado as Estado, t.ID as CodTrab, "
+				+ "t.Nombre as NomTrab, t.Apellido as ApeTrab, pv.ID as CodProv, pv.Direccion as DirProv, pv.Rz_Social as RZProv, "
+				+ "pv.Telefono as TelProv, sum(dc.Cantidad * dc.Precio) as Subtotal  "
+				+ "from Compra oc inner join Det_Comp dc on oc.Cod_Compra = dc.Cod_Compra inner join Trabajador t "
+				+ "on oc.Cod_Trabajador = t.ID inner join Proveedor pv on oc.Cod_Proveedor = pv.ID group by oc.Cod_Compra, "
+				+ "oc.Fecha, oc.IGV, oc.Estado, t.ID , t.Nombre, t.Apellido, pv.ID, pv.Direccion, pv.Rz_Social, pv.Telefono";
+		
+		try {
+			con = Conexion.Conectar();
+			st = con.createStatement();
+			rs = st.executeQuery(sql);
+			while(rs.next()){
+				Compra obj = new Compra();
+				obj.setId(rs.getString("Compra"));
+				obj.setSqlFecha(rs.getDate("Fecha"));
+				obj.setIGV(rs.getDouble("IGV"));
+				obj.setEstado(rs.getInt("Estado"));
+				obj.getTrab().setID(rs.getString("CodTrab"));
+				obj.getTrab().setNombre(rs.getString("NomTrab"));
+				obj.getTrab().setApellido(rs.getString("ApeTrab"));
+				obj.getProv().setID(rs.getString("CodProv"));
+				obj.getTrab().setDireccion(rs.getString("Direccion"));
+				obj.getProv().setRaz_Soc(rs.getString("RZProv"));
+				obj.getProv().setTelf(rs.getString("TelProv"));
+				obj.setSubtotal(rs.getDouble("Subtotal"));
+				
+				lista.add(obj);
+				
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (st != null)
+					st.close();
+				if (con != null)
+					con.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		
+		return lista;
+	}
+	
+}

@@ -313,15 +313,15 @@ CREATE or ALTER PROCEDURE USP_CompraMantenimiento
 @Trab VARCHAR (6) = NULL,
 @Fecha date = NULL,
 @igv decimal(10,2) = NULL,
-@estado int = NULL
+@estado int = null
 AS
 
 IF(@OPERACION = '1') --======PARA INSERTAR COMPRA
 	BEGIN
 		IF NOT EXISTS(SELECT Cod_Compra FROM DBO.Compra WHERE Cod_Compra = @Compra)
 			BEGIN
-				INSERT INTO Compra(Cod_Compra,Cod_Proveedor, Cod_Trabajador, Fecha, IGV)
-				VALUES (@Compra,@Prov, @Trab, @Fecha, @igv)
+				INSERT INTO Compra(Cod_Compra,Cod_Proveedor, Cod_Trabajador, Fecha, IGV, Estado)
+				VALUES (@Compra,@Prov, @Trab, @Fecha, @igv, @estado)
 				SET @OPERACION = 'INSERCI�N EXITOSA'
 			END
 		ELSE
@@ -337,8 +337,13 @@ ELSE IF (@OPERACION = '2') --======PARA MODIFICAR COMPRA
 	END
 ELSE IF (@OPERACION = '3')--======PARA BORRAR COMPRA
 	BEGIN
-	DELETE FROM DBO.Compra WHERE Cod_Compra = @Compra
-	SET @OPERACION = 'REGISTRO ELIMINADO'
+		DELETE FROM DBO.Compra WHERE Cod_Compra = @Compra
+		SET @OPERACION = 'REGISTRO ELIMINADO'
+	END
+ELSE IF(@OPERACION = 4) --========PARA MODIFICAR COMPRA RECIBIDA Y PARA RECIBIR COMPRA
+	BEGIN
+		UPDATE DBO.Compra SET Cod_Proveedor = @Prov, Cod_Trabajador = @Trab, Fecha = @Fecha, IGV = @igv, Estado = 1
+		WHERE Cod_Compra = @Compra
 	END
 GO
 
@@ -457,12 +462,22 @@ CREATE or ALTER PROCEDURE USP_DetCompMantenimiento
 @Precio decimal(10,2) = NULL
 AS
 
+DECLARE @estado int
+SELECT @estado = Estado FROM Compra WHERE Cod_Compra = @Compra --===>OBTENEMOS EL ESTADO PARA SABER SI ES UNA COMPRA RECIBIDA O POR RECIBIR
+
 IF(@OPERACION = '1') --======PARA INSERTAR DETALLE DE COMPRA
 	BEGIN
 		IF NOT EXISTS(SELECT Cod_Compra, Cod_Produc FROM DBO.Det_Comp WHERE Cod_Compra = @Compra AND Cod_Produc = @Producto)
 			BEGIN
+				
 				INSERT INTO Det_Comp(Cod_Compra,Cod_Produc, Cantidad, Precio)
 				VALUES (@Compra,@Producto, @cant, @Precio)
+
+				IF(@estado = 1)
+				BEGIN
+					UPDATE Producto SET Stock_Actual = Stock_Actual + @cant
+				END
+
 				SET @OPERACION = 'INSERCI�N EXITOSA'
 			END
 		ELSE
@@ -472,19 +487,52 @@ IF(@OPERACION = '1') --======PARA INSERTAR DETALLE DE COMPRA
 		END
 ELSE IF (@OPERACION = '2') --======PARA MODIFICAR DETALLE DE COMPRA
 	BEGIN
+		DECLARE @cantActual int = 0
+		IF(@estado = 1)
+		BEGIN
+			SELECT @cantActual = Cantidad FROM Det_Comp WHERE Cod_Compra = @Compra AND Cod_Produc = @Producto
+			SET @cantActual = @cantActual + @cant
+		END
+		
 		UPDATE DBO.Det_Comp SET Cod_Produc = @Producto, Cantidad = @cant, Precio = @Precio
 		WHERE Cod_Compra = @Compra and Cod_Produc = @Producto
+
+		UPDATE Producto SET Stock_Actual = Stock_Actual - @cantActual
 		SET @OPERACION = 'ACTUALIZACI�N SATISFACTORIA'
 	END
 ELSE IF (@OPERACION = '3')--======PARA BORRAR 1 DETALLE DE COMPRA
 	BEGIN
-	DELETE FROM DBO.Det_Comp WHERE Cod_Compra = @Compra AND Cod_Produc = @Producto
-	SET @OPERACION = 'REGISTRO ELIMINADO'
+		DECLARE @cantActual2 int = 0
+		IF(@estado = 1)
+		BEGIN
+			SELECT @cantActual2 = Cantidad FROM Det_Comp WHERE Cod_Compra = @Compra AND Cod_Produc = @Producto
+		END
+		DELETE FROM DBO.Det_Comp WHERE Cod_Compra = @Compra AND Cod_Produc = @Producto
+		UPDATE Producto SET Stock_Actual = Stock_Actual - @cantActual2
+		SET @OPERACION = 'REGISTRO ELIMINADO'
 	END
 ELSE IF (@OPERACION = '4')--======PARA BORRAR TODOS LOS DETALLES DE UNA COMPRA
 	BEGIN
-	DELETE FROM DBO.Det_Comp WHERE Cod_Compra = @Compra
-	SET @OPERACION = 'REGISTROS ELIMINADOS'
+		IF(@estado = 1)
+		BEGIN
+			DECLARE c_EliminaDet CURSOR 
+			FOR SELECT Cod_Produc, Cantidad FROM Det_Comp WHERE Cod_Compra = @Compra
+			DECLARE @codProd varchar(10), @cantProd int
+
+			OPEN c_EliminaDet
+			FETCH c_EliminaDet INTO @codProd, @cantProd
+			WHILE @@FETCH_STATUS = 0
+			BEGIN
+				UPDATE Producto SET Stock_Actual = Stock_Actual - @cantProd WHERE ID = @codProd
+				FETCH c_EliminaDet INTO @codProd, @cantProd
+			END
+			CLOSE c_EliminaDet
+			DEALLOCATE c_EliminaDet
+
+		END
+
+		DELETE FROM Det_Comp WHERE Cod_Compra = @Compra
+		SET @OPERACION = 'REGISTROS ELIMINADOS'
 	END
 GO
 

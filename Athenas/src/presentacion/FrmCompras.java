@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.awt.event.KeyEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.ListSelectionModel;
 
 public class FrmCompras extends JInternalFrame implements KeyListener, ActionListener {
 	private JPanel panel;
@@ -223,6 +224,9 @@ public class FrmCompras extends JInternalFrame implements KeyListener, ActionLis
 		panel_5.add(scrollPane, BorderLayout.CENTER);
 		
 		tblCompra = new JTable();
+		tblCompra.setRowHeight(20);
+		tblCompra.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tblCompra.setFont(new Font("Times New Roman", Font.PLAIN, 14));
 		scrollPane.setViewportView(tblCompra);
 		setBounds(0, 0, 1100, 600);
 		

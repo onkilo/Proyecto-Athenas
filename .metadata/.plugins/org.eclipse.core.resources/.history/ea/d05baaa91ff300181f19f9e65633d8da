@@ -1,0 +1,54 @@
+package util;
+
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+
+import javax.swing.table.AbstractTableModel;
+import entidades.Compra;
+
+public class CompraTableModel extends AbstractTableModel{
+	
+	private ArrayList<Compra> data;
+	private String[] columnas = {"Código", "Proveedor", "Trabajador", "Fecha", "IGV", "Total", "Estado"};
+	private DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd-MM-uuuu");
+
+	public CompraTableModel() {
+		data = new ArrayList<>();
+	}
+
+	public CompraTableModel(ArrayList<Compra> data) {
+		this.data = data;
+	}
+
+	@Override
+	public int getColumnCount() {
+		return columnas.length;
+	}
+
+	@Override
+	public int getRowCount() {
+		return data.size();
+	}
+
+	@Override
+	public String getColumnName(int column) {
+		return columnas[column];
+	}
+	@Override
+	public Object getValueAt(int rowIndex, int columnIndex) {
+		Compra obj = data.get(rowIndex);
+		switch(columnIndex){
+		case 0 : return obj.getId();
+		case 1 : return obj.getProv().getRaz_Soc();
+		case 2 : return obj.getTrab().getNombre() + " " + obj.getTrab().getApellido();
+		case 3 : return obj.getFecha().format(formato);
+		case 4 : return obj.MontoIGV();
+		case 5 : return obj.getCalcTotal();
+		case 6 : 
+			if (obj.getEstado() == 0) return "Por Recibir";
+			else return "Reciibido";
+		default : return null;
+		}
+	}
+
+}

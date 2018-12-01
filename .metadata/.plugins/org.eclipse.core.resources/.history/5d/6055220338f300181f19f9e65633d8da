@@ -1,0 +1,408 @@
+package presentacion;
+
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.UIManager;
+import net.miginfocom.swing.MigLayout;
+import java.awt.SystemColor;
+import javax.swing.border.TitledBorder;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import java.awt.Font;
+import com.github.lgooddatepicker.components.DatePicker;
+import java.awt.Dimension;
+import javax.swing.SwingConstants;
+import java.awt.Color;
+import javax.swing.border.LineBorder;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+
+public class FrmDetComp extends JDialog implements ActionListener {
+
+	private final JPanel contentPanel = new JPanel();
+	private JPanel panel;
+	private JPanel panel_1;
+	private JPanel panel_3;
+	private JPanel panel_4;
+	private JPanel panel_5;
+	private JLabel lblTotal;
+	private JTextField txtTotal;
+	private JLabel lblCdigo;
+	private JLabel lblFecha;
+	private JTextField txtCodigo;
+	private DatePicker dpFecha;
+	private JLabel lblBodegaAthenas;
+	private JLabel lblDni;
+	private JLabel lblNombre;
+	private JTextField btnProvCod;
+	private JTextField btnProdRZ;
+	private JButton btnBucarProv;
+	private JLabel lblTelfono;
+	private JTextField btnProdTel;
+	private JLabel lblVendedor;
+	private JTextField txtTrab;
+	private JLabel lblRuc;
+	private JPanel panel_2;
+	private JLabel lblProducto;
+	private JTextField txtProdDesc;
+	private JButton btnBuscarProd;
+	private JLabel lblPrecio;
+	private JTextField txtProdPrecio;
+	private JButton btnAgregar;
+	private JButton btnEliminarProducto;
+	private JButton btnModificarDetalle;
+	private JButton btnCancelarPedido;
+	private JButton btnRegistrarPedido;
+	private JButton btnImprimirPedido;
+	private JLabel lblCantidad;
+	private JTextField txtProdCant;
+	private JLabel lblDireccin;
+	private JTextField txtProvDir;
+	private JScrollPane scrollPane;
+	private JTable tblDetalle;
+	private JTextField txtSubtotal;
+	private JLabel lblSubtotalS;
+	private JLabel lblIgvs;
+	private JTextField txtIgv;
+	private JTextField txtProdStock;
+	private JLabel lblStock;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		try {
+			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		try {
+			FrmDetComp dialog = new FrmDetComp();
+			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			dialog.setVisible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Create the dialog.
+	 */
+	public FrmDetComp() {
+		setResizable(false);
+		setModal(true);
+		setBounds(100, 100, 869, 654);
+		getContentPane().setLayout(new BorderLayout());
+		contentPanel.setBackground(SystemColor.activeCaption);
+		contentPanel.setBorder(null);
+		getContentPane().add(contentPanel, BorderLayout.CENTER);
+		contentPanel.setLayout(null);
+		
+		panel = new JPanel();
+		panel.setBackground(SystemColor.control);
+		panel.setBounds(7, 6, 322, 263);
+		panel.setBorder(new TitledBorder(null, "Pedido", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(59, 59, 59)));
+		contentPanel.add(panel);
+		panel.setLayout(null);
+		
+		lblBodegaAthenas = new JLabel("Bodega Athenas\r\n");
+		lblBodegaAthenas.setBounds(33, 17, 258, 24);
+		lblBodegaAthenas.setFont(new Font("Serif", Font.BOLD, 18));
+		lblBodegaAthenas.setHorizontalAlignment(SwingConstants.CENTER);
+		panel.add(lblBodegaAthenas);
+		
+		lblCdigo = new JLabel("C\u00F3digo");
+		lblCdigo.setBounds(33, 115, 50, 19);
+		lblCdigo.setPreferredSize(new Dimension(50, 16));
+		lblCdigo.setFont(new Font("Serif", Font.BOLD, 14));
+		panel.add(lblCdigo);
+		
+		txtCodigo = new JTextField();
+		txtCodigo.setBackground(SystemColor.control);
+		txtCodigo.setEditable(false);
+		txtCodigo.setBounds(114, 111, 122, 28);
+		panel.add(txtCodigo);
+		txtCodigo.setColumns(10);
+		
+		lblFecha = new JLabel("Fecha");
+		lblFecha.setBounds(33, 156, 50, 25);
+		lblFecha.setPreferredSize(new Dimension(50, 25));
+		lblFecha.setFont(new Font("Serif", Font.BOLD, 14));
+		panel.add(lblFecha);
+		
+		dpFecha = new DatePicker();
+		dpFecha.setBackground(SystemColor.control);
+		dpFecha.setBounds(114, 155, 152, 28);
+		dpFecha.setEnabled(false);
+		dpFecha.getComponentToggleCalendarButton().setPreferredSize(new Dimension(41, 28));
+		dpFecha.getComponentDateTextField().setPreferredSize(new Dimension(159, 25));
+		dpFecha.getComponentToggleCalendarButton().setBounds(98, -2, 41, 28);
+		dpFecha.getComponentDateTextField().setBounds(0, 0, 100, 25);
+		dpFecha.setPreferredSize(new Dimension(203, 28));
+		panel.add(dpFecha);
+		dpFecha.setLayout(null);
+		
+		lblRuc = new JLabel("R.U.C. : 0000000000");
+		lblRuc.setBounds(31, 53, 249, 50);
+		lblRuc.setFont(new Font("Serif", Font.BOLD, 14));
+		lblRuc.setHorizontalAlignment(SwingConstants.CENTER);
+		panel.add(lblRuc);
+		
+		lblVendedor = new JLabel("Trabajador");
+		lblVendedor.setBounds(32, 205, 70, 25);
+		lblVendedor.setPreferredSize(new Dimension(50, 25));
+		lblVendedor.setFont(new Font("Serif", Font.BOLD, 14));
+		panel.add(lblVendedor);
+		
+		txtTrab = new JTextField();
+		txtTrab.setBackground(SystemColor.control);
+		txtTrab.setEditable(false);
+		txtTrab.setBounds(114, 204, 191, 28);
+		panel.add(txtTrab);
+		txtTrab.setColumns(15);
+		
+		panel_1 = new JPanel();
+		panel_1.setBackground(SystemColor.control);
+		panel_1.setBounds(332, 6, 525, 118);
+		panel_1.setBorder(new TitledBorder(null, "Proveedor", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(59, 59, 59)));
+		contentPanel.add(panel_1);
+		panel_1.setLayout(null);
+		
+		lblDni = new JLabel("C\u00F3digo");
+		lblDni.setBounds(21, 30, 50, 19);
+		lblDni.setFont(new Font("Serif", Font.PLAIN, 14));
+		lblDni.setPreferredSize(new Dimension(50, 16));
+		panel_1.add(lblDni);
+		
+		btnProvCod = new JTextField();
+		btnProvCod.setBackground(SystemColor.control);
+		btnProvCod.setEditable(false);
+		btnProvCod.setBounds(110, 26, 99, 28);
+		panel_1.add(btnProvCod);
+		btnProvCod.setColumns(10);
+		
+		lblNombre = new JLabel("Raz\u00F3n social");
+		lblNombre.setBounds(21, 75, 77, 19);
+		lblNombre.setFont(new Font("Serif", Font.PLAIN, 14));
+		lblNombre.setPreferredSize(new Dimension(50, 16));
+		panel_1.add(lblNombre);
+		
+		btnBucarProv = new JButton("...");
+		btnBucarProv.setBounds(208, 26, 37, 28);
+		panel_1.add(btnBucarProv);
+		
+		lblTelfono = new JLabel("Tel\u00E9fono");
+		lblTelfono.setBounds(330, 75, 50, 19);
+		lblTelfono.setFont(new Font("Serif", Font.PLAIN, 14));
+		lblTelfono.setPreferredSize(new Dimension(50, 16));
+		panel_1.add(lblTelfono);
+		
+		btnProdRZ = new JTextField();
+		btnProdRZ.setBackground(SystemColor.control);
+		btnProdRZ.setEditable(false);
+		btnProdRZ.setBounds(110, 71, 208, 28);
+		panel_1.add(btnProdRZ);
+		btnProdRZ.setColumns(20);
+		
+		btnProdTel = new JTextField();
+		btnProdTel.setBackground(SystemColor.control);
+		btnProdTel.setEditable(false);
+		btnProdTel.setBounds(392, 71, 119, 28);
+		panel_1.add(btnProdTel);
+		btnProdTel.setColumns(10);
+		
+		lblDireccin = new JLabel("Direcci\u00F3n");
+		lblDireccin.setPreferredSize(new Dimension(50, 16));
+		lblDireccin.setFont(new Font("Serif", Font.PLAIN, 14));
+		lblDireccin.setBounds(257, 30, 66, 19);
+		panel_1.add(lblDireccin);
+		
+		txtProvDir = new JTextField();
+		txtProvDir.setEditable(false);
+		txtProvDir.setColumns(10);
+		txtProvDir.setBackground(SystemColor.menu);
+		txtProvDir.setBounds(324, 26, 187, 28);
+		panel_1.add(txtProvDir);
+		
+		panel_3 = new JPanel();
+		panel_3.setBackground(SystemColor.control);
+		panel_3.setBounds(7, 274, 850, 345);
+		contentPanel.add(panel_3);
+		panel_3.setLayout(null);
+		
+		panel_4 = new JPanel();
+		panel_4.setBackground(SystemColor.control);
+		panel_4.setBounds(7, 7, 621, 262);
+		panel_4.setBorder(new TitledBorder(null, "Detalle", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel_3.add(panel_4);
+		panel_4.setLayout(new BorderLayout(0, 0));
+		
+		scrollPane = new JScrollPane();
+		scrollPane.setBackground(SystemColor.control);
+		panel_4.add(scrollPane, BorderLayout.CENTER);
+		
+		tblDetalle = new JTable();
+		scrollPane.setViewportView(tblDetalle);
+		
+		panel_5 = new JPanel();
+		panel_5.setBackground(SystemColor.control);
+		panel_5.setBorder(new LineBorder(new Color(180, 180, 180), 2));
+		panel_5.setBounds(640, 7, 200, 254);
+		panel_3.add(panel_5);
+		panel_5.setLayout(null);
+		
+		btnEliminarProducto = new JButton("Eliminar detalle");
+		btnEliminarProducto.setBackground(new Color(75, 0, 130));
+		btnEliminarProducto.setForeground(Color.WHITE);
+		btnEliminarProducto.setFont(new Font("Serif", Font.BOLD, 14));
+		btnEliminarProducto.setBounds(34, 17, 141, 35);
+		panel_5.add(btnEliminarProducto);
+		
+		btnModificarDetalle = new JButton("Modificar detalle");
+		btnModificarDetalle.setBackground(new Color(75, 0, 130));
+		btnModificarDetalle.setForeground(Color.WHITE);
+		btnModificarDetalle.setFont(new Font("Serif", Font.BOLD, 14));
+		btnModificarDetalle.setBounds(34, 52, 141, 35);
+		panel_5.add(btnModificarDetalle);
+		
+		btnCancelarPedido = new JButton("Cancelar pedido");
+		btnCancelarPedido.setBackground(new Color(75, 0, 130));
+		btnCancelarPedido.setForeground(Color.WHITE);
+		btnCancelarPedido.setFont(new Font("Serif", Font.BOLD, 14));
+		btnCancelarPedido.setBounds(34, 160, 141, 35);
+		panel_5.add(btnCancelarPedido);
+		
+		btnRegistrarPedido = new JButton("Registrar pedido");
+		btnRegistrarPedido.setBackground(new Color(75, 0, 130));
+		btnRegistrarPedido.setForeground(Color.WHITE);
+		btnRegistrarPedido.setFont(new Font("Serif", Font.BOLD, 14));
+		btnRegistrarPedido.setBounds(34, 120, 141, 35);
+		panel_5.add(btnRegistrarPedido);
+		
+		btnImprimirPedido = new JButton("Imprimir pedido");
+		btnImprimirPedido.setBackground(new Color(75, 0, 130));
+		btnImprimirPedido.setForeground(Color.WHITE);
+		btnImprimirPedido.setFont(new Font("Serif", Font.BOLD, 14));
+		btnImprimirPedido.setBounds(34, 198, 141, 35);
+		panel_5.add(btnImprimirPedido);
+		
+		lblTotal = new JLabel("Total S/. ");
+		lblTotal.setBounds(408, 318, 86, 19);
+		lblTotal.setFont(new Font("Serif", Font.BOLD, 14));
+		panel_3.add(lblTotal);
+		
+		txtTotal = new JTextField();
+		txtTotal.setBounds(506, 314, 122, 25);
+		panel_3.add(txtTotal);
+		txtTotal.setColumns(10);
+		
+		txtSubtotal = new JTextField();
+		txtSubtotal.setColumns(10);
+		txtSubtotal.setBounds(256, 281, 122, 25);
+		panel_3.add(txtSubtotal);
+		
+		lblSubtotalS = new JLabel("Subtotal S/. ");
+		lblSubtotalS.setFont(new Font("Serif", Font.BOLD, 14));
+		lblSubtotalS.setBounds(158, 285, 86, 19);
+		panel_3.add(lblSubtotalS);
+		
+		lblIgvs = new JLabel("IGV S/. ");
+		lblIgvs.setFont(new Font("Serif", Font.BOLD, 14));
+		lblIgvs.setBounds(408, 285, 86, 19);
+		panel_3.add(lblIgvs);
+		
+		txtIgv = new JTextField();
+		txtIgv.setColumns(10);
+		txtIgv.setBounds(506, 281, 122, 25);
+		panel_3.add(txtIgv);
+		
+		panel_2 = new JPanel();
+		panel_2.setBackground(SystemColor.control);
+		panel_2.setBorder(new TitledBorder(null, "Producto", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(59, 59, 59)));
+		panel_2.setBounds(334, 128, 523, 141);
+		contentPanel.add(panel_2);
+		panel_2.setLayout(null);
+		
+		lblProducto = new JLabel("Producto");
+		lblProducto.setPreferredSize(new Dimension(50, 16));
+		lblProducto.setFont(new Font("Serif", Font.PLAIN, 14));
+		lblProducto.setBounds(18, 34, 74, 19);
+		panel_2.add(lblProducto);
+		
+		txtProdDesc = new JTextField();
+		txtProdDesc.setBackground(SystemColor.control);
+		txtProdDesc.setEditable(false);
+		txtProdDesc.setColumns(10);
+		txtProdDesc.setBounds(82, 30, 355, 28);
+		panel_2.add(txtProdDesc);
+		
+		btnBuscarProd = new JButton("...");
+		btnBuscarProd.setBounds(449, 30, 37, 28);
+		panel_2.add(btnBuscarProd);
+		
+		lblPrecio = new JLabel("Precio");
+		lblPrecio.setPreferredSize(new Dimension(50, 16));
+		lblPrecio.setFont(new Font("Serif", Font.PLAIN, 14));
+		lblPrecio.setBounds(209, 69, 74, 19);
+		panel_2.add(lblPrecio);
+		
+		txtProdPrecio = new JTextField();
+		txtProdPrecio.setBackground(SystemColor.control);
+		txtProdPrecio.setEditable(false);
+		txtProdPrecio.setColumns(10);
+		txtProdPrecio.setBounds(264, 65, 99, 28);
+		panel_2.add(txtProdPrecio);
+		
+		btnAgregar = new JButton("Agregar");
+		btnAgregar.addActionListener(this);
+		btnAgregar.setForeground(new Color(255, 255, 255));
+		btnAgregar.setFont(new Font("Serif", Font.BOLD, 14));
+		btnAgregar.setBackground(new Color(128, 128, 0));
+		btnAgregar.setBounds(375, 94, 105, 30);
+		panel_2.add(btnAgregar);
+		
+		lblCantidad = new JLabel("Cantidad");
+		lblCantidad.setPreferredSize(new Dimension(50, 16));
+		lblCantidad.setFont(new Font("Serif", Font.PLAIN, 14));
+		lblCantidad.setBounds(18, 105, 74, 19);
+		panel_2.add(lblCantidad);
+		
+		txtProdCant = new JTextField();
+		txtProdCant.setColumns(10);
+		txtProdCant.setBounds(82, 100, 99, 28);
+		panel_2.add(txtProdCant);
+		
+		txtProdStock = new JTextField();
+		txtProdStock.setEditable(false);
+		txtProdStock.setColumns(10);
+		txtProdStock.setBackground(SystemColor.menu);
+		txtProdStock.setBounds(82, 65, 99, 28);
+		panel_2.add(txtProdStock);
+		
+		lblStock = new JLabel("Stock");
+		lblStock.setPreferredSize(new Dimension(50, 16));
+		lblStock.setFont(new Font("Serif", Font.PLAIN, 14));
+		lblStock.setBounds(18, 69, 74, 19);
+		panel_2.add(lblStock);
+	}
+	
+	public FrmDetComp(FrmCompras vent){
+		this();
+		
+	}
+	
+	public void actionPerformed(ActionEvent arg0) {
+		if (arg0.getSource() == btnAgregar) {
+			actionPerformedBtnAgregar(arg0);
+		}
+	}
+	protected void actionPerformedBtnAgregar(ActionEvent arg0) {
+	}
+}

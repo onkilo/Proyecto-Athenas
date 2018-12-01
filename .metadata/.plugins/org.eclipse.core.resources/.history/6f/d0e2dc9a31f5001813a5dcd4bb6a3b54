@@ -1,0 +1,232 @@
+package presentacion;
+
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import net.miginfocom.swing.MigLayout;
+import util.ProductoTableModel;
+
+import java.awt.SystemColor;
+import javax.swing.UIManager;
+import javax.swing.border.TitledBorder;
+
+import entidades.Producto;
+import negocio.NegocioProducto;
+
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.JRadioButton;
+import java.awt.Font;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import java.awt.Color;
+import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.awt.event.MouseEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;
+
+public class FrmBProducto extends JDialog implements ActionListener, KeyListener, MouseListener {
+
+	private final JPanel contentPanel = new JPanel();
+	private JTextField txtBuscar;
+	private JTable tblProducto;
+
+	private ButtonGroup btnG;
+	private JRadioButton rdbtPorCodigo;
+	private JRadioButton rdbtPorDescripcion;
+	private JButton btnResetear;
+	private JLabel lblBuscar;
+	private JScrollPane scrollPane;
+
+	private NegocioProducto nProd = new NegocioProducto();
+	private FrmPromo ventProm = null;
+	private Producto prod;
+	private ProductoTableModel modelo;
+	private FrmDetVentas ventDetVent = null;
+	private FrmDetComp ventDetComp = null;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		try {
+			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		try {
+			FrmBProducto dialog = new FrmBProducto();
+			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			dialog.setVisible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Create the dialog.
+	 */
+	public FrmBProducto() {
+		setResizable(false);
+		setModal(true);
+		setBounds(100, 100, 750, 450);
+		getContentPane().setLayout(new BorderLayout());
+		contentPanel.setBackground(SystemColor.control);
+		contentPanel.setBorder(
+				new TitledBorder(null, "Buscar producto", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		getContentPane().add(contentPanel, BorderLayout.CENTER);
+		contentPanel.setLayout(new MigLayout("", "[100px:n][250px:n][grow]", "[][][grow]"));
+
+		lblBuscar = new JLabel("Buscar");
+		contentPanel.add(lblBuscar, "cell 0 0,alignx center");
+
+		txtBuscar = new JTextField();
+		txtBuscar.addKeyListener(this);
+		contentPanel.add(txtBuscar, "cell 1 0,alignx leading");
+		txtBuscar.setColumns(20);
+
+		btnResetear = new JButton("Resetear");
+		btnResetear.addActionListener(this);
+		btnResetear.setFont(new Font("Serif", Font.BOLD, 14));
+		btnResetear.setForeground(new Color(255, 255, 255));
+		btnResetear.setBackground(new Color(128, 128, 0));
+		contentPanel.add(btnResetear, "cell 2 0,alignx leading");
+
+		JPanel panel = new JPanel();
+		panel.setBackground(SystemColor.control);
+		contentPanel.add(panel, "cell 1 1,grow");
+		panel.setLayout(new MigLayout("", "[89px][grow]", "[22px]"));
+
+		rdbtPorCodigo = new JRadioButton("Por c\u00F3digo");
+		rdbtPorCodigo.setFont(new Font("Serif", Font.PLAIN, 16));
+		panel.add(rdbtPorCodigo, "cell 0 0,alignx left,aligny top");
+
+		rdbtPorDescripcion = new JRadioButton("Por Descripci\u00F3n");
+		rdbtPorDescripcion.setFont(new Font("Serif", Font.PLAIN, 16));
+		panel.add(rdbtPorDescripcion, "cell 1 0");
+
+		panel = new JPanel();
+		panel.setBackground(SystemColor.control);
+		contentPanel.add(panel, "cell 0 2 3 1,grow");
+		panel.setLayout(new BorderLayout(0, 0));
+
+		scrollPane = new JScrollPane();
+		scrollPane.setBackground(SystemColor.control);
+		panel.add(scrollPane, BorderLayout.CENTER);
+
+		tblProducto = new JTable();
+		tblProducto.addMouseListener(this);
+		scrollPane.setViewportView(tblProducto);
+
+		btnG = new ButtonGroup();
+		btnG.add(rdbtPorDescripcion);
+		btnG.add(rdbtPorCodigo);
+
+		rdbtPorCodigo.setSelected(true);
+
+		modelo = new ProductoTableModel();
+		tblProducto.setModel(modelo);
+		modelo.setData(nProd.listar());
+	}
+
+	public FrmBProducto(FrmPromo vent) {
+		this();
+		this.ventProm = vent;
+		this.setLocationRelativeTo(vent);
+	}
+
+	public FrmBProducto(FrmDetVentas vent) {
+		this();
+		this.ventDetVent = vent;
+		this.setLocationRelativeTo(vent);
+	}
+	
+	public FrmBProducto(FrmDetComp vent) {
+		this();
+		this.ventDetComp = vent;
+		this.setLocationRelativeTo(vent);
+	}
+
+	public void actionPerformed(ActionEvent arg0) {
+		if (arg0.getSource() == btnResetear) {
+			actionPerformedBtnResetear(arg0);
+		}
+	}
+
+	protected void actionPerformedBtnResetear(ActionEvent arg0) {
+		txtBuscar.setText("");
+		modelo.setData(nProd.listar());
+	}
+
+	public void keyPressed(KeyEvent arg0) {
+	}
+
+	public void keyReleased(KeyEvent arg0) {
+		if (arg0.getSource() == txtBuscar) {
+			keyReleasedTxtBuscar(arg0);
+		}
+	}
+
+	public void keyTyped(KeyEvent e) {
+	}
+
+	protected void keyReleasedTxtBuscar(KeyEvent arg0) {
+		ArrayList<Producto> busqueda = new ArrayList<Producto>();
+		String patron = txtBuscar.getText();
+		if (rdbtPorCodigo.isSelected()) {
+			busqueda = nProd.getProductosByID(patron);
+		} else if (rdbtPorDescripcion.isSelected()) {
+			busqueda = nProd.getProductosByDescripcion(patron);
+		}
+		modelo.setData(busqueda);
+	}
+
+	public void mouseClicked(MouseEvent e) {
+		if (e.getSource() == tblProducto) {
+			mouseClickedTblProducto(e);
+		}
+	}
+
+	public void mouseEntered(MouseEvent e) {
+	}
+
+	public void mouseExited(MouseEvent e) {
+	}
+
+	public void mousePressed(MouseEvent e) {
+	}
+
+	public void mouseReleased(MouseEvent e) {
+	}
+
+	protected void mouseClickedTblProducto(MouseEvent e) {
+		if (e.getClickCount() == 2) {
+			if (!tblProducto.getSelectionModel().isSelectionEmpty()) {
+				int fila = tblProducto.getSelectedRow();
+				this.prod = modelo.getProducto(fila);
+
+				if (this.ventProm != null) {
+					this.ventProm.setProd(prod);
+					this.ventProm.getTxtProd().setText(prod.getDescripcion());
+					this.dispose();
+				} else if (this.ventDetVent != null) {
+					this.ventDetVent.CargarProducto(prod);
+					this.dispose();
+				}
+				else if (this.ventDetComp != null) {
+					this.ventDetComp.CargarProducto(prod);
+					this.dispose();
+				}
+			}
+		}
+
+	}
+}

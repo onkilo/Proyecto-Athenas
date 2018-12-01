@@ -8,7 +8,9 @@ import net.miginfocom.swing.MigLayout;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
+import util.Comunes;
 import util.ProveedorTableModel;
+import util.Reporte;
 
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
@@ -42,6 +44,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
+import javax.swing.ListSelectionModel;
 
 public class FrmProveedor extends JInternalFrame implements KeyListener, ActionListener {
 	private JPanel panel;
@@ -82,6 +85,7 @@ public class FrmProveedor extends JInternalFrame implements KeyListener, ActionL
 	private NegocioProveedor nProv = new NegocioProveedor();
 	private JLabel lblDireccin;
 	private JTextField txtDireccion;
+	Comunes comon = new Comunes();
 
 	/**
 	 * Launch the application.
@@ -138,7 +142,8 @@ public class FrmProveedor extends JInternalFrame implements KeyListener, ActionL
 		panel.add(lblRaznSocial, "cell 0 1,alignx center");
 
 		txtRazon = new JTextField();
-		txtRazon.setEnabled(false);
+		txtRazon.setEditable(false);
+		txtRazon.setBackground(SystemColor.control);
 		panel.add(txtRazon, "cell 1 1,alignx leading");
 		txtRazon.setColumns(20);
 
@@ -148,7 +153,8 @@ public class FrmProveedor extends JInternalFrame implements KeyListener, ActionL
 		panel.add(lblRepresentante, "cell 0 2,alignx center");
 
 		txtRepresentante = new JTextField();
-		txtRepresentante.setEnabled(false);
+		txtRepresentante.setEditable(false);
+		txtRepresentante.setBackground(SystemColor.control);
 		panel.add(txtRepresentante, "cell 1 2,alignx leading");
 		txtRepresentante.setColumns(20);
 
@@ -158,7 +164,8 @@ public class FrmProveedor extends JInternalFrame implements KeyListener, ActionL
 		panel.add(lblEmail, "cell 0 3,alignx center");
 
 		txtEmail = new JTextField();
-		txtEmail.setEnabled(false);
+		txtEmail.setEditable(false);
+		txtEmail.setBackground(SystemColor.control);
 		panel.add(txtEmail, "cell 1 3,alignx leading");
 		txtEmail.setColumns(20);
 
@@ -168,7 +175,8 @@ public class FrmProveedor extends JInternalFrame implements KeyListener, ActionL
 		panel.add(lblTelfono, "cell 0 4,alignx center");
 
 		txtTelefono = new JTextField();
-		txtTelefono.setEnabled(false);
+		txtTelefono.setEditable(false);
+		txtTelefono.setBackground(SystemColor.control);
 		panel.add(txtTelefono, "cell 1 4,alignx leading");
 		txtTelefono.setColumns(10);
 		
@@ -178,7 +186,8 @@ public class FrmProveedor extends JInternalFrame implements KeyListener, ActionL
 		panel.add(lblDireccin, "cell 0 5,alignx center");
 		
 		txtDireccion = new JTextField();
-		txtDireccion.setEnabled(false);
+		txtDireccion.setEditable(false);
+		txtDireccion.setBackground(SystemColor.control);
 		txtDireccion.setColumns(20);
 		panel.add(txtDireccion, "cell 1 5,alignx leading");
 
@@ -257,6 +266,9 @@ public class FrmProveedor extends JInternalFrame implements KeyListener, ActionL
 		panel_5.add(scrollPane, BorderLayout.CENTER);
 
 		tblProveedor = new JTable();
+		tblProveedor.setRowHeight(20);
+		tblProveedor.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tblProveedor.setFont(new Font("Times New Roman", Font.PLAIN, 14));
 		scrollPane.setViewportView(tblProveedor);
 
 		panel_2 = new JPanel();
@@ -341,19 +353,18 @@ public class FrmProveedor extends JInternalFrame implements KeyListener, ActionL
 	private void LlenaDatos(Proveedor p) {
 		txtCodigo.setText(p.getID());
 		txtRazon.setText(p.getRaz_Soc());
-		txtRepresentante.setText(p.getRaz_Soc());
+		txtRepresentante.setText(p.getRepresentante());
 		txtEmail.setText(p.getEmail());
 		txtTelefono.setText(p.getTelf());
 		txtDireccion.setText(p.getDireccion());
 	}
 
 	private void Habilita(boolean estado) {
-		txtRazon.setEnabled(estado);
-		txtRepresentante.setEnabled(estado);
-		txtTelefono.setEnabled(estado);
-		txtEmail.setEnabled(estado);
-		txtDireccion.setEnabled(estado);
-		
+		comon.habTextField(txtRazon, estado);
+		comon.habTextField(txtRepresentante, estado);
+		comon.habTextField(txtTelefono, estado);
+		comon.habTextField(txtEmail, estado);
+		comon.habTextField(txtDireccion, estado);		
 	
 		btnGuardar.setEnabled(estado);
 		btnCancelar.setEnabled(estado);
@@ -499,16 +510,6 @@ public class FrmProveedor extends JInternalFrame implements KeyListener, ActionL
 	}
 
 	protected void actionPerformedBtnImprimir(ActionEvent arg0) {
-		try {
-			JasperPrint jp = JasperFillManager.fillReport("src/reportes/ListaProveedores.jasper", null,
-					Conexion.Conectar());
-			JasperViewer jv = new JasperViewer(jp, false);
-			jv.setTitle("Lista de proveedores");
-			jv.setVisible(true);
-
-		} catch (Exception e) {
-
-			e.printStackTrace();
-		}
+		Reporte.CreaReporte("src/reportes/ListaProveedores.jasper");
 	}
 }

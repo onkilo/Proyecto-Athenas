@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Pedido" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="077cbece-2e68-4fde-9e81-5566884752b9">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="BDAthenasCon"/>
+	<parameter name="Compra" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT c.Cod_Compra as CodCompra,c.Estado as Estado, c.Fecha as Fecha, p.Rz_Social as ProvRz, p.Direccion as ProvDir, p.Telefono as ProvTel, t.Nombre + ' ' + t.Apellido as Trab, sum(dc.Cantidad*dc.Precio) as Subtotal, 
+	 sum(dc.Cantidad*dc.Precio) * c.IGV as IGVMonto, sum(dc.Cantidad*dc.Precio) + sum(dc.Cantidad*dc.Precio) * c.IGV as Total
+FROM Compra c inner join Det_Comp dc on c.Cod_Compra = dc.Cod_Compra inner join Trabajador t on c.Cod_Trabajador = t.ID inner join Proveedor p on c.Cod_Proveedor = p.ID
+where c.Cod_Compra =  $P{Compra} 
+group by c.Cod_Compra, c.Fecha, p.Rz_Social, p.Direccion, p.Telefono, c.IGV, t.Nombre, t.Apellido, c.Estado]]>
+	</queryString>
+	<field name="CodCompra" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CodCompra"/>
+	</field>
+	<field name="Estado" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="Estado"/>
+	</field>
+	<field name="Fecha" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.label" value="Fecha"/>
+	</field>
+	<field name="ProvRz" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ProvRz"/>
+	</field>
+	<field name="ProvDir" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ProvDir"/>
+	</field>
+	<field name="ProvTel" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ProvTel"/>
+	</field>
+	<field name="Trab" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Trab"/>
+	</field>
+	<field name="Subtotal" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="Subtotal"/>
+	</field>
+	<field name="IGVMonto" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="IGVMonto"/>
+	</field>
+	<field name="Total" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="Total"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="230" splitType="Stretch">
+			<frame>
+				<reportElement x="130" y="0" width="420" height="180" uuid="b640037a-188f-40d6-869d-4c1aedb5cda6"/>
+				<staticText>
+					<reportElement x="143" y="10" width="135" height="30" uuid="eac6e492-ad9b-4edf-bccf-daaeaf5fb998"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Serif" size="14"/>
+					</textElement>
+					<text><![CDATA[Bodega Athenas]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="143" y="40" width="135" height="30" uuid="111e624c-5c03-468a-92c5-df732d6ae02d"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Serif" size="14"/>
+					</textElement>
+					<text><![CDATA[Nota de Pedido]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="70" y="69" width="111" height="30" uuid="eb8ab77c-3066-44aa-ac68-6949ace32df4"/>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Serif" size="14"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<text><![CDATA[Código de pedido]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="70" y="100" width="110" height="30" uuid="34bf0739-4d07-4e96-9577-521d1a5495b7"/>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Serif" size="14"/>
+						<paragraph lineSpacing="Single" leftIndent="5"/>
+					</textElement>
+					<text><![CDATA[Fecha de pedido]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="70" y="131" width="111" height="30" uuid="ac9d8b32-2b92-4173-b087-7fb3af156d8d"/>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Serif" size="14"/>
+						<paragraph lineSpacing="Single" leftIndent="5"/>
+					</textElement>
+					<text><![CDATA[Solicitante]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="180" y="69" width="200" height="30" uuid="4d306a5d-5da4-4164-a4f1-d73cc8d4797c"/>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Serif" size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{CodCompra}]]></textFieldExpression>
+				</textField>
+				<textField pattern="MMMM d, yyyy">
+					<reportElement x="180" y="100" width="200" height="30" uuid="d2402721-7b19-4f16-b360-90f08b3e0443"/>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Serif" size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Fecha}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="181" y="131" width="199" height="30" uuid="1a859893-ac8c-49e4-9f38-e13a033602a6"/>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Serif" size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Trab}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

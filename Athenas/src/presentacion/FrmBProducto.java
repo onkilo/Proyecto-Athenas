@@ -32,6 +32,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
+import javax.swing.ListSelectionModel;
 
 public class FrmBProducto extends JDialog implements ActionListener, KeyListener, MouseListener {
 
@@ -123,6 +124,9 @@ public class FrmBProducto extends JDialog implements ActionListener, KeyListener
 		panel.add(scrollPane, BorderLayout.CENTER);
 
 		tblProducto = new JTable();
+		tblProducto.setRowHeight(20);
+		tblProducto.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tblProducto.setFont(new Font("Times New Roman", Font.PLAIN, 14));
 		tblProducto.addMouseListener(this);
 		scrollPane.setViewportView(tblProducto);
 
