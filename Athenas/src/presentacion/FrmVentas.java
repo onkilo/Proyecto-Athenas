@@ -330,6 +330,9 @@ public class FrmVentas extends JInternalFrame implements KeyListener, ActionList
 			param.put("CodVenta", venta.getCodVenta());
 			Reporte.CreaReporte("/reportes/CDP.jasper", param);
 		}
+		else {
+			JOptionPane.showInternalMessageDialog(this, "Debe selecionar un registro para poder imprimir", "Seleción Errónea", JOptionPane.WARNING_MESSAGE);
+		}
 	}
 	
 }

@@ -16,7 +16,7 @@ public class NegocioTrabajador {
 	public ArrayList<Trabajador> Listar() {
 		ArrayList<Trabajador> lista = new ArrayList<Trabajador>();
 
-		sql = "SELECT ID,Nombre,Apellido,Telefono,DNI,Email, Direccion, Usuario, Contrasenia,Sexo, Rol FROM Trabajador";
+		sql = "SELECT ID,Nombre,Apellido,Telefono,DNI,Email, Direccion, Usuario, Contrasenia,Sexo, Rol FROM Trabajador WHERE ID <> 'TB0000'";
 
 		try {
 			con = Conexion.Conectar();
@@ -162,7 +162,7 @@ public class NegocioTrabajador {
 	public Trabajador getTrabajadorBYID(String cod) {
 		Trabajador t = null;
 
-		sql = "SELECT ID,Nombre,Apellido,Telefono,DNI,Email, Direccion, Usuario, Contrasenia,Sexo, Rol FROM Trabajador WHERE ID = ?";
+		sql = "SELECT ID,Nombre,Apellido,Telefono,DNI,Email, Direccion, Usuario, Contrasenia,Sexo, Rol FROM Trabajador WHERE ID = ? AND ID <> 'TB0000'";
 
 		try {
 			con = Conexion.Conectar();
@@ -204,7 +204,7 @@ public class NegocioTrabajador {
 	public ArrayList<Trabajador> getTrabajadoresBYID(String patron) {
 		ArrayList<Trabajador> lista = new ArrayList<Trabajador>();
 
-		sql = "SELECT ID,Nombre,Apellido,Telefono,DNI,Email, Direccion, Usuario, Contrasenia,Sexo, Rol FROM Trabajador WHERE ID like ?";
+		sql = "SELECT ID,Nombre,Apellido,Telefono,DNI,Email, Direccion, Usuario, Contrasenia,Sexo, Rol FROM Trabajador WHERE ID like ? AND ID <> 'TB0000'";
 
 		try {
 			con = Conexion.Conectar();
@@ -248,7 +248,7 @@ public class NegocioTrabajador {
 	public ArrayList<Trabajador> getTrabajadoresBYNombre(String patron) {
 		ArrayList<Trabajador> lista = new ArrayList<Trabajador>();
 
-		sql = "SELECT ID,Nombre,Apellido,Telefono,DNI,Email, Direccion, Usuario, Contrasenia,Sexo, Rol FROM Trabajador WHERE (Nombre + ' ' + Apellido) like ?";
+		sql = "SELECT ID,Nombre,Apellido,Telefono,DNI,Email, Direccion, Usuario, Contrasenia,Sexo, Rol FROM Trabajador WHERE (Nombre + ' ' + Apellido) like ?  AND ID <> 'TB0000'";
 
 		try {
 			con = Conexion.Conectar();
@@ -288,8 +288,7 @@ public class NegocioTrabajador {
 
 		return lista;
 	}
-	
-	
+
 	public Trabajador getTrabajadorBYUser(String user, String pass) {
 		Trabajador t = null;
 

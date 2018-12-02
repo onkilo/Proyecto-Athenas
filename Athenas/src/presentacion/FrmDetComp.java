@@ -190,7 +190,7 @@ public class FrmDetComp extends JDialog implements ActionListener {
 		lblRuc.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(lblRuc);
 
-		lblVendedor = new JLabel("Trabajador");
+		lblVendedor = new JLabel("Solicitante");
 		lblVendedor.setBounds(32, 205, 70, 25);
 		lblVendedor.setPreferredSize(new Dimension(50, 25));
 		lblVendedor.setFont(new Font("Serif", Font.BOLD, 14));

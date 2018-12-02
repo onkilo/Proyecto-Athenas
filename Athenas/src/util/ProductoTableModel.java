@@ -102,4 +102,5 @@ public class ProductoTableModel extends AbstractTableModel {
 		this.data = data;
 		fireTableDataChanged();
 	}
+	
 }

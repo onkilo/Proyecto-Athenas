@@ -420,7 +420,7 @@ public class FrmProveedor extends JInternalFrame implements KeyListener, ActionL
 	}
 
 	protected void actionPerformedBtnGuardar(ActionEvent arg0) {
-		if(ValidaDatos()){
+		if (ValidaDatos()) {
 			if (opGuardar.equals("Nuevo")) {
 				nProv.InsertarProveedor(LeerProveedor());
 				ReseteaCampos();
@@ -475,7 +475,7 @@ public class FrmProveedor extends JInternalFrame implements KeyListener, ActionL
 		rdbtnPorCodigo.setSelected(true);
 
 		modelo.setData(nProv.Listar());
-		
+
 		if (FrmPrincipal.currentUser != null && FrmPrincipal.currentUser.getUsuario() != null) {
 			if (FrmPrincipal.currentUser.getRol().equalsIgnoreCase("Vendedor")) {
 				btnImprimir.setVisible(false);
@@ -522,34 +522,29 @@ public class FrmProveedor extends JInternalFrame implements KeyListener, ActionL
 		p.setDireccion(txtDireccion.getText());
 		return p;
 	}
-	
-	private boolean ValidaDatos(){
+
+	private boolean ValidaDatos() {
 		boolean datosOK = false;
-		
-		if(txtRazon.getText().length()<1){
+
+		if (txtRazon.getText().length() < 1) {
 			JOptionPane.showInternalMessageDialog(this, "Razón Social no puede estar vacía");
 			txtRazon.grabFocus();
-		}
-		else if (!comon.ValidaTexto(txtRepresentante.getText())){
+		} else if (!comon.ValidaTexto(txtRepresentante.getText())) {
 			JOptionPane.showInternalMessageDialog(this, "Nombre de Representante inválido");
 			txtRepresentante.grabFocus();
-		}
-		else if (!comon.ValidaEmail(txtEmail.getText())){
+		} else if (!comon.ValidaEmail(txtEmail.getText())) {
 			JOptionPane.showInternalMessageDialog(this, "Formato de email inválido");
 			txtEmail.grabFocus();
-		}
-		else if(!comon.ValidaEntero(txtTelefono.getText()) || txtTelefono.getText().length()<7){
+		} else if (!comon.ValidaEntero(txtTelefono.getText()) || txtTelefono.getText().length() < 7) {
 			JOptionPane.showInternalMessageDialog(this, "Error en ingreso de Teléfono");
 			txtTelefono.grabFocus();
-		}
-		else if (txtDireccion.getText().length()<1){
+		} else if (txtDireccion.getText().length() < 1) {
 			JOptionPane.showInternalMessageDialog(this, "La dirección no puede estar vacía");
 			txtDireccion.grabFocus();
-		}
-		else{
+		} else {
 			datosOK = true;
 		}
-		
+
 		return datosOK;
 	}
 }

@@ -428,5 +428,8 @@ public class FrmCompras extends JInternalFrame implements KeyListener, ActionLis
 			param.put("Compra", obj.getId());
 			Reporte.CreaReporte("/reportes/Pedido.jasper", param);
 		}
+		else {
+			JOptionPane.showInternalMessageDialog(this, "Debe selecionar un registro para poder imprimir", "Seleción Errónea", JOptionPane.WARNING_MESSAGE);
+		}
 	}
 }

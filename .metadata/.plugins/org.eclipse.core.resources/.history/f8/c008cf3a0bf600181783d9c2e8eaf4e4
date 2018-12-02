@@ -1,0 +1,73 @@
+package presentacion;
+
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import java.awt.Font;
+import java.awt.Dimension;
+import javax.swing.JTextField;
+import java.awt.SystemColor;
+
+public class FrmAddCliente extends JDialog {
+
+	private final JPanel contentPanel = new JPanel();
+	private JLabel label;
+	private JTextField textField;
+	private JLabel label_1;
+	private JTextField textField_1;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		try {
+			FrmAddCliente dialog = new FrmAddCliente();
+			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			dialog.setVisible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Create the dialog.
+	 */
+	public FrmAddCliente() {
+		setResizable(false);
+		setModal(true);
+		setBounds(100, 100, 462, 454);
+		getContentPane().setLayout(new BorderLayout());
+		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		getContentPane().add(contentPanel, BorderLayout.CENTER);
+		contentPanel.setLayout(null);
+		
+		label = new JLabel("C\u00F3digo");
+		label.setPreferredSize(new Dimension(100, 16));
+		label.setFont(new Font("Serif", Font.PLAIN, 14));
+		label.setBounds(45, 53, 100, 19);
+		contentPanel.add(label);
+		
+		textField = new JTextField();
+		textField.setColumns(10);
+		textField.setBackground(SystemColor.menu);
+		textField.setBounds(168, 50, 122, 28);
+		contentPanel.add(textField);
+		
+		label_1 = new JLabel("Nombre");
+		label_1.setPreferredSize(new Dimension(100, 16));
+		label_1.setFont(new Font("Serif", Font.PLAIN, 14));
+		label_1.setBounds(45, 110, 100, 19);
+		contentPanel.add(label_1);
+		
+		textField_1 = new JTextField();
+		textField_1.setColumns(20);
+		textField_1.setBackground(SystemColor.menu);
+		textField_1.setBounds(168, 107, 232, 28);
+		contentPanel.add(textField_1);
+	}
+}

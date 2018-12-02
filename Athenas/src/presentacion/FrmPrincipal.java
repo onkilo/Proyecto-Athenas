@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JMenuBar;
@@ -21,8 +20,6 @@ import javax.swing.ImageIcon;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
-import javax.swing.event.InternalFrameListener;
-
 import conexion.Conexion;
 import entidades.Trabajador;
 import util.Reporte;
@@ -30,7 +27,6 @@ import util.Reporte;
 import javax.swing.event.ChangeEvent;
 import javax.swing.SwingConstants;
 import java.awt.Font;
-import javax.swing.JDesktopPane;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 import java.awt.Toolkit;
@@ -59,7 +55,6 @@ public class FrmPrincipal extends JFrame implements ActionListener, ChangeListen
 	private JMenuItem mntmCompras;
 	private JMenuItem mntmTrabajador;
 	private PanelImagen pnEscritorio;
-	
 
 	// Persona logeada
 	public static Trabajador currentUser = new Trabajador();
@@ -73,7 +68,7 @@ public class FrmPrincipal extends JFrame implements ActionListener, ChangeListen
 	FrmCompras com = null;
 	FrmVentas vent = null;
 	FrmCategoria cat = null;
-	
+
 	private JMenuItem mntmCategorias;
 	private JMenuItem mntmProductos;
 	private JMenu mntmPromociones;
@@ -83,6 +78,7 @@ public class FrmPrincipal extends JFrame implements ActionListener, ChangeListen
 	private JMenuItem mntmPromocionesActuales;
 	private JMenuItem mntmPromocionesVencidas;
 	private JLabel lblAthenas;
+	private JLabel lblAthenas_1;
 
 	/**
 	 * Launch the application.
@@ -111,9 +107,9 @@ public class FrmPrincipal extends JFrame implements ActionListener, ChangeListen
 	public FrmPrincipal() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(FrmPrincipal.class.getResource("/img/icon-logo.png")));
 		setTitle("Bodega - Athenas");
-		setMinimumSize(new Dimension(1024, 700));
+		setMinimumSize(new Dimension(1100, 700));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1024, 700);
+		setBounds(100, 100, 1100, 700);
 
 		menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -151,7 +147,7 @@ public class FrmPrincipal extends JFrame implements ActionListener, ChangeListen
 		mntmProducto.addChangeListener(this);
 		mntmProducto.setIcon(new ImageIcon(FrmPrincipal.class.getResource("/img/icon-productos-black.png")));
 		mnMantenimiento.add(mntmProducto);
-		
+
 		mntmCategorias = new JMenuItem("Categorias");
 		mntmCategorias.addActionListener(this);
 		mntmCategorias.setFont(new Font("Serif", Font.PLAIN, 15));
@@ -203,49 +199,49 @@ public class FrmPrincipal extends JFrame implements ActionListener, ChangeListen
 		mnReportes.addChangeListener(this);
 		mnReportes.setIcon(new ImageIcon(FrmPrincipal.class.getResource("/img/icon-reportes-black.png")));
 		menuBar.add(mnReportes);
-		
+
 		mntmProductos = new JMenuItem("Productos");
 		mntmProductos.addActionListener(this);
 		mntmProductos.setFont(new Font("Serif", Font.PLAIN, 15));
 		mntmProductos.addChangeListener(this);
 		mntmProductos.setIcon(new ImageIcon(FrmPrincipal.class.getResource("/img/icon-listados-black.png")));
 		mnReportes.add(mntmProductos);
-		
+
 		mntmPromociones = new JMenu("Promociones");
 		mntmPromociones.addMouseListener(this);
 		mntmPromociones.addChangeListener(this);
 		mntmPromociones.setIcon(new ImageIcon(FrmPrincipal.class.getResource("/img/icon-listados-black.png")));
 		mntmPromociones.setFont(new Font("Serif", Font.PLAIN, 15));
 		mnReportes.add(mntmPromociones);
-		
+
 		mntmPromocionesActuales = new JMenuItem("Promociones Actuales");
 		mntmPromocionesActuales.addActionListener(this);
 		mntmPromocionesActuales.addChangeListener(this);
 		mntmPromocionesActuales.setIcon(new ImageIcon(FrmPrincipal.class.getResource("/img/icon-listados-black.png")));
 		mntmPromocionesActuales.setFont(new Font("Serif", Font.PLAIN, 15));
 		mntmPromociones.add(mntmPromocionesActuales);
-		
+
 		mntmPromocionesVencidas = new JMenuItem("Promociones Vencidas");
 		mntmPromocionesVencidas.addActionListener(this);
 		mntmPromocionesVencidas.addChangeListener(this);
 		mntmPromocionesVencidas.setIcon(new ImageIcon(FrmPrincipal.class.getResource("/img/icon-listados-black.png")));
 		mntmPromocionesVencidas.setFont(new Font("Serif", Font.PLAIN, 15));
 		mntmPromociones.add(mntmPromocionesVencidas);
-		
+
 		mntmClientes = new JMenuItem("Clientes");
 		mntmClientes.addActionListener(this);
 		mntmClientes.setFont(new Font("Serif", Font.PLAIN, 15));
 		mntmClientes.addChangeListener(this);
 		mntmClientes.setIcon(new ImageIcon(FrmPrincipal.class.getResource("/img/icon-listados-black.png")));
 		mnReportes.add(mntmClientes);
-		
+
 		mntmProveedores = new JMenuItem("Proveedores");
 		mntmProveedores.addActionListener(this);
 		mntmProveedores.addChangeListener(this);
 		mntmProveedores.setFont(new Font("Serif", Font.PLAIN, 15));
 		mntmProveedores.setIcon(new ImageIcon(FrmPrincipal.class.getResource("/img/icon-listados-black.png")));
 		mnReportes.add(mntmProveedores);
-		
+
 		mntmRepTrab = new JMenuItem("Trabajadores");
 		mntmRepTrab.addActionListener(this);
 		mntmRepTrab.addChangeListener(this);
@@ -266,7 +262,7 @@ public class FrmPrincipal extends JFrame implements ActionListener, ChangeListen
 		mntmTrabajador.setIcon(new ImageIcon(FrmPrincipal.class.getResource("/img/icon-trabajador-black.png")));
 		mnAdministrador.add(mntmTrabajador);
 		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setBorder(null);
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 
@@ -274,21 +270,30 @@ public class FrmPrincipal extends JFrame implements ActionListener, ChangeListen
 		pnEscritorio.setBorder(null);
 		contentPane.add(pnEscritorio, BorderLayout.CENTER);
 		
-		lblAthenas = new JLabel("Athenas");
-		lblAthenas.setBorder(new LineBorder(new Color(0, 0, 0), 3, true));
+		lblAthenas_1 = new JLabel("Athenas");
+		lblAthenas_1.setForeground(new Color(47, 79, 79));
+		lblAthenas_1.setFont(new Font("Segoe Print", Font.BOLD, 76));
+		lblAthenas_1.setHorizontalAlignment(SwingConstants.CENTER);
+		lblAthenas_1.setHorizontalTextPosition(SwingConstants.CENTER);
+		lblAthenas_1.setBounds(96, 152, 344, 68);
+		pnEscritorio.add(lblAthenas_1);
+
+		lblAthenas = new JLabel("");
+		lblAthenas.setHorizontalTextPosition(SwingConstants.CENTER);
+		lblAthenas.setIcon(new ImageIcon(FrmPrincipal.class.getResource("/img/cartel-fondo-madera.png")));
+		lblAthenas.setBorder(null);
 		lblAthenas.setBackground(new Color(0, 100, 0));
-		lblAthenas.setOpaque(true);
 		lblAthenas.setForeground(SystemColor.activeCaption);
 		lblAthenas.setFont(new Font("Edwardian Script ITC", Font.BOLD, 80));
 		lblAthenas.setHorizontalAlignment(SwingConstants.CENTER);
-		lblAthenas.setBounds(6, 6, 503, 190);
+		lblAthenas.setBounds(2, 0, 600, 237);
 		pnEscritorio.add(lblAthenas);
 
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 
 		Conexion.Conectar();
 		CheckPrivilegios();
-		
+
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowOpened(WindowEvent e) {
@@ -299,14 +304,14 @@ public class FrmPrincipal extends JFrame implements ActionListener, ChangeListen
 							"Ha ingresado al sistema sin usar el login. \nAlgunos módulos no funcionarán correctamente\n"
 									+ " \n¿Desea ingresar usando el login?",
 							"Ingreso erróneo", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
-					
-					if(ingreso == JOptionPane.YES_OPTION){
+
+					if (ingreso == JOptionPane.YES_OPTION) {
 						getGUI().dispose();
 						FrmLogin login = new FrmLogin();
 						login.setVisible(true);
 					}
 				}
-					
+
 			}
 		});
 
@@ -323,7 +328,7 @@ public class FrmPrincipal extends JFrame implements ActionListener, ChangeListen
 		}
 	}
 
-	private JFrame getGUI(){
+	private JFrame getGUI() {
 		return this;
 	}
 
@@ -438,9 +443,10 @@ public class FrmPrincipal extends JFrame implements ActionListener, ChangeListen
 		if (arg0.getSource() == mntmCerrarSesin) {
 			stateChangedMntmCerrarSesin(arg0);
 		}
-		if(arg0.getSource() == mntmProductos || arg0.getSource() == mntmProveedores || arg0.getSource() == mntmPromociones
-				|| arg0.getSource() == mntmPromocionesActuales || arg0.getSource() == mntmPromocionesVencidas 
-				|| arg0.getSource() == mntmClientes || arg0.getSource() == mntmRepTrab){
+		if (arg0.getSource() == mntmProductos || arg0.getSource() == mntmProveedores
+				|| arg0.getSource() == mntmPromociones || arg0.getSource() == mntmPromocionesActuales
+				|| arg0.getSource() == mntmPromocionesVencidas || arg0.getSource() == mntmClientes
+				|| arg0.getSource() == mntmRepTrab) {
 			CambiaIcono(arg0, "listados");
 		}
 	}
@@ -502,9 +508,9 @@ public class FrmPrincipal extends JFrame implements ActionListener, ChangeListen
 	}
 
 	protected void actionPerformedMntmProveedor(ActionEvent e) {
-		if(prov != null){
+		if (prov != null) {
 			prov.toFront();
-		}else{
+		} else {
 			prov = new FrmProveedor();
 			pnEscritorio.add(prov);
 			prov.setVisible(true);
@@ -516,13 +522,13 @@ public class FrmPrincipal extends JFrame implements ActionListener, ChangeListen
 				}
 			});
 		}
-		
+
 	}
 
 	protected void actionPerformedMntmCliente(ActionEvent e) {
-		if(cli != null){
+		if (cli != null) {
 			cli.toFront();
-		}else{
+		} else {
 			cli = new FrmCliente();
 			pnEscritorio.add(cli);
 			cli.setVisible(true);
@@ -536,11 +542,10 @@ public class FrmPrincipal extends JFrame implements ActionListener, ChangeListen
 		}
 	}
 
-
 	protected void actionPerformedMntmPromocin(ActionEvent e) {
-		if(prom != null){
+		if (prom != null) {
 			prom.toFront();
-		}else{
+		} else {
 			prom = new FrmPromo();
 			pnEscritorio.add(prom);
 			prom.setVisible(true);
@@ -555,9 +560,9 @@ public class FrmPrincipal extends JFrame implements ActionListener, ChangeListen
 	}
 
 	protected void actionPerformedMntmTrabajadores(ActionEvent e) {
-		if(trab != null){
+		if (trab != null) {
 			trab.toFront();
-		}else{
+		} else {
 			trab = new FrmTrabajador();
 			pnEscritorio.add(trab);
 			trab.setVisible(true);
@@ -572,9 +577,9 @@ public class FrmPrincipal extends JFrame implements ActionListener, ChangeListen
 	}
 
 	protected void actionPerformedMntmVentas(ActionEvent e) {
-		if(vent != null){
+		if (vent != null) {
 			vent.toFront();
-		}else{
+		} else {
 			vent = new FrmVentas();
 			pnEscritorio.add(vent);
 			vent.setVisible(true);
@@ -589,9 +594,9 @@ public class FrmPrincipal extends JFrame implements ActionListener, ChangeListen
 	}
 
 	protected void actionPerformedMntmCompras(ActionEvent e) {
-		if(com != null){
+		if (com != null) {
 			com.toFront();
-		}else{
+		} else {
 			com = new FrmCompras();
 			pnEscritorio.add(com);
 			com.setVisible(true);
@@ -604,13 +609,14 @@ public class FrmPrincipal extends JFrame implements ActionListener, ChangeListen
 			});
 		}
 	}
-	
+
 	protected void actionPerformedMntmCategorias(ActionEvent e) {
 		cat = new FrmCategoria();
 		cat.setLocationRelativeTo(this);
 		cat.setVisible(true);
-		
+
 	}
+
 	public void mouseClicked(MouseEvent arg0) {
 		if (arg0.getSource() == mntmPromociones) {
 			mouseClickedMntmPromociones(arg0);
@@ -619,18 +625,23 @@ public class FrmPrincipal extends JFrame implements ActionListener, ChangeListen
 			mouseClickedMntmProducto(arg0);
 		}
 	}
+
 	public void mouseEntered(MouseEvent arg0) {
 	}
+
 	public void mouseExited(MouseEvent arg0) {
 	}
+
 	public void mousePressed(MouseEvent e) {
 	}
+
 	public void mouseReleased(MouseEvent e) {
 	}
+
 	protected void mouseClickedMntmProducto(MouseEvent arg0) {
-		if(prod != null){
+		if (prod != null) {
 			prod.toFront();
-		}else{
+		} else {
 			prod = new FrmProducto();
 			pnEscritorio.add(prod);
 			prod.setVisible(true);
@@ -643,21 +654,27 @@ public class FrmPrincipal extends JFrame implements ActionListener, ChangeListen
 			});
 		}
 	}
+
 	protected void actionPerformedMntmProveedores(ActionEvent e) {
 		Reporte.CreaReporte("/reportes/ListaProveedores.jasper");
 	}
+
 	protected void actionPerformedMntmProductos(ActionEvent e) {
 		Reporte.CreaReporte("/reportes/ListaProductos.jasper");
 	}
+
 	protected void actionPerformedMntmClientes(ActionEvent e) {
 		Reporte.CreaReporte("/reportes/ListaClientes.jasper");
 	}
+
 	protected void actionPerformedMntmPromocionesActuales(ActionEvent e) {
 		Reporte.CreaReporte("/reportes/ListaPromosActual.jasper");
 	}
+
 	protected void actionPerformedMntmPromocionesVencidas(ActionEvent e) {
 		Reporte.CreaReporte("/reportes/ListaPromosVencidas.jasper");
 	}
+
 	protected void mouseClickedMntmPromociones(MouseEvent arg0) {
 		Reporte.CreaReporte("/reportes/ListaPromos.jasper");
 	}

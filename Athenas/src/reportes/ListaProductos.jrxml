@@ -190,7 +190,7 @@ FROM  dbo."Producto"
 				</textElement>
 				<textFieldExpression><![CDATA[$F{Descripcion}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="¤#,##0.00;¤-#,##0.00">
 				<reportElement x="316" y="0" width="150" height="30" uuid="f7fa92f2-4c31-4103-94f0-582e051bec2d">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="4775fa99-5214-4755-b031-7110b7592d22"/>
 				</reportElement>
@@ -200,12 +200,12 @@ FROM  dbo."Producto"
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
-				<textElement verticalAlignment="Middle">
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<paragraph leftIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{Precio_Compra}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="¤#,##0.00;¤-#,##0.00">
 				<reportElement x="466" y="0" width="134" height="30" uuid="c55341ea-49c8-4fee-9553-c6b751c6c512">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="04791744-4026-4046-976e-4a6143f283ce"/>
 				</reportElement>
@@ -215,7 +215,7 @@ FROM  dbo."Producto"
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
-				<textElement verticalAlignment="Middle">
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<paragraph leftIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{Precio_Venta}]]></textFieldExpression>
@@ -230,7 +230,7 @@ FROM  dbo."Producto"
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement verticalAlignment="Middle">
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<paragraph leftIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{Stock_Actual}]]></textFieldExpression>

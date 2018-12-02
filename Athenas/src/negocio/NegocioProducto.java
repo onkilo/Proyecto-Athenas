@@ -191,6 +191,32 @@ public class NegocioProducto {
 		return exito;
 	}
 	
+	
+	public boolean EliminarImg(String cod){
+		boolean exito = false;
+		
+		sql = "{call USP_ProductoMantenimiento(?,?)}";
+		
+		try {
+			con = Conexion.Conectar();
+			cstm = con.prepareCall(sql);
+			cstm.setString(1, "4");
+			cstm.setString(2, cod);
+			cstm.executeUpdate();
+			exito = true;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally{
+			try {
+				if(cstm != null) cstm.close();
+				if(con != null) con.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		return exito;
+	}
+	
 	public Producto getProductoByID(String cod){
 		Producto obj = null;
 		sql = "SELECT p.ID as ID, p.Descripcion as Descripcion, p.Precio_Compra as Precio_Compra,"

@@ -120,6 +120,7 @@ public class FrmDetVentas extends JDialog implements ActionListener {
 
 	private Comunes comunes = new Comunes();
 	int operacion = 0;
+	private JButton btnNuevoCliente;
 
 	/**
 	 * Launch the application.
@@ -272,6 +273,14 @@ public class FrmDetVentas extends JDialog implements ActionListener {
 		txtCliTel.setBounds(371, 71, 106, 28);
 		panel_1.add(txtCliTel);
 		txtCliTel.setColumns(10);
+		
+		btnNuevoCliente = new JButton("Nuevo cliente");
+		btnNuevoCliente.addActionListener(this);
+		btnNuevoCliente.setForeground(Color.WHITE);
+		btnNuevoCliente.setFont(new Font("Serif", Font.BOLD, 14));
+		btnNuevoCliente.setBackground(new Color(128, 128, 0));
+		btnNuevoCliente.setBounds(309, 26, 143, 30);
+		panel_1.add(btnNuevoCliente);
 
 		panel_3 = new JPanel();
 		panel_3.setBackground(SystemColor.control);
@@ -500,6 +509,9 @@ public class FrmDetVentas extends JDialog implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
+		if (arg0.getSource() == btnNuevoCliente) {
+			actionPerformedBtnNuevoCliente(arg0);
+		}
 		if (arg0.getSource() == btnImprimirVenta) {
 			actionPerformedBtnImprimirVenta(arg0);
 		}
@@ -731,5 +743,10 @@ public class FrmDetVentas extends JDialog implements ActionListener {
 		}
 
 		return datosOK;
+	}
+	protected void actionPerformedBtnNuevoCliente(ActionEvent arg0) {
+		FrmAddCliente nuevoCliente = new FrmAddCliente(this);
+		nuevoCliente.setLocationRelativeTo(this);
+		nuevoCliente.setVisible(true);
 	}
 }

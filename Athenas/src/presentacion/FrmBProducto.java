@@ -33,6 +33,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 import javax.swing.ListSelectionModel;
+import java.awt.Dimension;
+import javax.swing.ImageIcon;
 
 public class FrmBProducto extends JDialog implements ActionListener, KeyListener, MouseListener {
 
@@ -95,7 +97,10 @@ public class FrmBProducto extends JDialog implements ActionListener, KeyListener
 		contentPanel.add(txtBuscar, "cell 1 0,alignx leading");
 		txtBuscar.setColumns(20);
 
-		btnResetear = new JButton("Resetear");
+		btnResetear = new JButton("");
+		btnResetear.setMinimumSize(new Dimension(30, 25));
+		btnResetear.setIcon(new ImageIcon(FrmBProducto.class.getResource("/img/icon-resetear-white.png")));
+		btnResetear.setPreferredSize(new Dimension(60, 30));
 		btnResetear.addActionListener(this);
 		btnResetear.setFont(new Font("Serif", Font.BOLD, 14));
 		btnResetear.setForeground(new Color(255, 255, 255));

@@ -110,6 +110,7 @@ public class FrmProducto extends JInternalFrame implements KeyListener, ActionLi
 	private File archivoImg = null;
 	private String opGuardar = "";
 	Comunes comon = new Comunes();
+	private JButton btnEliminarImgen;
 
 	/**
 	 * Launch the application.
@@ -286,7 +287,7 @@ public class FrmProducto extends JInternalFrame implements KeyListener, ActionLi
 		panel_1.setBorder(new TitledBorder(null, "Listado de productos", TitledBorder.LEADING, TitledBorder.TOP, null,
 				new Color(59, 59, 59)));
 		getContentPane().add(panel_1, "cell 1 0 1 2,grow");
-		panel_1.setLayout(new MigLayout("", "[100px:n][grow][grow]", "[][][grow][]"));
+		panel_1.setLayout(new MigLayout("", "[][grow][grow]", "[][][grow][]"));
 
 		lblBuscar = new JLabel("Buscar ");
 		lblBuscar.setFont(new Font("Serif", Font.PLAIN, 16));
@@ -379,6 +380,14 @@ public class FrmProducto extends JInternalFrame implements KeyListener, ActionLi
 
 		btnImprimir = new JButton("");
 		btnImprimir.addActionListener(this);
+		
+		btnEliminarImgen = new JButton("Eliminar im\u00E1gen");
+		btnEliminarImgen.addActionListener(this);
+		btnEliminarImgen.setPreferredSize(new Dimension(100, 30));
+		btnEliminarImgen.setForeground(Color.WHITE);
+		btnEliminarImgen.setFont(new Font("SansSerif", Font.BOLD, 12));
+		btnEliminarImgen.setBackground(new Color(128, 128, 0));
+		panel_1.add(btnEliminarImgen, "cell 0 3");
 		btnImprimir.setIcon(new ImageIcon(FrmProducto.class.getResource("/img/icon-imprimir-white.png")));
 		panel_1.add(btnImprimir, "cell 2 3,alignx trailing");
 		btnImprimir.setFont(new Font("SansSerif", Font.BOLD, 12));
@@ -400,7 +409,7 @@ public class FrmProducto extends JInternalFrame implements KeyListener, ActionLi
 
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-				if(!tblProducto.getSelectionModel().isSelectionEmpty()){
+				if (!tblProducto.getSelectionModel().isSelectionEmpty()) {
 					int fila = tblProducto.getSelectedRow();
 					LlenaDatos(modelo.getProducto(fila));
 				}
@@ -410,8 +419,7 @@ public class FrmProducto extends JInternalFrame implements KeyListener, ActionLi
 		modelo.setData(nProd.listar());
 		LlenaCbo();
 		cboCategoria.setModel(cboModel);
-		
-		
+
 		if (FrmPrincipal.currentUser != null && FrmPrincipal.currentUser.getUsuario() != null) {
 			if (FrmPrincipal.currentUser.getRol().equalsIgnoreCase("Vendedor")) {
 				btnImprimir.setVisible(false);
@@ -434,8 +442,8 @@ public class FrmProducto extends JInternalFrame implements KeyListener, ActionLi
 			try {
 				ByteArrayInputStream imgIS = new ByteArrayInputStream(obj.getImg());
 				Image img = ImageIO.read(imgIS);
-				
-				if(img != null){
+
+				if (img != null) {
 					img = img.getScaledInstance(lblImg.getWidth(), lblImg.getHeight(), Image.SCALE_DEFAULT);
 					lblImg.setText("");
 					lblImg.setIcon(new ImageIcon(img));
@@ -511,61 +519,54 @@ public class FrmProducto extends JInternalFrame implements KeyListener, ActionLi
 		int opcion = open.showOpenDialog(this);
 		if (opcion == JFileChooser.APPROVE_OPTION) {
 			archivoImg = open.getSelectedFile();
-			if(archivoImg.length()<(1024 * 512)){
+			if (archivoImg.length() < (1024 * 512)) {
 				txtImg.setText(archivoImg.getAbsolutePath());
 				Image img = new ImageIcon(archivoImg.getAbsolutePath()).getImage();
 				img = img.getScaledInstance(lblImg.getWidth(), lblImg.getHeight(), Image.SCALE_DEFAULT);
 				lblImg.setIcon(new ImageIcon(img));
-			}
-			else{
+			} else {
 				JOptionPane.showMessageDialog(this, "Imagen seleccionada demasiado grande");
 				archivoImg = null;
 				lblImg.setIcon(null);
 				lblImg.setText("Sin imágen");
 				txtImg.setText("");
 			}
-			
+
 		}
 	}
 
-	private boolean ValidaDAtos(){
+	private boolean ValidaDAtos() {
 		boolean datosOK = false;
-		
-		if(txtDescripcion.getText().length()<1){
+
+		if (txtDescripcion.getText().length() < 1) {
 			JOptionPane.showInternalMessageDialog(this, "Descripción no puede estar vacía");
 			txtDescripcion.grabFocus();
-		}
-		else if(!comon.ValidaDouble(txtPreCompra.getText())){
+		} else if (!comon.ValidaDouble(txtPreCompra.getText())) {
 			JOptionPane.showInternalMessageDialog(this, "Precio de compra incorrecto");
 			txtPreCompra.grabFocus();
-		}
-		else if(!comon.ValidaDouble(txtPreVenta.getText())){
+		} else if (!comon.ValidaDouble(txtPreVenta.getText())) {
 			JOptionPane.showInternalMessageDialog(this, "Precio de venta incorrecto");
 			txtPreVenta.grabFocus();
-		}
-		else if(!comon.ValidaEntero(txtStockActual.getText())){
+		} else if (!comon.ValidaEntero(txtStockActual.getText())) {
 			JOptionPane.showInternalMessageDialog(this, "Stock actual incorrecto");
 			txtStockActual.grabFocus();
-		}
-		else if(!comon.ValidaEntero(txtStockMin.getText())){
+		} else if (!comon.ValidaEntero(txtStockMin.getText())) {
 			JOptionPane.showInternalMessageDialog(this, "Stock mínimo incorrecto");
 			txtStockMin.grabFocus();
-		}
-		else if (Double.parseDouble(txtPreCompra.getText().replaceAll(",", "."))<0 || Double.parseDouble(txtPreVenta.getText().replaceAll(",", "."))<0 
-				|| Integer.parseInt(txtStockActual.getText())<0 || Integer.parseInt(txtStockMin.getText())<0){
+		} else if (Double.parseDouble(txtPreCompra.getText().replaceAll(",", ".")) < 0
+				|| Double.parseDouble(txtPreVenta.getText().replaceAll(",", ".")) < 0
+				|| Integer.parseInt(txtStockActual.getText()) < 0 || Integer.parseInt(txtStockMin.getText()) < 0) {
 			JOptionPane.showInternalMessageDialog(this, "No se permite ingresar valores negtivos");
-		}
-		else if (Double.parseDouble(txtPreCompra.getText().replaceAll(",", ".")) > Double.parseDouble(txtPreVenta.getText().replaceAll(",", "."))){
+		} else if (Double.parseDouble(txtPreCompra.getText().replaceAll(",", ".")) > Double
+				.parseDouble(txtPreVenta.getText().replaceAll(",", "."))) {
 			JOptionPane.showInternalMessageDialog(this, "Precio de compra execede el precio de venta");
-		}
-		else{
+		} else {
 			datosOK = true;
 		}
-		
+
 		return datosOK;
 	}
-	
-	
+
 	public void keyPressed(KeyEvent arg0) {
 	}
 
@@ -590,6 +591,9 @@ public class FrmProducto extends JInternalFrame implements KeyListener, ActionLi
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
+		if (arg0.getSource() == btnEliminarImgen) {
+			actionPerformedBtnEliminarImgen(arg0);
+		}
 		if (arg0.getSource() == btnImprimir) {
 			actionPerformedBtnImprimir(arg0);
 		}
@@ -624,6 +628,7 @@ public class FrmProducto extends JInternalFrame implements KeyListener, ActionLi
 	protected void actionPerformedBtnNuevo(ActionEvent arg0) {
 		btnModificar.setEnabled(false);
 		btnEliminar.setEnabled(false);
+		btnEliminarImgen.setEnabled(false);
 
 		Habilita(true);
 		ReseteaCampos();
@@ -636,7 +641,7 @@ public class FrmProducto extends JInternalFrame implements KeyListener, ActionLi
 		if (!txtCodigo.getText().equals("")) {
 			btnNuevo.setEnabled(false);
 			btnEliminar.setEnabled(false);
-
+			btnEliminarImgen.setEnabled(false);
 			Habilita(true);
 			opGuardar = "Modificar";
 		} else {
@@ -651,6 +656,7 @@ public class FrmProducto extends JInternalFrame implements KeyListener, ActionLi
 		btnNuevo.setEnabled(true);
 		btnModificar.setEnabled(true);
 		btnEliminar.setEnabled(true);
+		btnEliminarImgen.setEnabled(true);
 		tblProducto.setEnabled(true);
 
 		if (!tblProducto.getSelectionModel().isSelectionEmpty()) {
@@ -660,7 +666,7 @@ public class FrmProducto extends JInternalFrame implements KeyListener, ActionLi
 	}
 
 	protected void actionPerformedBtnGuardar(ActionEvent arg0) {
-		if(ValidaDAtos()){
+		if (ValidaDAtos()) {
 			if (opGuardar.equals("Nuevo")) {
 				nProd.InsertarProducto(leerProducto());
 				ReseteaCampos();
@@ -670,7 +676,6 @@ public class FrmProducto extends JInternalFrame implements KeyListener, ActionLi
 			}
 			modelo.setData(nProd.listar());
 		}
-		
 
 	}
 
@@ -691,10 +696,25 @@ public class FrmProducto extends JInternalFrame implements KeyListener, ActionLi
 					"Advertencia", JOptionPane.WARNING_MESSAGE);
 		}
 	}
+
 	protected void actionPerformedBtnBuscarImg(ActionEvent arg0) {
 		LeerImg();
 	}
+
 	protected void actionPerformedBtnImprimir(ActionEvent arg0) {
 		Reporte.CreaReporte("/reportes/ListaProductos.jasper");
+	}
+	protected void actionPerformedBtnEliminarImgen(ActionEvent arg0) {
+		if(!txtCodigo.equals("")){
+			nProd.EliminarImg(txtCodigo.getText());
+			int fila = tblProducto.getSelectedRow();
+			modelo.setData(nProd.listar());
+			lblImg.setIcon(null);
+			archivoImg = null;
+		}
+		else {
+			JOptionPane.showInternalMessageDialog(this, "Debe seleccionar un registro para realzar esta acción",
+					"Advertencia", JOptionPane.WARNING_MESSAGE);
+		}
 	}
 }

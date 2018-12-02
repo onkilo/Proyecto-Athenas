@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ListaTrabajadores" pageWidth="1000" pageHeight="595" orientation="Landscape" columnWidth="960" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="4445895a-8378-4bb4-bd09-3f1fe5d0c86d">
-	<property name="com.jaspersoft.studio.data.sql.tables">
-		<![CDATA[ZGJvLiJUcmFiYWphZG9yIiBBUyAsMjgsMzEsYWI0ZDJhZWYtMzA2Yi00MGI4LWJjY2EtOWNhYWE4
-YmMzOGViOw==]]>
-	</property>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="BDAthenasCon"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
@@ -25,7 +22,8 @@ YmMzOGViOw==]]>
 	dbo."Trabajador"."Email",
 	dbo."Trabajador"."Sexo",
 	dbo."Trabajador"."Rol"
-FROM dbo."Trabajador"]]>
+FROM dbo."Trabajador"
+WHERE  ID <> 'TB0000']]>
 	</queryString>
 	<field name="ID" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="ID"/>

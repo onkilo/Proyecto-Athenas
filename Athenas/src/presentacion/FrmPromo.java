@@ -497,7 +497,7 @@ public class FrmPromo extends JInternalFrame implements ActionListener, KeyListe
 	}
 
 	protected void actionPerformedBtnGuardar(ActionEvent arg0) {
-		if(ValidaDatos()){
+		if (ValidaDatos()) {
 			if (opGuardar.equals("Nuevo")) {
 				nProm.InsertarPromo(LeerPromo());
 				ReseteaCampos();
@@ -606,7 +606,7 @@ public class FrmPromo extends JInternalFrame implements ActionListener, KeyListe
 
 		dpInicial.getSettings().setVetoPolicy(new HoyVetoPolicy());
 		dpFinal.getSettings().setVetoPolicy(new HoyVetoPolicy());
-		
+
 		if (FrmPrincipal.currentUser != null && FrmPrincipal.currentUser.getUsuario() != null) {
 			if (FrmPrincipal.currentUser.getRol().equalsIgnoreCase("Vendedor")) {
 				btnImprimir.setVisible(false);
@@ -644,7 +644,7 @@ public class FrmPromo extends JInternalFrame implements ActionListener, KeyListe
 		comon.habTextField(txtValor, estado);
 		rdbtnFijo.setEnabled(estado);
 		rdbtnPorcentual.setEnabled(estado);
-		
+
 		dpInicial.getComponentToggleCalendarButton().setVisible(estado);
 		dpFinal.getComponentToggleCalendarButton().setVisible(estado);
 		btnBuscarProd.setEnabled(estado);
@@ -680,72 +680,65 @@ public class FrmPromo extends JInternalFrame implements ActionListener, KeyListe
 		txtProducto.setText(this.prod.getDescripcion());
 	}
 
-	private boolean ValidaDatos(){
+	private boolean ValidaDatos() {
 		boolean datosOk = false;
-		
-		if(this.prod == null){
+
+		if (this.prod == null) {
 			JOptionPane.showInternalMessageDialog(this, "Debe elegir un producto");
-		}
-		else if(!comon.ValidaDouble(txtValor.getText())){
+		} else if (!comon.ValidaDouble(txtValor.getText())) {
 			JOptionPane.showInternalMessageDialog(this, "Valor de la promoción inválido");
 			txtValor.grabFocus();
-		}
-		else if (Double.parseDouble(txtValor.getText().replaceAll(",", "."))<0) {
+		} else if (Double.parseDouble(txtValor.getText().replaceAll(",", ".")) < 0) {
 			JOptionPane.showInternalMessageDialog(this, "Valor de la promoción inválido");
 			txtValor.grabFocus();
-		}
-		else if(dpInicial.getDate().isAfter(dpFinal.getDate())){
+		} else if (dpInicial.getDate().isAfter(dpFinal.getDate())) {
 			JOptionPane.showInternalMessageDialog(this, "La fecha de inicio debe ser posterior a la fecha final");
 			dpFinal.setDate(dpInicial.getDate());
-		}
-		else if(!ProdAdecuado()){
+		} else if (!ProdAdecuado()) {
 			JOptionPane.showInternalMessageDialog(this, "Ya existe una promoción actual para el producto");
-		}
-		else if(!ValorAdecuado()){
+		} else if (!ValorAdecuado()) {
 			JOptionPane.showInternalMessageDialog(this, "Valor de la promoción demasiado alto");
 			txtValor.grabFocus();
-		}
-		else{
+		} else {
 			datosOk = true;
 		}
-		
+
 		return datosOk;
 	}
-	
-	private boolean ValorAdecuado(){
+
+	private boolean ValorAdecuado() {
 		double precioActual = this.prod.getPreVenta();
 		double desc = Double.parseDouble(txtValor.getText().replaceAll(",", "."));
-		
-		if(rdbtnFijo.isSelected()){
-			if(desc >= precioActual)
+
+		if (rdbtnFijo.isSelected()) {
+			if (desc >= precioActual)
 				return false;
-		}
-		else{
-			if(desc >= 100)
+		} else {
+			if (desc >= 100)
 				return false;
 		}
 		return true;
 	}
-	
-	private boolean ProdAdecuado(){
-		if(opGuardar.equals("Nuevo")){
-			if(nProm.ProdEnPromocion(this.prod.getID(), Date.valueOf(dpInicial.getDate()))){
+
+	private boolean ProdAdecuado() {
+		if (opGuardar.equals("Nuevo")) {
+			if (nProm.ProdEnPromocion(this.prod.getID(), Date.valueOf(dpInicial.getDate()))) {
 				this.prod = null;
 				txtProducto.setText("");
 				return false;
 			}
-		}else{
-			if(nProm.ProdEnPromocion(this.prod.getID(), Date.valueOf(dpInicial.getDate()))){
+		} else {
+			if (nProm.ProdEnPromocion(this.prod.getID(), Date.valueOf(dpInicial.getDate()))) {
 				Producto prodActual = nProm.getPromoByID(txtCodigo.getText()).getProd();
-				if(!this.prod.getID().equals(prodActual.getID())){
+				if (!this.prod.getID().equals(prodActual.getID())) {
 					this.prod = null;
 					txtProducto.setText("");
 					return false;
 				}
 			}
 		}
-		
+
 		return true;
-		
+
 	}
 }
