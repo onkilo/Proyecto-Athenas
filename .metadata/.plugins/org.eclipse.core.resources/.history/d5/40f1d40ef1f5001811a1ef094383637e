@@ -174,7 +174,6 @@ public class FrmDetComp extends JDialog implements ActionListener {
 		panel.add(lblFecha);
 
 		dpFecha = new DatePicker();
-		dpFecha.getComponentDateTextField().setDisabledTextColor(Color.BLACK);
 		dpFecha.getComponentToggleCalendarButton().setIcon(new ImageIcon(FrmDetComp.class.getResource("/img/icon-calendario-black.png")));
 		dpFecha.getComponentToggleCalendarButton().setText("");
 		dpFecha.getComponentDateTextField().setBackground(SystemColor.control);

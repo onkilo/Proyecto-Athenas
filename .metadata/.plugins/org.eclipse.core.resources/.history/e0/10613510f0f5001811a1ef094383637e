@@ -47,7 +47,6 @@ import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
-import javax.swing.ImageIcon;
 
 public class FrmDetComp extends JDialog implements ActionListener {
 
@@ -174,14 +173,9 @@ public class FrmDetComp extends JDialog implements ActionListener {
 		panel.add(lblFecha);
 
 		dpFecha = new DatePicker();
-		dpFecha.getComponentDateTextField().setDisabledTextColor(Color.BLACK);
-		dpFecha.getComponentToggleCalendarButton().setIcon(new ImageIcon(FrmDetComp.class.getResource("/img/icon-calendario-black.png")));
-		dpFecha.getComponentToggleCalendarButton().setText("");
-		dpFecha.getComponentDateTextField().setBackground(SystemColor.control);
-		dpFecha.setEnabled(false);
-		dpFecha.getComponentDateTextField().setEditable(false);
 		dpFecha.setBackground(SystemColor.control);
 		dpFecha.setBounds(114, 155, 191, 28);
+		dpFecha.setEnabled(false);
 		dpFecha.getComponentToggleCalendarButton().setPreferredSize(new Dimension(41, 28));
 		dpFecha.getComponentDateTextField().setPreferredSize(new Dimension(159, 25));
 		dpFecha.getComponentToggleCalendarButton().setBounds(144, -2, 41, 28);

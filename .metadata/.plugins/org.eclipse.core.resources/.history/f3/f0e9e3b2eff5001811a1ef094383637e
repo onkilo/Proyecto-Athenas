@@ -153,6 +153,7 @@ public class FrmDetVentas extends JDialog implements ActionListener {
 		contentPanel.setLayout(null);
 
 		panel = new JPanel();
+		panel.setEnabled(false);
 		panel.setBackground(SystemColor.control);
 		panel.setBounds(7, 6, 322, 254);
 		panel.setBorder(

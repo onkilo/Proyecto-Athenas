@@ -159,6 +159,38 @@ public class NegocioDetVenta {
 		return exito;
 	}
 	
+/*	public boolean ModificarDetalle(DetVenta obj, Connection con){
+		boolean exito = false;
+
+		sql = "{call USP_DetVentMantenimiento(?,?,?,?,?,?)}";
+		
+		try {
+			
+			cstm = con.prepareCall(sql);
+			cstm.setString(1, "2");
+			cstm.setString(2, obj.getCodVenta());
+			cstm.setString(3, obj.getProd().getID());
+			cstm.setInt(4, obj.getCant());
+			cstm.setDouble(5, obj.getPrecio());
+			cstm.setDouble(6, obj.getDescUni());
+			
+			cstm.executeUpdate();
+			
+			exito = false;
+			
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			try {
+				if (cstm != null)
+					cstm.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		
+		return exito;
+	}*/
 	
 	//para eliminar el detalle se necesita la combinación de el cod de venta y el del producto
 	public boolean EliminarDetalle(String vent, String prod){

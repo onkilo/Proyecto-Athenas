@@ -159,6 +159,7 @@ public class NegocioDetVenta {
 		return exito;
 	}
 	
+
 	
 	//para eliminar el detalle se necesita la combinación de el cod de venta y el del producto
 	public boolean EliminarDetalle(String vent, String prod){
