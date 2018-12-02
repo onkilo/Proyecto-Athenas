@@ -33,6 +33,12 @@ import java.awt.Font;
 import javax.swing.JDesktopPane;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
+import java.awt.Toolkit;
+import util.PanelImagen;
+import javax.swing.JLabel;
+import java.awt.Color;
+import java.awt.SystemColor;
+import javax.swing.border.LineBorder;
 
 public class FrmPrincipal extends JFrame implements ActionListener, ChangeListener, MouseListener {
 
@@ -52,7 +58,7 @@ public class FrmPrincipal extends JFrame implements ActionListener, ChangeListen
 	private JMenuItem mntmVentas;
 	private JMenuItem mntmCompras;
 	private JMenuItem mntmTrabajador;
-	private JDesktopPane pnEscritorio;
+	private PanelImagen pnEscritorio;
 	
 
 	// Persona logeada
@@ -66,6 +72,8 @@ public class FrmPrincipal extends JFrame implements ActionListener, ChangeListen
 	FrmTrabajador trab = null;
 	FrmCompras com = null;
 	FrmVentas vent = null;
+	FrmCategoria cat = null;
+	
 	private JMenuItem mntmCategorias;
 	private JMenuItem mntmProductos;
 	private JMenu mntmPromociones;
@@ -74,6 +82,7 @@ public class FrmPrincipal extends JFrame implements ActionListener, ChangeListen
 	private JMenuItem mntmRepTrab;
 	private JMenuItem mntmPromocionesActuales;
 	private JMenuItem mntmPromocionesVencidas;
+	private JLabel lblAthenas;
 
 	/**
 	 * Launch the application.
@@ -100,6 +109,7 @@ public class FrmPrincipal extends JFrame implements ActionListener, ChangeListen
 	 * Create the frame.
 	 */
 	public FrmPrincipal() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(FrmPrincipal.class.getResource("/img/icon-logo.png")));
 		setTitle("Bodega - Athenas");
 		setMinimumSize(new Dimension(1024, 700));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -143,6 +153,7 @@ public class FrmPrincipal extends JFrame implements ActionListener, ChangeListen
 		mnMantenimiento.add(mntmProducto);
 		
 		mntmCategorias = new JMenuItem("Categorias");
+		mntmCategorias.addActionListener(this);
 		mntmCategorias.setFont(new Font("Serif", Font.PLAIN, 18));
 		mntmProducto.add(mntmCategorias);
 
@@ -259,9 +270,19 @@ public class FrmPrincipal extends JFrame implements ActionListener, ChangeListen
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 
-		pnEscritorio = new JDesktopPane();
+		pnEscritorio = new PanelImagen("/img/fondo.jpg");
 		pnEscritorio.setBorder(null);
 		contentPane.add(pnEscritorio, BorderLayout.CENTER);
+		
+		lblAthenas = new JLabel("Athenas");
+		lblAthenas.setBorder(new LineBorder(new Color(0, 0, 0), 3, true));
+		lblAthenas.setBackground(new Color(0, 100, 0));
+		lblAthenas.setOpaque(true);
+		lblAthenas.setForeground(SystemColor.activeCaption);
+		lblAthenas.setFont(new Font("Edwardian Script ITC", Font.BOLD, 80));
+		lblAthenas.setHorizontalAlignment(SwingConstants.CENTER);
+		lblAthenas.setBounds(6, 6, 503, 190);
+		pnEscritorio.add(lblAthenas);
 
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 
@@ -316,6 +337,9 @@ public class FrmPrincipal extends JFrame implements ActionListener, ChangeListen
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == mntmCategorias) {
+			actionPerformedMntmCategorias(e);
+		}
 		if (e.getSource() == mntmPromocionesVencidas) {
 			actionPerformedMntmPromocionesVencidas(e);
 		}
@@ -323,7 +347,7 @@ public class FrmPrincipal extends JFrame implements ActionListener, ChangeListen
 			actionPerformedMntmPromocionesActuales(e);
 		}
 		if (e.getSource() == mntmRepTrab) {
-			Reporte.CreaReporte("src/reportes/ListaTrabajadores.jasper");
+			Reporte.CreaReporte("/reportes/ListaTrabajadores.jasper");
 		}
 		if (e.getSource() == mntmClientes) {
 			actionPerformedMntmClientes(e);
@@ -579,6 +603,13 @@ public class FrmPrincipal extends JFrame implements ActionListener, ChangeListen
 			});
 		}
 	}
+	
+	protected void actionPerformedMntmCategorias(ActionEvent e) {
+		cat = new FrmCategoria();
+		cat.setLocationRelativeTo(this);
+		cat.setVisible(true);
+		
+	}
 	public void mouseClicked(MouseEvent arg0) {
 		if (arg0.getSource() == mntmPromociones) {
 			mouseClickedMntmPromociones(arg0);
@@ -612,21 +643,21 @@ public class FrmPrincipal extends JFrame implements ActionListener, ChangeListen
 		}
 	}
 	protected void actionPerformedMntmProveedores(ActionEvent e) {
-		Reporte.CreaReporte("src/reportes/ListaProveedores.jasper");
+		Reporte.CreaReporte("/reportes/ListaProveedores.jasper");
 	}
 	protected void actionPerformedMntmProductos(ActionEvent e) {
-		Reporte.CreaReporte("src/reportes/ListaProductos.jasper");
+		Reporte.CreaReporte("/reportes/ListaProductos.jasper");
 	}
 	protected void actionPerformedMntmClientes(ActionEvent e) {
-		Reporte.CreaReporte("src/reportes/ListaClientes.jasper");
+		Reporte.CreaReporte("/reportes/ListaClientes.jasper");
 	}
 	protected void actionPerformedMntmPromocionesActuales(ActionEvent e) {
-		Reporte.CreaReporte("src/reportes/ListaPromosActual.jasper");
+		Reporte.CreaReporte("/reportes/ListaPromosActual.jasper");
 	}
 	protected void actionPerformedMntmPromocionesVencidas(ActionEvent e) {
-		Reporte.CreaReporte("src/reportes/ListaPromosVencidas.jasper");
+		Reporte.CreaReporte("/reportes/ListaPromosVencidas.jasper");
 	}
 	protected void mouseClickedMntmPromociones(MouseEvent arg0) {
-		Reporte.CreaReporte("src/reportes/ListaPromos.jasper");
+		Reporte.CreaReporte("/reportes/ListaPromos.jasper");
 	}
 }

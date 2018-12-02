@@ -103,7 +103,6 @@ public class FrmProducto extends JInternalFrame implements KeyListener, ActionLi
 	private JButton btnBuscarImg;
 	private JLabel lblImg;
 	private JComboBox<CategoriaProducto> cboCategoria;
-	private JButton btnNuevaCat;
 
 	private NegocioProducto nProd = new NegocioProducto();
 	private NegocioCategoria nCat = new NegocioCategoria();
@@ -280,10 +279,6 @@ public class FrmProducto extends JInternalFrame implements KeyListener, ActionLi
 		btnBuscarImg.addActionListener(this);
 		btnBuscarImg.setEnabled(false);
 		panel.add(btnBuscarImg, "cell 1 7");
-
-		btnNuevaCat = new JButton("+");
-		btnNuevaCat.setEnabled(false);
-		panel.add(btnNuevaCat, "cell 1 6");
 
 		panel_1 = new JPanel();
 		panel_1.setBackground(SystemColor.control);
@@ -484,8 +479,8 @@ public class FrmProducto extends JInternalFrame implements KeyListener, ActionLi
 		Producto obj = new Producto();
 		obj.setID(txtCodigo.getText());
 		obj.setDescripcion(txtDescripcion.getText());
-		obj.setPreCompra(Double.parseDouble(txtPreCompra.getText()));
-		obj.setPreVenta(Double.parseDouble(txtPreVenta.getText()));
+		obj.setPreCompra(Double.parseDouble(txtPreCompra.getText().replaceAll(",", ".")));
+		obj.setPreVenta(Double.parseDouble(txtPreVenta.getText().replaceAll(",", ".")));
 		obj.setStockAcual(Integer.parseInt(txtStockActual.getText()));
 		obj.setStockMin(Integer.parseInt(txtStockMin.getText()));
 		obj.setCate((CategoriaProducto) cboModel.getSelectedItem());
@@ -508,13 +503,61 @@ public class FrmProducto extends JInternalFrame implements KeyListener, ActionLi
 		int opcion = open.showOpenDialog(this);
 		if (opcion == JFileChooser.APPROVE_OPTION) {
 			archivoImg = open.getSelectedFile();
-			txtImg.setText(archivoImg.getAbsolutePath());
-			Image img = new ImageIcon(archivoImg.getAbsolutePath()).getImage();
-			img = img.getScaledInstance(lblImg.getWidth(), lblImg.getHeight(), Image.SCALE_DEFAULT);
-			lblImg.setIcon(new ImageIcon(img));
+			if(archivoImg.length()<(1024 * 512)){
+				txtImg.setText(archivoImg.getAbsolutePath());
+				Image img = new ImageIcon(archivoImg.getAbsolutePath()).getImage();
+				img = img.getScaledInstance(lblImg.getWidth(), lblImg.getHeight(), Image.SCALE_DEFAULT);
+				lblImg.setIcon(new ImageIcon(img));
+			}
+			else{
+				JOptionPane.showMessageDialog(this, "Imagen seleccionada demasiado grande");
+				archivoImg = null;
+				lblImg.setIcon(null);
+				lblImg.setText("Sin imágen");
+				txtImg.setText("");
+			}
+			
 		}
 	}
 
+	private boolean ValidaDAtos(){
+		boolean datosOK = false;
+		
+		if(txtDescripcion.getText().length()<1){
+			JOptionPane.showInternalMessageDialog(this, "Descripción no puede estar vacía");
+			txtDescripcion.grabFocus();
+		}
+		else if(!comon.ValidaDouble(txtPreCompra.getText())){
+			JOptionPane.showInternalMessageDialog(this, "Precio de compra incorrecto");
+			txtPreCompra.grabFocus();
+		}
+		else if(!comon.ValidaDouble(txtPreVenta.getText())){
+			JOptionPane.showInternalMessageDialog(this, "Precio de venta incorrecto");
+			txtPreVenta.grabFocus();
+		}
+		else if(!comon.ValidaEntero(txtStockActual.getText())){
+			JOptionPane.showInternalMessageDialog(this, "Stock actual incorrecto");
+			txtStockActual.grabFocus();
+		}
+		else if(!comon.ValidaEntero(txtStockMin.getText())){
+			JOptionPane.showInternalMessageDialog(this, "Stock mínimo incorrecto");
+			txtStockMin.grabFocus();
+		}
+		else if (Double.parseDouble(txtPreCompra.getText().replaceAll(",", "."))<0 || Double.parseDouble(txtPreVenta.getText().replaceAll(",", "."))<0 
+				|| Integer.parseInt(txtStockActual.getText())<0 || Integer.parseInt(txtStockMin.getText())<0){
+			JOptionPane.showInternalMessageDialog(this, "No se permite ingresar valores negtivos");
+		}
+		else if (Double.parseDouble(txtPreCompra.getText().replaceAll(",", ".")) > Double.parseDouble(txtPreVenta.getText().replaceAll(",", "."))){
+			JOptionPane.showInternalMessageDialog(this, "Precio de compra execede el precio de venta");
+		}
+		else{
+			datosOK = true;
+		}
+		
+		return datosOK;
+	}
+	
+	
 	public void keyPressed(KeyEvent arg0) {
 	}
 
@@ -609,14 +652,17 @@ public class FrmProducto extends JInternalFrame implements KeyListener, ActionLi
 	}
 
 	protected void actionPerformedBtnGuardar(ActionEvent arg0) {
-		if (opGuardar.equals("Nuevo")) {
-			nProd.InsertarProducto(leerProducto());
-			ReseteaCampos();
-			txtCodigo.setText(nProd.nextCod());
-		} else if (opGuardar.equals("Modificar")) {
-			nProd.ModificarProducto(leerProducto());
+		if(ValidaDAtos()){
+			if (opGuardar.equals("Nuevo")) {
+				nProd.InsertarProducto(leerProducto());
+				ReseteaCampos();
+				txtCodigo.setText(nProd.nextCod());
+			} else if (opGuardar.equals("Modificar")) {
+				nProd.ModificarProducto(leerProducto());
+			}
+			modelo.setData(nProd.listar());
 		}
-		modelo.setData(nProd.listar());
+		
 
 	}
 
@@ -641,6 +687,6 @@ public class FrmProducto extends JInternalFrame implements KeyListener, ActionLi
 		LeerImg();
 	}
 	protected void actionPerformedBtnImprimir(ActionEvent arg0) {
-		Reporte.CreaReporte("src/reportes/ListaProductos.jasper");
+		Reporte.CreaReporte("/reportes/ListaProductos.jasper");
 	}
 }

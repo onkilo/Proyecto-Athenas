@@ -115,7 +115,7 @@ from Venta v inner join Trabajador t on t.ID = v.Cod_Trabajador inner join Clien
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="Serif" size="14"/>
 					</textElement>
-					<text><![CDATA[RUC : 000000000]]></text>
+					<text><![CDATA[RUC : 24563789145]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="51" y="71" width="100" height="30" uuid="9ca51c14-e560-46b0-98e9-d799e3e2eaa0"/>

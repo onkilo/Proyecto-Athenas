@@ -313,6 +313,8 @@ public class NegocioProducto {
 		return lista;
 	}
 	
+
+	
 	public String nextCod(){
 		sql = "{call USP_NextCod(?)}";
 		String cod = "";

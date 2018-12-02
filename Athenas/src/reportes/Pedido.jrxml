@@ -37,7 +37,7 @@
 		<queryString language="SQL">
 			<![CDATA[select p.ID as CodProd, p.Descripcion as ProdDesc, dc.Cantidad as Cantidad, dc.Precio as Precio, dc.Cantidad*dc.Precio as DetSubtotal 
 from Det_Comp dc inner join Producto p on dc.Cod_Produc = p.ID
-where dc.Cod_Compra =  $P{DetCompra} ]]>
+where dc.Cod_Compra =  $P{DetCompra}]]>
 		</queryString>
 		<field name="CodProd" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.label" value="CodProd"/>

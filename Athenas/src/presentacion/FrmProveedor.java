@@ -123,7 +123,8 @@ public class FrmProveedor extends JInternalFrame implements KeyListener, ActionL
 		panel.setBackground(SystemColor.control);
 		panel.setBorder(new TitledBorder(null, "Proveedor", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		getContentPane().add(panel, "cell 0 0,grow");
-		panel.setLayout(new MigLayout("", "[150px:n,grow][grow]", "[50px:n][50px:n][50px:n][50px:n][50px:n][50px:n][]"));
+		panel.setLayout(
+				new MigLayout("", "[150px:n,grow][grow]", "[50px:n][50px:n][50px:n][50px:n][50px:n][50px:n][]"));
 
 		lblCdigo = new JLabel("C\u00F3digo");
 		lblCdigo.setFont(new Font("Serif", Font.PLAIN, 14));
@@ -179,12 +180,12 @@ public class FrmProveedor extends JInternalFrame implements KeyListener, ActionL
 		txtTelefono.setBackground(SystemColor.control);
 		panel.add(txtTelefono, "cell 1 4,alignx leading");
 		txtTelefono.setColumns(10);
-		
+
 		lblDireccin = new JLabel("Direcci\u00F3n");
 		lblDireccin.setPreferredSize(new Dimension(100, 16));
 		lblDireccin.setFont(new Font("Serif", Font.PLAIN, 14));
 		panel.add(lblDireccin, "cell 0 5,alignx center");
-		
+
 		txtDireccion = new JTextField();
 		txtDireccion.setEditable(false);
 		txtDireccion.setBackground(SystemColor.control);
@@ -327,69 +328,6 @@ public class FrmProveedor extends JInternalFrame implements KeyListener, ActionL
 		MiIni();
 	}
 
-	private void MiIni() {
-		modelo = new ProveedorTableModel();
-		tblProveedor.setModel(modelo);
-
-		tblProveedor.getTableHeader().setReorderingAllowed(false);
-
-		tblProveedor.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				if (!tblProveedor.getSelectionModel().isSelectionEmpty()) {
-					int fila = tblProveedor.getSelectedRow();
-					LlenaDatos(modelo.getProveedor(fila));
-				}
-
-			}
-		});
-
-		rdbtnPorCodigo.setSelected(true);
-
-		modelo.setData(nProv.Listar());
-	}
-
-	private void LlenaDatos(Proveedor p) {
-		txtCodigo.setText(p.getID());
-		txtRazon.setText(p.getRaz_Soc());
-		txtRepresentante.setText(p.getRepresentante());
-		txtEmail.setText(p.getEmail());
-		txtTelefono.setText(p.getTelf());
-		txtDireccion.setText(p.getDireccion());
-	}
-
-	private void Habilita(boolean estado) {
-		comon.habTextField(txtRazon, estado);
-		comon.habTextField(txtRepresentante, estado);
-		comon.habTextField(txtTelefono, estado);
-		comon.habTextField(txtEmail, estado);
-		comon.habTextField(txtDireccion, estado);		
-	
-		btnGuardar.setEnabled(estado);
-		btnCancelar.setEnabled(estado);
-	}
-
-	private void ReseteaCampos() {
-		txtCodigo.setText("");
-		txtRazon.setText("");
-		txtRepresentante.setText("");
-		txtTelefono.setText("");
-		txtEmail.setText("");
-		txtDireccion.setText("");
-	}
-
-	private Proveedor LeerProveedor() {
-		Proveedor p = new Proveedor();
-		p.setID(txtCodigo.getText());
-		p.setRaz_Soc(txtRazon.getText());
-		p.setRepresentante(txtRepresentante.getText());
-		p.setTelf(txtTelefono.getText());
-		p.setEmail(txtEmail.getText());
-		p.setDireccion(txtDireccion.getText());
-		return p;
-	}
-
 	public void keyPressed(KeyEvent arg0) {
 	}
 
@@ -481,14 +419,16 @@ public class FrmProveedor extends JInternalFrame implements KeyListener, ActionL
 	}
 
 	protected void actionPerformedBtnGuardar(ActionEvent arg0) {
-		if (opGuardar.equals("Nuevo")) {
-			nProv.InsertarProveedor(LeerProveedor());
-			ReseteaCampos();
-			txtCodigo.setText(nProv.nextCod());
-		} else if (opGuardar.equals("Modificar")) {
-			nProv.ModificarProveedor(LeerProveedor());
+		if(ValidaDatos()){
+			if (opGuardar.equals("Nuevo")) {
+				nProv.InsertarProveedor(LeerProveedor());
+				ReseteaCampos();
+				txtCodigo.setText(nProv.nextCod());
+			} else if (opGuardar.equals("Modificar")) {
+				nProv.ModificarProveedor(LeerProveedor());
+			}
+			modelo.setData(nProv.Listar());
 		}
-		modelo.setData(nProv.Listar());
 	}
 
 	protected void actionPerformedBtnEliminar(ActionEvent arg0) {
@@ -510,6 +450,99 @@ public class FrmProveedor extends JInternalFrame implements KeyListener, ActionL
 	}
 
 	protected void actionPerformedBtnImprimir(ActionEvent arg0) {
-		Reporte.CreaReporte("src/reportes/ListaProveedores.jasper");
+		Reporte.CreaReporte("/reportes/ListaProveedores.jasper");
+	}
+
+	private void MiIni() {
+		modelo = new ProveedorTableModel();
+		tblProveedor.setModel(modelo);
+
+		tblProveedor.getTableHeader().setReorderingAllowed(false);
+
+		tblProveedor.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				if (!tblProveedor.getSelectionModel().isSelectionEmpty()) {
+					int fila = tblProveedor.getSelectedRow();
+					LlenaDatos(modelo.getProveedor(fila));
+				}
+
+			}
+		});
+
+		rdbtnPorCodigo.setSelected(true);
+
+		modelo.setData(nProv.Listar());
+	}
+
+	private void LlenaDatos(Proveedor p) {
+		txtCodigo.setText(p.getID());
+		txtRazon.setText(p.getRaz_Soc());
+		txtRepresentante.setText(p.getRepresentante());
+		txtEmail.setText(p.getEmail());
+		txtTelefono.setText(p.getTelf());
+		txtDireccion.setText(p.getDireccion());
+	}
+
+	private void Habilita(boolean estado) {
+		comon.habTextField(txtRazon, estado);
+		comon.habTextField(txtRepresentante, estado);
+		comon.habTextField(txtTelefono, estado);
+		comon.habTextField(txtEmail, estado);
+		comon.habTextField(txtDireccion, estado);
+
+		btnGuardar.setEnabled(estado);
+		btnCancelar.setEnabled(estado);
+	}
+
+	private void ReseteaCampos() {
+		txtCodigo.setText("");
+		txtRazon.setText("");
+		txtRepresentante.setText("");
+		txtTelefono.setText("");
+		txtEmail.setText("");
+		txtDireccion.setText("");
+	}
+
+	private Proveedor LeerProveedor() {
+		Proveedor p = new Proveedor();
+		p.setID(txtCodigo.getText());
+		p.setRaz_Soc(txtRazon.getText());
+		p.setRepresentante(txtRepresentante.getText());
+		p.setTelf(txtTelefono.getText());
+		p.setEmail(txtEmail.getText());
+		p.setDireccion(txtDireccion.getText());
+		return p;
+	}
+	
+	private boolean ValidaDatos(){
+		boolean datosOK = false;
+		
+		if(txtRazon.getText().length()<1){
+			JOptionPane.showInternalMessageDialog(this, "Razón Social no puede estar vacía");
+			txtRazon.grabFocus();
+		}
+		else if (!comon.ValidaTexto(txtRepresentante.getText())){
+			JOptionPane.showInternalMessageDialog(this, "Nombre de Representante inválido");
+			txtRepresentante.grabFocus();
+		}
+		else if (!comon.ValidaEmail(txtEmail.getText())){
+			JOptionPane.showInternalMessageDialog(this, "Formato de email inválido");
+			txtEmail.grabFocus();
+		}
+		else if(!comon.ValidaEntero(txtTelefono.getText()) || txtTelefono.getText().length()<7){
+			JOptionPane.showInternalMessageDialog(this, "Error en ingreso de Teléfono");
+			txtTelefono.grabFocus();
+		}
+		else if (txtDireccion.getText().length()<1){
+			JOptionPane.showInternalMessageDialog(this, "La dirección no puede estar vacía");
+			txtDireccion.grabFocus();
+		}
+		else{
+			datosOK = true;
+		}
+		
+		return datosOK;
 	}
 }

@@ -219,7 +219,6 @@ public class FrmBProducto extends JDialog implements ActionListener, KeyListener
 
 				if (this.ventProm != null) {
 					this.ventProm.setProd(prod);
-					this.ventProm.getTxtProd().setText(prod.getDescripcion());
 					this.dispose();
 				} else if (this.ventDetVent != null) {
 					this.ventDetVent.CargarProducto(prod);

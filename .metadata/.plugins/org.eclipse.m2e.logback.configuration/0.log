@@ -68,3 +68,5 @@ Caused by: java.net.SocketTimeoutException: Read timed out
 2018-11-30 00:28:57,983 [Worker-70] INFO  org.eclipse.jetty.server.Server - Started @2534258ms
 2018-11-30 00:28:58,101 [Worker-70] INFO  o.e.j.server.handler.ContextHandler - Started o.e.j.s.ServletContextHandler@561252eb{/Athenas,null,AVAILABLE}
 2018-11-30 19:10:21,770 [main] INFO  c.g.t.t.d.PublishedGradleVersions - Gradle version information cache file is not out-of-date. No remote download required.
+2018-12-01 10:39:13,275 [Worker-18] INFO  c.g.t.t.d.PublishedGradleVersions - Gradle version information cache file is out-of-date. Remote download required.
+2018-12-01 11:34:54,272 [Worker-17] INFO  c.g.t.t.d.PublishedGradleVersions - Gradle version information cache file is not out-of-date. No remote download required.

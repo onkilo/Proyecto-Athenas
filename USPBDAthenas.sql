@@ -58,6 +58,38 @@ BEGIN
 END
 GO
 
+
+CREATE OR ALTER PROCEDURE USP_CateMantenimientos
+(
+	@OPERACION VARCHAR(100) OUTPUT,
+	@ID VARCHAR (6) = NULL,
+	@Desc VARCHAR(50) = NULL
+)
+AS
+	BEGIN
+		IF(@OPERACION = 1)
+		BEGIN
+			IF(NOT EXISTS (SELECT * FROM Cat_Prod WHERE ID = @ID))
+				BEGIN
+					INSERT INTO Cat_Prod(ID, Descripcion) VALUES(@ID, @Desc)
+					SET @OPERACION = 'INSERCIÓN EXITOSA'
+				END
+			ELSE 
+				SET @OPERACION = 'CODIGO YA REGISTRADO'
+		END
+		ELSE IF(@OPERACION = 2)
+		BEGIN
+			UPDATE Cat_Prod SET Descripcion = @Desc WHERE ID = @ID
+			SET @OPERACION = 'MODIFICACIÓN SATISFACTRIA'
+		END
+		ELSE IF(@OPERACION = 3)
+		BEGIN
+			DELETE FROM Cat_Prod WHERE ID = @ID
+			SET @OPERACION = 'REGISTRO ELIMINADO'
+		END
+	END
+GO
+
 CREATE or ALTER PROCEDURE USP_ClienteMantenimiento
 @OPERACION VARCHAR(100) OUTPUT,
 @ID VARCHAR (6) = NULL,
@@ -294,7 +326,7 @@ IF(@OPERACION = '1') --======PARA INSERTAR PROMO
 		END
 ELSE IF (@OPERACION = '2') --======PARA MODIFICAR PROMO
 	BEGIN
-		UPDATE DBO.Promo SET  Cod_Prod = @Prod, Tipo = @Tipo, Valor = @Valor, FecIni = FecIni, FecFin = FecFin
+		UPDATE DBO.Promo SET  Cod_Prod = @Prod, Tipo = @Tipo, Valor = @Valor, FecIni = @FecIni, FecFin = @FecFin
 		WHERE ID = @ID
 		SET @OPERACION = 'ACTUALIZACI�N SATISFACTORIA'
 	END
@@ -557,6 +589,24 @@ BEGIN
 END
 GO
 
+--FUNCION PARA DETERMINAR SI UN PRODUCTO YA TIENE UNA PROMOCIÓN EN UNA DETERMINADA FECHA
+CREATE OR ALTER FUNCTION UDF_ProductoPromo
+(	
+	@prod varchar(10),
+	@fecha date
+)
+returns int
+AS
+BEGIN
+	DECLARE @Resultado INT
 
+	if(@prod IN (SELECT Cod_Prod FROM Promo where CONVERT(VARCHAR,@fecha, 101) BETWEEN FecIni AND FecFin))
+		SET @Resultado = 1
+	ELSE
+		SET @Resultado = 0
+
+	RETURN @Resultado
+END
+GO
 
 

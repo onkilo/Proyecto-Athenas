@@ -1,0 +1,28 @@
+package util;
+
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Image;
+
+import javax.swing.ImageIcon;
+import javax.swing.JDesktopPane;
+
+public class PanelImagen extends JDesktopPane {
+
+	public Image img1;
+
+	public PanelImagen(){
+		
+	}
+	
+	public PanelImagen(String src) {
+
+		img1 = new ImageIcon(getClass().getResource(src)).getImage();
+	}
+
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		Dimension tam = getSize();
+		g.drawImage(img1, 0, 0, tam.width, tam.height, null);
+	}
+}

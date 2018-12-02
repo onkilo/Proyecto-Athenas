@@ -203,7 +203,7 @@ public class FrmDetVentas extends JDialog implements ActionListener {
 		panel.add(dpFecha);
 		dpFecha.setLayout(null);
 
-		lblRuc = new JLabel("R.U.C. : 0000000000");
+		lblRuc = new JLabel("R.U.C. : 24563789145");
 		lblRuc.setBounds(31, 53, 249, 50);
 		lblRuc.setFont(new Font("Serif", Font.BOLD, 14));
 		lblRuc.setHorizontalAlignment(SwingConstants.CENTER);
@@ -496,6 +496,140 @@ public class FrmDetVentas extends JDialog implements ActionListener {
 		txtTotal.setText(comunes.formatDouble(venta.getCalcTotal()));
 	}
 
+	public void actionPerformed(ActionEvent arg0) {
+		if (arg0.getSource() == btnImprimirVenta) {
+			actionPerformedBtnImprimirVenta(arg0);
+		}
+		if (arg0.getSource() == btnRegistrarVenta) {
+			actionPerformedBtnRegistrarVenta(arg0);
+		}
+		if (arg0.getSource() == btnBuscarCliente) {
+			actionPerformedBtnBuscarCliente(arg0);
+		}
+		if (arg0.getSource() == btnBuscarProd) {
+			actionPerformedBtnBuscarProd(arg0);
+		}
+		if (arg0.getSource() == btnEliminarDetalle) {
+			actionPerformedBtnEliminarDetalle(arg0);
+		}
+		if (arg0.getSource() == btnCancelarVenta) {
+			actionPerformedBtnCancelarVenta(arg0);
+		}
+		if (arg0.getSource() == btnAgregar) {
+			actionPerformedBtnAgregar(arg0);
+		}
+	}
+
+	protected void actionPerformedBtnAgregar(ActionEvent arg0) {
+		if (ValidaDetalle()) {
+			DetVenta det = new DetVenta();
+			det.setCodVenta(this.venta.getCodVenta());
+			det.setProd(this.prod);
+			det.setCant(Integer.parseInt(txtCantidad.getText()));
+			det.setPrecio(this.prod.getPreVenta());
+			det.setDescUni(Double.parseDouble(txtDescuento.getText()));
+
+			if (modelo.ExisteVenta(det)) {
+				modelo.updateDetVenta(modelo.PosicionDetProd(det), det);
+
+			} else {
+				modelo.adDetVenta(det);
+				LimpiarProd();
+			}
+			CalcularTotales();
+		}
+	}
+
+	protected void actionPerformedBtnCancelarVenta(ActionEvent arg0) {
+		this.dispose();
+	}
+
+	protected void actionPerformedBtnEliminarDetalle(ActionEvent arg0) {
+		if (!tblDetalle.getSelectionModel().isSelectionEmpty()) {
+			int fila = tblDetalle.getSelectedRow();
+			DetVenta det = modelo.getDetVenta(fila);
+			modelo.deleteDetVenta(fila);
+			CalcularTotales();
+
+		} else {
+			JOptionPane.showMessageDialog(this, "Debe selecionar un registro para realizar esta operación",
+					"Selección Errónea", JOptionPane.WARNING_MESSAGE);
+		}
+	}
+
+	protected void actionPerformedBtnBuscarProd(ActionEvent arg0) {
+		FrmBProducto bProd = new FrmBProducto(this);
+		bProd.setVisible(true);
+	}
+
+	protected void actionPerformedBtnBuscarCliente(ActionEvent arg0) {
+		FrmBCliente bCli = new FrmBCliente(this);
+		bCli.setVisible(true);
+	}
+
+	protected void actionPerformedBtnRegistrarVenta(ActionEvent arg0) {
+		if (ValidaVenta()) {
+			this.venta.setCli(cli);
+			venta.setFecha(dpFecha.getDate());
+			venta.setIGV(0.18);
+			CalcularTotales();
+			if (operacion == 0) {
+				this.venta.setTrab(FrmPrincipal.currentUser);
+				nVent.InsertarVenta(venta, modelo.getData());
+				JOptionPane.showMessageDialog(this, "Venta Registrada");
+				this.dispose();
+			} else if (operacion == 1) {
+				nVent.ModificarVenta(venta, modelo.getData());
+				JOptionPane.showMessageDialog(this, "Venta Modificada");
+				this.dispose();
+			}
+		}
+	}
+
+	protected void actionPerformedBtnImprimirVenta(ActionEvent arg0) {
+
+		if (ValidaVenta()) {
+			this.venta.setCli(cli);
+			venta.setFecha(dpFecha.getDate());
+			venta.setIGV(0.18);
+			CalcularTotales();
+			if (operacion == 0) {
+				int confirmar = JOptionPane.showConfirmDialog(this,
+						"Es necesario registrar la venta antes de imprimirla"
+								+ "\nSi continúa la venta quedará registrada en el sistema" + "\n¿Desea continuar?",
+						"Imprimir", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+				if (confirmar == JOptionPane.YES_OPTION) {
+
+					this.venta.setTrab(FrmPrincipal.currentUser);
+					nVent.InsertarVenta(venta, modelo.getData());
+					JOptionPane.showMessageDialog(this, "Venta Registrada");
+					this.dispose();
+					Imprimir(venta);
+				}
+			} else if (operacion == 1) {
+				int confirmar = JOptionPane.showConfirmDialog(this,
+						"Es necesario completar la modificación de la venta antes de imprimirla"
+								+ "\nSi continúa la venta quedará modificada en el sistema" + "\n¿Desea continuar?",
+						"Imprimir", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+				if (confirmar == JOptionPane.YES_OPTION) {
+					nVent.ModificarVenta(venta, modelo.getData());
+					JOptionPane.showMessageDialog(this, "Venta Modificada");
+					this.dispose();
+					Imprimir(venta);
+				}
+
+			}
+
+		}
+	}
+
+	private void Imprimir(Venta obj) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("CodVenta", obj.getCodVenta());
+		Reporte.CreaReporte("/reportes/CDP.jasper", param);
+
+	}
+
 	private void miInit() {
 
 		tblDetalle.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
@@ -561,131 +695,38 @@ public class FrmDetVentas extends JDialog implements ActionListener {
 		txtTotal.setText(comunes.formatDouble(venta.getCalcTotal()));
 	}
 
-	public void actionPerformed(ActionEvent arg0) {
-		if (arg0.getSource() == btnImprimirVenta) {
-			actionPerformedBtnImprimirVenta(arg0);
-		}
-		if (arg0.getSource() == btnRegistrarVenta) {
-			actionPerformedBtnRegistrarVenta(arg0);
-		}
-		if (arg0.getSource() == btnBuscarCliente) {
-			actionPerformedBtnBuscarCliente(arg0);
-		}
-		if (arg0.getSource() == btnBuscarProd) {
-			actionPerformedBtnBuscarProd(arg0);
-		}
-		if (arg0.getSource() == btnEliminarDetalle) {
-			actionPerformedBtnEliminarDetalle(arg0);
-		}
-		if (arg0.getSource() == btnCancelarVenta) {
-			actionPerformedBtnCancelarVenta(arg0);
-		}
-		if (arg0.getSource() == btnAgregar) {
-			actionPerformedBtnAgregar(arg0);
-		}
-	}
+	private boolean ValidaDetalle() {
+		boolean datosOK = false;
 
-	protected void actionPerformedBtnAgregar(ActionEvent arg0) {
-		DetVenta det = new DetVenta();
-		det.setCodVenta(this.venta.getCodVenta());
-		det.setProd(this.prod);
-		det.setCant(Integer.parseInt(txtCantidad.getText()));
-		det.setPrecio(this.prod.getPreVenta());
-		det.setDescUni(Double.parseDouble(txtDescuento.getText()));
-
-		if (modelo.ExisteVenta(det)) {
-			modelo.updateDetVenta(modelo.PosicionDetProd(det), det);
-
+		if (txtProdDesc.getText().equals("")) {
+			JOptionPane.showMessageDialog(this, "Debe seleccionar un producto");
+		} else if (!comunes.ValidaEntero(txtCantidad.getText())) {
+			JOptionPane.showMessageDialog(this, "Cantidad ingresada incorrecta");
+			txtCantidad.grabFocus();
+		} else if (this.prod.getStockAcual() <= Integer.parseInt(txtCantidad.getText())) {
+			JOptionPane.showMessageDialog(this, "Cantidad ingresada excede el stock");
+			txtCantidad.grabFocus();
 		} else {
-			modelo.adDetVenta(det);
-			LimpiarProd();
-		}
-		CalcularTotales();
-	}
-
-	protected void actionPerformedBtnCancelarVenta(ActionEvent arg0) {
-		this.dispose();
-	}
-
-	protected void actionPerformedBtnEliminarDetalle(ActionEvent arg0) {
-		if (!tblDetalle.getSelectionModel().isSelectionEmpty()) {
-			int fila = tblDetalle.getSelectedRow();
-			DetVenta det = modelo.getDetVenta(fila);
-			modelo.deleteDetVenta(fila);
-			CalcularTotales();
-
-		} else {
-			JOptionPane.showMessageDialog(this, "Debe selecionar un registro para realizar esta operación",
-					"Selección Errónea", JOptionPane.WARNING_MESSAGE);
-		}
-	}
-
-	protected void actionPerformedBtnBuscarProd(ActionEvent arg0) {
-		FrmBProducto bProd = new FrmBProducto(this);
-		bProd.setVisible(true);
-	}
-
-	protected void actionPerformedBtnBuscarCliente(ActionEvent arg0) {
-		FrmBCliente bCli = new FrmBCliente(this);
-		bCli.setVisible(true);
-	}
-
-	protected void actionPerformedBtnRegistrarVenta(ActionEvent arg0) {
-		this.venta.setCli(cli);
-		venta.setFecha(dpFecha.getDate());
-		venta.setIGV(0.18);
-		CalcularTotales();
-		if (operacion == 0) {
-			this.venta.setTrab(FrmPrincipal.currentUser);
-			nVent.InsertarVenta(venta, modelo.getData());
-			JOptionPane.showMessageDialog(this, "Venta Registrada");
-			this.dispose();
-		} else if (operacion == 1) {
-			nVent.ModificarVenta(venta, modelo.getData());
-			JOptionPane.showMessageDialog(this, "Venta Modificada");
-			this.dispose();
-		}
-	}
-
-	protected void actionPerformedBtnImprimirVenta(ActionEvent arg0) {
-
-		this.venta.setCli(cli);
-		venta.setFecha(dpFecha.getDate());
-		venta.setIGV(0.18);
-		CalcularTotales();
-		if (operacion == 0) {
-			int confirmar = JOptionPane.showConfirmDialog(this,
-					"Es necesario registrar la venta antes de imprimirla"
-							+ "\nSi continúa la venta quedará registrada en el sistema" + "\n¿Desea continuar?",
-					"Imprimir", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-			if (confirmar == JOptionPane.YES_OPTION) {
-				
-				this.venta.setTrab(FrmPrincipal.currentUser);
-				nVent.InsertarVenta(venta, modelo.getData());
-				JOptionPane.showMessageDialog(this, "Venta Registrada");
-				this.dispose();
-				Imprimir(venta);
-			}
-		} else if (operacion == 1) {
-			int confirmar = JOptionPane.showConfirmDialog(this,
-					"Es necesario completar la modificación de la venta antes de imprimirla"
-							+ "\nSi continúa la venta quedará modificada en el sistema" + "\n¿Desea continuar?",
-					"Imprimir", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-			if(confirmar == JOptionPane.YES_OPTION){
-				nVent.ModificarVenta(venta, modelo.getData());
-				JOptionPane.showMessageDialog(this, "Venta Modificada");
-				 this.dispose();
-				 Imprimir(venta);
-			}
-			
+			datosOK = true;
 		}
 
+		return datosOK;
 	}
 
-	private void Imprimir(Venta obj) {
-		Map<String, Object> param = new HashMap<>();
-		param.put("CodVenta", obj.getCodVenta());
-		Reporte.CreaReporte("src/reportes/CDP.jasper", param);
+	private boolean ValidaVenta() {
+		boolean datosOK = false;
 
+		if (txtCliNombre.getText().equals("")) {
+			JOptionPane.showMessageDialog(this, "Debe seleccionar un cliente");
+		} else if (tblDetalle.getRowCount() < 1) {
+			JOptionPane.showMessageDialog(this,
+					"Debe ingresar al menos un producto en el detalle para confirmar la venta");
+		}
+
+		else {
+			datosOK = true;
+		}
+
+		return datosOK;
 	}
 }

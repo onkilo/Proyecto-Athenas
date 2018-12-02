@@ -1,0 +1,38 @@
+package util;
+
+import java.util.Map;
+
+import conexion.Conexion;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
+
+public class Reporte {
+	
+	public static void CreaReporte(String reporte){
+		JasperPrint jp;
+		try {
+			jp = JasperFillManager.fillReport(reporte, null, Conexion.Conectar());
+			JasperViewer jv = new JasperViewer(jp, false);
+			jv.setTitle("");
+			jv.setVisible(true);
+		} catch (JRException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public static void CreaReporte(String reporte, Map<String, Object> param){
+		JasperPrint jp;
+		try {
+			jp = JasperFillManager.fillReport(reporte, param, Conexion.Conectar());
+			JasperViewer jv = new JasperViewer(jp, false);
+			jv.setTitle("");
+			jv.setVisible(true);
+		} catch (JRException e) {
+			e.printStackTrace();
+		}
+	}
+
+}

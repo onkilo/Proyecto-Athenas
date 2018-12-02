@@ -45,5 +45,111 @@ public class NegocioCategoria {
 		
 		return lista;
 	}
-
+	
+	
+	public boolean InsertarCate(CategoriaProducto obj){
+		boolean exito = false;
+		
+		sql = "{ call USP_CateMantenimientos(?,?,?)}";
+		
+		try {
+			con = Conexion.Conectar();
+			cstm = con.prepareCall(sql);
+			cstm.setString(1, "1");
+			cstm.setString(2, obj.getID());
+			cstm.setString(3, obj.getDescripcion());
+			
+			cstm.executeUpdate();
+			
+			exito = true;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally{
+			try {
+				if(cstm != null) cstm.close();
+				if(con != null) con.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		return exito;
+	}
+	
+	public boolean ModificarCate(CategoriaProducto obj){
+		boolean exito = false;
+		
+		sql = "{ call USP_CateMantenimientos(?,?,?)}";
+		
+		try {
+			con = Conexion.Conectar();
+			cstm = con.prepareCall(sql);
+			cstm.setString(1, "2");
+			cstm.setString(2, obj.getID());
+			cstm.setString(3, obj.getDescripcion());
+			
+			cstm.executeUpdate();
+			
+			exito = true;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally{
+			try {
+				if(cstm != null) cstm.close();
+				if(con != null) con.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		return exito;
+	}
+	
+	public boolean EliminarCate(String cod){
+		boolean exito = false;
+		
+		sql = "{ call USP_CateMantenimientos(?,?)}";
+		
+		try {
+			con = Conexion.Conectar();
+			cstm = con.prepareCall(sql);
+			cstm.setString(1, "3");
+			cstm.setString(2, cod);
+			
+			cstm.executeUpdate();
+			
+			exito = true;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally{
+			try {
+				if(cstm != null) cstm.close();
+				if(con != null) con.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		return exito;
+	}
+	
+	public String nextCod(){
+		sql = "{call USP_NextCod(?)}";
+		String cod = "";
+		try {
+			con = Conexion.Conectar();
+			cstm = con.prepareCall(sql);
+			cstm.setString(1, "1");
+			cstm.registerOutParameter(1, Types.VARCHAR);
+			cstm.executeUpdate();
+			cod = cstm.getString(1);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally{
+			try {
+				if(cstm != null) cstm.close();
+				if(con != null) con.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		return cod;
+	}
 }

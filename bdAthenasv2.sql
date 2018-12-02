@@ -124,7 +124,7 @@ CREATE TABLE Compra(
   Cod_Proveedor VARCHAR(6) NOT NULL ,
   Cod_Trabajador VARCHAR(6) NOT NULL,
   Fecha DATE NOT NULL,
-  IGV DECIMAL(10,2) NOT NULL,
+  IGV DECIMAL(10,2) NOT NULL DEFAULT 0.18,
   Estado int not null default 0,
   PRIMARY KEY(Cod_Compra),
   FOREIGN KEY (Cod_Proveedor) REFERENCES Proveedor (ID),
@@ -171,8 +171,8 @@ CREATE TABLE Venta (
 	Cod_Cliente VARCHAR(6) NOT NULL,
 	Cod_Trabajador VARCHAR(6) NOT NULL,
 	Fecha DATE NOT NULL,
-    IGV DECIMAL(10,2) NOT NULL,
-	DescTotal DECIMAL(10,2)
+    IGV DECIMAL(10,2) NOT NULL DEFAULT 0.18,
+	DescTotal DECIMAL(10,2) DEFAULT 0.0,
 	PRIMARY KEY(Cod_Venta),
 	FOREIGN KEY (Cod_Cliente) REFERENCES Cliente (ID),
 	FOREIGN KEY (Cod_Trabajador) REFERENCES Trabajador (ID)

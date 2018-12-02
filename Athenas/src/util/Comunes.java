@@ -28,4 +28,36 @@ public class Comunes {
 		
 		return formatoDouble.format(num);
 	}
+	
+	public boolean ValidaTexto(String texto){
+		boolean coincide = false;
+		
+		coincide = texto.matches("[a-zA-Z\\s]+");
+		
+		return coincide;
+	}
+	
+	public boolean ValidaEntero(String texto){
+		boolean coincide = false;
+		
+		coincide = texto.matches("[\\d]+");
+		
+		return coincide;
+	}
+	
+	public boolean ValidaDouble(String texto){
+		boolean coincide = false;
+		
+		coincide = texto.matches("[\\d]+([\\.,]{1}[\\d]+)?");
+		
+		return coincide;
+	}
+	
+	public boolean ValidaEmail(String texto){
+		boolean coincide = false;
+		
+		coincide = texto.matches("^[a-zA-Z0-9\\._-]+@[a-zA-Z0-9\\._-]+\\.[a-zA-Z0-9_-]+$");
+		
+		return coincide;
+	}
 }

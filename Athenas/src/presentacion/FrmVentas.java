@@ -327,7 +327,7 @@ public class FrmVentas extends JInternalFrame implements KeyListener, ActionList
 			Venta venta = modelo.getVenta(fila);
 			Map<String, Object> param = new HashMap<>();
 			param.put("CodVenta", venta.getCodVenta());
-			Reporte.CreaReporte("src/reportes/CDP.jasper", param);
+			Reporte.CreaReporte("/reportes/CDP.jasper", param);
 		}
 	}
 	

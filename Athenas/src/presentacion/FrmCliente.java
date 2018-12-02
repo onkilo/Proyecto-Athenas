@@ -368,64 +368,7 @@ public class FrmCliente extends JInternalFrame implements KeyListener, ActionLis
 		Habilita(false);
 	}
 
-	private void LlenaDatos(Cliente c) {
-		txtCodigo.setText(c.getID());
-		txtNombre.setText(c.getNombre());
-		txtApellido.setText(c.getApellido());
-		txtTelefono.setText(c.getTelefono());
-		txtDni.setText(c.getDni());
-		if (c.getSexo().equalsIgnoreCase("M")) {
-			rdbtnMasculino.setSelected(true);
-		} else {
-			rdbtnFemenino.setSelected(true);
-		}
-	}
-
-	private void Habilita(boolean estado) {
-		
-		/*txtNombre.setEnabled(estado);
-		txtApellido.setEnabled(estado);
-		txtTelefono.setEnabled(estado);
-		txtDni.setEnabled(estado);*/
-		comon.habTextField(txtNombre, estado);
-		comon.habTextField(txtApellido, estado);
-		comon.habTextField(txtTelefono, estado);
-		comon.habTextField(txtDni, estado);
-		rdbtnFemenino.setEnabled(estado);
-		rdbtnMasculino.setEnabled(estado);
-
-		btnGuardar.setEnabled(estado);
-		btnCancelar.setEnabled(estado);
-	}
-
-	private void SeleccionCliente() {
-		int fila = tblCliente.getSelectedRow();
-		LlenaDatos(modelo.getCliente(fila));
-	}
-
-	private void ReseteaCampos() {
-		txtCodigo.setText("");
-		txtNombre.setText("");
-		txtApellido.setText("");
-		txtTelefono.setText("");
-		txtDni.setText("");
-		rdbtnMasculino.setSelected(true);
-	}
-
-	private Cliente LeerCliente() {
-		Cliente c = new Cliente();
-		c.setID(txtCodigo.getText());
-		c.setNombre(txtNombre.getText());
-		c.setApellido(txtApellido.getText());
-		c.setTelefono(txtTelefono.getText());
-		c.setDni(txtDni.getText());
-		if (rdbtnMasculino.isSelected())
-			c.setSexo("M");
-		else
-			c.setSexo("F");
-
-		return c;
-	}
+	
 
 	public void keyPressed(KeyEvent arg0) {
 	}
@@ -520,14 +463,16 @@ public class FrmCliente extends JInternalFrame implements KeyListener, ActionLis
 	}
 
 	protected void actionPerformedBtnGuardar(ActionEvent arg0) {
-		if (opGuardar.equals("Nuevo")) {
-			nCliente.InsertarCliente(LeerCliente());
-			ReseteaCampos();
-			txtCodigo.setText(nCliente.nextCod());
-		} else if (opGuardar.equals("Modificar")) {
-			nCliente.ModificarCliente(LeerCliente());
+		if(ValidaDatos()){
+			if (opGuardar.equals("Nuevo")) {
+				nCliente.InsertarCliente(LeerCliente());
+				ReseteaCampos();
+				txtCodigo.setText(nCliente.nextCod());
+			} else if (opGuardar.equals("Modificar")) {
+				nCliente.ModificarCliente(LeerCliente());
+			}
+			modelo.setData(nCliente.Listar());
 		}
-		modelo.setData(nCliente.Listar());
 	}
 
 	protected void actionPerformedBtnEliminar(ActionEvent arg0) {
@@ -549,6 +494,85 @@ public class FrmCliente extends JInternalFrame implements KeyListener, ActionLis
 	}
 
 	protected void actionPerformedBtnImprimir(ActionEvent arg0) {
-		Reporte.CreaReporte("src/reportes/ListaClientes.jasper");
+		Reporte.CreaReporte("/reportes/ListaClientes.jasper");
+	}
+	
+	private void LlenaDatos(Cliente c) {
+		txtCodigo.setText(c.getID());
+		txtNombre.setText(c.getNombre());
+		txtApellido.setText(c.getApellido());
+		txtTelefono.setText(c.getTelefono());
+		txtDni.setText(c.getDni());
+		if (c.getSexo().equalsIgnoreCase("M")) {
+			rdbtnMasculino.setSelected(true);
+		} else {
+			rdbtnFemenino.setSelected(true);
+		}
+	}
+
+	private void Habilita(boolean estado) {
+		comon.habTextField(txtNombre, estado);
+		comon.habTextField(txtApellido, estado);
+		comon.habTextField(txtTelefono, estado);
+		comon.habTextField(txtDni, estado);
+		rdbtnFemenino.setEnabled(estado);
+		rdbtnMasculino.setEnabled(estado);
+
+		btnGuardar.setEnabled(estado);
+		btnCancelar.setEnabled(estado);
+	}
+
+	private void SeleccionCliente() {
+		int fila = tblCliente.getSelectedRow();
+		LlenaDatos(modelo.getCliente(fila));
+	}
+
+	private void ReseteaCampos() {
+		txtCodigo.setText("");
+		txtNombre.setText("");
+		txtApellido.setText("");
+		txtTelefono.setText("");
+		txtDni.setText("");
+		rdbtnMasculino.setSelected(true);
+	}
+
+	private Cliente LeerCliente() {
+		Cliente c = new Cliente();
+		c.setID(txtCodigo.getText());
+		c.setNombre(txtNombre.getText());
+		c.setApellido(txtApellido.getText());
+		c.setTelefono(txtTelefono.getText());
+		c.setDni(txtDni.getText());
+		if (rdbtnMasculino.isSelected())
+			c.setSexo("M");
+		else
+			c.setSexo("F");
+
+		return c;
+	}
+	
+	private boolean ValidaDatos(){
+		boolean datosOk = false;
+		
+		if(!comon.ValidaTexto(txtNombre.getText())){
+			JOptionPane.showInternalMessageDialog(this, "Error en ingreso de Nombre");
+			txtNombre.grabFocus();
+		}
+		else if (!comon.ValidaTexto(txtApellido.getText())){
+			JOptionPane.showInternalMessageDialog(this, "Error en ingreso de Apellido");
+			txtApellido.grabFocus();
+		}
+		else if(!comon.ValidaEntero(txtTelefono.getText()) || txtTelefono.getText().length()<7){
+			JOptionPane.showInternalMessageDialog(this, "Error en ingreso de Teléfono");
+			txtTelefono.grabFocus();
+		}
+		else if(!comon.ValidaEntero(txtDni.getText()) || txtDni.getText().length()<8){
+			JOptionPane.showInternalMessageDialog(this, "Error en ingreso de DNI");
+			txtDni.grabFocus();
+		}
+		else{
+			datosOk = true;
+		}
+		return datosOk;
 	}
 }

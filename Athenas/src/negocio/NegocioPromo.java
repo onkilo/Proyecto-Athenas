@@ -233,7 +233,7 @@ public class NegocioPromo {
 			
 			con = Conexion.Conectar();
 			cstm = con.prepareCall(sql);
-			cstm.setString(1, "1");
+			cstm.setString(1, "3");
 			cstm.setString(2, cod);
 			
 			cstm.executeUpdate();
@@ -416,6 +416,41 @@ public class NegocioPromo {
 		}
 		
 		return desc;
+	}
+	
+	public boolean ProdEnPromocion(String cod, Date fecha){
+		boolean existe = false;
+		
+		sql = "{? = call UDF_ProductoPromo(?,?)}";
+		
+		try {
+			con = Conexion.Conectar();
+			cstm = con.prepareCall(sql);
+			cstm.registerOutParameter(1, Types.INTEGER);
+			cstm.setString(2, cod);
+			cstm.setDate(3, fecha);
+			cstm.execute();
+			int resultado = cstm.getInt(1);
+			if(resultado == 0){
+				existe = false;
+			}
+			else{
+				existe = true;
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			try {
+				if (cstm != null)
+					cstm.close();
+				if (con != null)
+					con.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		
+		return existe;
 	}
 	
 	public String nextCod() {

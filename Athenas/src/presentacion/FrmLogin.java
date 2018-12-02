@@ -27,6 +27,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
+import java.awt.Toolkit;
 
 public class FrmLogin extends JFrame implements ActionListener, KeyListener {
 
@@ -73,6 +74,7 @@ public class FrmLogin extends JFrame implements ActionListener, KeyListener {
 	 * Create the frame.
 	 */
 	public FrmLogin() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(FrmLogin.class.getResource("/img/icon-logo.png")));
 		setResizable(false);
 		setTitle("Login");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
