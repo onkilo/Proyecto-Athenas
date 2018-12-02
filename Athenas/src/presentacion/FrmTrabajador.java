@@ -126,6 +126,7 @@ public class FrmTrabajador extends JInternalFrame implements KeyListener, Action
 	 * Create the frame.
 	 */
 	public FrmTrabajador() {
+		setTitle("Mantenimiento | Trabajadores");
 		setMinimumSize(new Dimension(1100, 600));
 		setMaximizable(true);
 		setClosable(true);
@@ -553,6 +554,12 @@ public class FrmTrabajador extends JInternalFrame implements KeyListener, Action
 				}
 			}
 		});
+		
+		if (FrmPrincipal.currentUser != null && FrmPrincipal.currentUser.getUsuario() != null) {
+			if (FrmPrincipal.currentUser.getRol().equalsIgnoreCase("Vendedor")) {
+				btnImprimir.setVisible(false);
+			}
+		}
 	}
 
 	private void LlenaDatos(Trabajador t) {

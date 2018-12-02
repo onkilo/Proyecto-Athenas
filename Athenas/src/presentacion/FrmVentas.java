@@ -99,6 +99,7 @@ public class FrmVentas extends JInternalFrame implements KeyListener, ActionList
 	 * Create the frame.
 	 */
 	public FrmVentas() {
+		setTitle("Ventas");
 		setMinimumSize(new Dimension(1100, 600));
 		setMaximizable(true);
 		setClosable(true);

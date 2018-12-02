@@ -477,13 +477,16 @@ public class FrmDetVentas extends JDialog implements ActionListener {
 		dpFecha.setDate(LocalDate.now());
 
 		txtCodigo.setText(nVent.nextCod());
-
+		
+		this.setTitle("Nueva Venta");
+		
 		miInit();
 	}
 
 	public FrmDetVentas(Venta venta) {
 		this();
 		operacion = 1;
+		this.setTitle("Modificar Venta");
 		this.venta = venta;
 		txtCodigo.setText(venta.getCodVenta());
 		dpFecha.setDate(venta.getFecha());

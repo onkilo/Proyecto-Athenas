@@ -124,6 +124,7 @@ public class FrmCliente extends JInternalFrame implements KeyListener, ActionLis
 	 * Create the frame.
 	 */
 	public FrmCliente() {
+		setTitle("Mantenimiento | Clientes");
 		setMinimumSize(new Dimension(1100, 600));
 		setMaximizable(true);
 		setClosable(true);
@@ -366,6 +367,12 @@ public class FrmCliente extends JInternalFrame implements KeyListener, ActionLis
 		rdbtnPorCodigo.setSelected(true);
 		rdbtnMasculino.setSelected(true);
 		Habilita(false);
+		
+		if (FrmPrincipal.currentUser != null && FrmPrincipal.currentUser.getUsuario() != null) {
+			if (FrmPrincipal.currentUser.getRol().equalsIgnoreCase("Vendedor")) {
+				btnImprimir.setVisible(false);
+			}
+		}
 	}
 
 	

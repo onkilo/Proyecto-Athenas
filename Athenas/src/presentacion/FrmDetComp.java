@@ -436,13 +436,15 @@ public class FrmDetComp extends JDialog implements ActionListener {
 
 		txtCodigo.setText(nComp.nextCod());
 		dpFecha.setDate(LocalDate.now());
-
+		
+		this.setTitle("Nuevo Pedido");
 		miInit();
 	}
 
 	public FrmDetComp(Compra comp) {
 		this();
 		operacion = 1;
+		this.setTitle("Modificar Pedido");
 		this.comp = comp;
 		txtCodigo.setText(comp.getId());
 		dpFecha.setDate(comp.getFecha());

@@ -76,6 +76,7 @@ public class FrmBProducto extends JDialog implements ActionListener, KeyListener
 	 * Create the dialog.
 	 */
 	public FrmBProducto() {
+		setTitle("Buscar Producto");
 		setResizable(false);
 		setModal(true);
 		setBounds(100, 100, 750, 450);

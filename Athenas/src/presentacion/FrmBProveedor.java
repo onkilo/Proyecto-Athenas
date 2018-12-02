@@ -73,6 +73,7 @@ public class FrmBProveedor extends JDialog implements KeyListener, ActionListene
 	 * Create the dialog.
 	 */
 	public FrmBProveedor() {
+		setTitle("Buscar Proveedor");
 		setResizable(false);
 		setModal(true);
 		setBounds(100, 100, 750, 450);

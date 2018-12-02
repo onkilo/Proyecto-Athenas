@@ -112,6 +112,7 @@ public class FrmProveedor extends JInternalFrame implements KeyListener, ActionL
 	 * Create the frame.
 	 */
 	public FrmProveedor() {
+		setTitle("Mantenimiento | Proveedor");
 		setMinimumSize(new Dimension(1100, 600));
 		setMaximizable(true);
 		setClosable(true);
@@ -474,6 +475,12 @@ public class FrmProveedor extends JInternalFrame implements KeyListener, ActionL
 		rdbtnPorCodigo.setSelected(true);
 
 		modelo.setData(nProv.Listar());
+		
+		if (FrmPrincipal.currentUser != null && FrmPrincipal.currentUser.getUsuario() != null) {
+			if (FrmPrincipal.currentUser.getRol().equalsIgnoreCase("Vendedor")) {
+				btnImprimir.setVisible(false);
+			}
+		}
 	}
 
 	private void LlenaDatos(Proveedor p) {

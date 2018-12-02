@@ -136,6 +136,7 @@ public class FrmProducto extends JInternalFrame implements KeyListener, ActionLi
 	 * Create the frame.
 	 */
 	public FrmProducto() {
+		setTitle("Mantenimiento | Productos");
 		setMinimumSize(new Dimension(1100, 600));
 		setMaximizable(true);
 		setClosable(true);
@@ -409,6 +410,13 @@ public class FrmProducto extends JInternalFrame implements KeyListener, ActionLi
 		modelo.setData(nProd.listar());
 		LlenaCbo();
 		cboCategoria.setModel(cboModel);
+		
+		
+		if (FrmPrincipal.currentUser != null && FrmPrincipal.currentUser.getUsuario() != null) {
+			if (FrmPrincipal.currentUser.getRol().equalsIgnoreCase("Vendedor")) {
+				btnImprimir.setVisible(false);
+			}
+		}
 	}
 
 	private void LlenaDatos(Producto obj) {

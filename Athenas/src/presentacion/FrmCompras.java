@@ -102,6 +102,7 @@ public class FrmCompras extends JInternalFrame implements KeyListener, ActionLis
 	 * Create the frame.
 	 */
 	public FrmCompras() {
+		setTitle("Pedidos");
 		setMinimumSize(new Dimension(1100, 600));
 		setMaximizable(true);
 		setClosable(true);

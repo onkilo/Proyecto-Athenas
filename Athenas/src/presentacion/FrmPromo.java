@@ -136,6 +136,7 @@ public class FrmPromo extends JInternalFrame implements ActionListener, KeyListe
 	 * Create the frame.
 	 */
 	public FrmPromo() {
+		setTitle("Mantenimiento | Promociones");
 		setMinimumSize(new Dimension(1100, 600));
 		setMaximizable(true);
 		setClosable(true);
@@ -605,6 +606,12 @@ public class FrmPromo extends JInternalFrame implements ActionListener, KeyListe
 
 		dpInicial.getSettings().setVetoPolicy(new HoyVetoPolicy());
 		dpFinal.getSettings().setVetoPolicy(new HoyVetoPolicy());
+		
+		if (FrmPrincipal.currentUser != null && FrmPrincipal.currentUser.getUsuario() != null) {
+			if (FrmPrincipal.currentUser.getRol().equalsIgnoreCase("Vendedor")) {
+				btnImprimir.setVisible(false);
+			}
+		}
 	}
 
 	private void DecideListado() {
